@@ -1,4 +1,4 @@
-<svg viewBox="0 0 640 380" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <style>
     path { fill: #141414; }
     @media (prefers-color-scheme: dark) {
@@ -7,21 +7,21 @@
   </style>
   <defs>
     <g id="side">
-      <path d="M348 118 L632 132 L632 150 L348 138 Z" />
-      <path d="M350 144 L598 158 L598 174 L350 164 Z" />
-      <path d="M352 170 L562 184 L562 199 L352 189 Z" />
-      <path d="M354 195 L524 209 L524 223 L354 213 Z" />
-      <path d="M356 219 L482 233 L482 246 L356 237 Z" />
-      <path d="M358 242 L436 256 L436 268 L358 260 Z" />
-      <path d="M332 258 L364 306 L348 314 L326 268 Z" />
-      <path d="M342 254 L359 326 L337 332 L328 262 Z" />
+      <path d="M536 126 L606 132 L602 154 L536 150 Z" />
+      <path d="M548 150 L985 158 L975 196 L548 188 Z" />
+      <path d="M548 194 L905 202 L895 238 L548 230 Z" />
+      <path d="M548 236 L820 244 L810 278 L548 270 Z" />
+      <path d="M548 276 L730 284 L722 314 L548 306 Z" />
+      <path d="M548 312 L645 320 L639 346 L548 340 Z" />
+      <path d="M524 296 L550 290 L588 368 L556 380 Z" />
+      <path d="M552 372 L544 404 L562 382 L566 412 L577 384 L592 406 L588 376 Z" />
     </g>
   </defs>
   <use xlink:href="#side" />
-  <use xlink:href="#side" transform="matrix(-1 0 0 1 640 0)" />
-  <path d="M320 92 C348 92 354 128 352 176 C350 220 340 252 320 264 C300 252 290 220 288 176 C286 128 292 92 320 92 Z" />
-  <path d="M306 84 h28 v16 h-28 Z" />
-  <path fill-rule="evenodd" d="M320 46 a22 22 0 1 0 0.01 0 Z M311 58.5 a3.5 3.5 0 1 0 0.01 0 Z" />
-  <path d="M299 60 L278 70 L299 79 Z" />
-  <path d="M310 260 L305 336 L335 336 L330 260 Z" />
+  <use xlink:href="#side" transform="matrix(-1 0 0 1 1000 0)" />
+  <path d="M500 108 C542 108 552 150 552 210 C552 268 534 320 500 336 C466 320 448 268 448 210 C448 150 458 108 500 108 Z" />
+  <path fill-rule="evenodd" d="M516 112 L516 62 C516 46 505 38 490 38 C475 38 464 44 459 51 L444 54 C436 55 432 59 434 64 L439 72 L446 68 L456 73 C461 84 470 93 480 97 L480 112 Z M487 51 a4 4 0 1 0 0.01 0 Z" />
+  <path d="M472 330 L528 330 L531 372 L469 372 Z" />
+  <path d="M466 377 L534 377 L537 416 L463 416 Z" />
+  <path d="M460 421 L540 421 L543 458 L457 458 Z" />
 </svg>

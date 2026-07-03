@@ -9,17 +9,22 @@ body {
   overflow: hidden;
 }
 
-body {
-  background: #f4f2ec;
-  color: #141414;
-  font-family: Georgia, "Times New Roman", serif;
+:root {
+  --bg: #f4f2ec;
+  --fg: #141414;
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
-    background: #0e0e0e;
-    color: #ececec;
+  :root {
+    --bg: #0e0e0e;
+    --fg: #ececec;
   }
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .stage {
