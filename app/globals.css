@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #f4f2ec;
+  color: #141414;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0e0e0e;
+    color: #ececec;
+  }
+}
+
+.stage {
+  height: 100dvh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 4vh, 3rem);
+}
+
+.eagle {
+  width: min(90vw, 120vh);
+  height: auto;
+  display: block;
+}
+
+.date {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.6vw, 1.8rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  text-align: center;
+  padding-left: 0.35em; /* offset letter-spacing so text is optically centered */
+}
