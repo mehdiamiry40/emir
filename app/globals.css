@@ -1,17 +1,22 @@
-@property --bg-0 {
+@property --paper {
   syntax: "<color>";
   inherits: true;
-  initial-value: #fbfaf7;
+  initial-value: #f7f7f4;
 }
-@property --bg-1 {
+@property --paper-deep {
   syntax: "<color>";
   inherits: true;
-  initial-value: #f2efe9;
+  initial-value: #e9e8e1;
 }
-@property --bg-2 {
+@property --glow {
   syntax: "<color>";
   inherits: true;
-  initial-value: #e6e2d8;
+  initial-value: #ffffff;
+}
+@property --glow-mid {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #fbfbf8;
 }
 @property --eagle-invert {
   syntax: "<number>";
@@ -21,46 +26,85 @@
 
 :root {
   color-scheme: light;
-  --bg-0: #fbfaf7;
-  --bg-1: #f2efe9;
-  --bg-2: #e6e2d8;
-  --ink: #121212;
-  --muted: #57534a;
-  --shadow: rgba(35, 28, 14, 0.16);
+  --ink: #070707;
+  --ink-muted: rgba(7, 7, 7, 0.7);
+  --hairline: rgba(7, 7, 7, 0.16);
+  --grid: rgba(7, 7, 7, 0.035);
+  --paper: #f7f7f4;
+  --paper-deep: #e9e8e1;
+  --glow: #ffffff;
+  --glow-mid: #fbfbf8;
+  --veil-a: rgba(255, 255, 255, 0.86);
+  --veil-b: rgba(255, 255, 255, 0.76);
+  --edge: rgba(7, 7, 7, 0.085);
+  --ground: rgba(7, 7, 7, 0.18);
+  --sh1: rgba(0, 0, 0, 0.12);
+  --sh2: rgba(255, 255, 255, 0.65);
+  --sh1-hover: rgba(0, 0, 0, 0.14);
+  --sh2-hover: rgba(255, 255, 255, 0.68);
   --eagle-invert: 0;
   --show-sun: 0;
-  --grain: 0.04;
+  background: var(--paper);
+  color: var(--ink);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  text-rendering: geometricPrecision;
   transition:
-    --bg-0 0.45s ease,
-    --bg-1 0.45s ease,
-    --bg-2 0.45s ease;
+    --paper 0.45s ease,
+    --paper-deep 0.45s ease,
+    --glow 0.45s ease,
+    --glow-mid 0.45s ease;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg-0: #16161a;
-  --bg-1: #0e0e11;
-  --bg-2: #060608;
   --ink: #ece9e2;
-  --muted: #a09c91;
-  --shadow: rgba(0, 0, 0, 0.55);
+  --ink-muted: rgba(236, 233, 226, 0.68);
+  --hairline: rgba(236, 233, 226, 0.16);
+  --grid: rgba(236, 233, 226, 0.045);
+  --paper: #101013;
+  --paper-deep: #050507;
+  --glow: #1b1b20;
+  --glow-mid: #141417;
+  --veil-a: rgba(16, 16, 19, 0.85);
+  --veil-b: rgba(16, 16, 19, 0.75);
+  --edge: rgba(0, 0, 0, 0.35);
+  --ground: rgba(0, 0, 0, 0.55);
+  --sh1: rgba(0, 0, 0, 0.5);
+  --sh2: rgba(0, 0, 0, 0.3);
+  --sh1-hover: rgba(0, 0, 0, 0.55);
+  --sh2-hover: rgba(0, 0, 0, 0.35);
   --eagle-invert: 0.93;
   --show-sun: 1;
-  --grain: 0.06;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg-0: #16161a;
-    --bg-1: #0e0e11;
-    --bg-2: #060608;
     --ink: #ece9e2;
-    --muted: #a09c91;
-    --shadow: rgba(0, 0, 0, 0.55);
+    --ink-muted: rgba(236, 233, 226, 0.68);
+    --hairline: rgba(236, 233, 226, 0.16);
+    --grid: rgba(236, 233, 226, 0.045);
+    --paper: #101013;
+    --paper-deep: #050507;
+    --glow: #1b1b20;
+    --glow-mid: #141417;
+    --veil-a: rgba(16, 16, 19, 0.85);
+    --veil-b: rgba(16, 16, 19, 0.75);
+    --edge: rgba(0, 0, 0, 0.35);
+    --ground: rgba(0, 0, 0, 0.55);
+    --sh1: rgba(0, 0, 0, 0.5);
+    --sh2: rgba(0, 0, 0, 0.3);
+    --sh1-hover: rgba(0, 0, 0, 0.55);
+    --sh2-hover: rgba(0, 0, 0, 0.35);
     --eagle-invert: 0.93;
     --show-sun: 1;
-    --grain: 0.06;
   }
 }
 
@@ -77,53 +121,59 @@ body {
 }
 
 body {
-  background: var(--bg-1);
-  background-image: radial-gradient(
-    120% 100% at 50% 38%,
-    var(--bg-0) 0%,
-    var(--bg-1) 55%,
-    var(--bg-2) 100%
-  );
-  color: var(--ink);
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  font-synthesis: none;
   transition: color 0.45s ease;
-}
-
-/* faint film grain */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  opacity: var(--grain);
-  pointer-events: none;
-  z-index: 5;
 }
 
 ::selection {
   background: var(--ink);
-  color: var(--bg-0);
+  color: var(--paper);
 }
 
 .home {
+  position: relative;
+  isolation: isolate;
   width: 100vw;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(20px, 5vh, 44px);
+  gap: clamp(18px, 4.2vh, 42px);
   overflow: hidden;
-  padding: clamp(18px, 4vw, 56px);
+  padding: clamp(24px, 4.5vw, 72px);
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 36%, var(--glow) 0, var(--glow-mid) 38%, var(--paper-deep) 100%);
+  background-size:
+    clamp(34px, 4vw, 54px) clamp(34px, 4vw, 54px),
+    clamp(34px, 4vw, 54px) clamp(34px, 4vw, 54px),
+    100% 100%;
+}
+
+.home::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background:
+    linear-gradient(180deg, var(--veil-a), transparent 26%, transparent 74%, var(--veil-b)),
+    radial-gradient(ellipse at center, transparent 0, transparent 58%, var(--edge) 100%);
+  pointer-events: none;
+}
+
+.home::after {
+  position: absolute;
+  inset: auto 8vw clamp(18px, 4vh, 44px);
+  z-index: -1;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--hairline), transparent);
+  pointer-events: none;
 }
 
 .parallax {
@@ -135,49 +185,60 @@ body::after {
 }
 
 .eagleWrap {
-  width: min(86vw, 1040px);
+  position: relative;
+  width: clamp(300px, 76vw, 920px);
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: enter 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform: translateY(-0.8vh);
+}
+
+.eagleWrap::after {
+  position: absolute;
+  right: 13%;
+  bottom: -9%;
+  left: 13%;
+  z-index: -1;
+  height: 18%;
+  content: "";
+  background: radial-gradient(ellipse at center, var(--ground), transparent 68%);
+  filter: blur(8px);
+  opacity: 0.55;
+  transform: scaleX(0.92);
+  pointer-events: none;
 }
 
 .eagle {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 66dvh;
+  max-height: 56dvh;
   object-fit: contain;
-  filter: invert(var(--eagle-invert)) drop-shadow(0 26px 34px var(--shadow));
-  transition: filter 0.5s ease;
-  animation: float 5.5s ease-in-out 1.2s infinite alternate;
+  opacity: 0.96;
+  filter:
+    invert(var(--eagle-invert))
+    drop-shadow(0 18px 16px var(--sh1))
+    drop-shadow(0 2px 1px var(--sh2));
+  transform-origin: 50% 50%;
+  transition: filter 0.45s ease;
   user-select: none;
   -webkit-user-drag: none;
 }
 
 .date {
-  display: block;
-  color: var(--muted);
-  font-size: clamp(13px, 1.7vw, 19px);
-  font-weight: 500;
-  letter-spacing: 0.32em;
-  padding-left: 0.32em; /* optically re-center the tracked uppercase text */
-  line-height: 1.4;
+  color: var(--ink-muted);
+  min-height: 1.3em;
+  border-top: 1px solid var(--hairline);
+  padding-top: clamp(12px, 2.2vh, 20px);
+  font-size: clamp(15px, 1.7vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
   text-align: center;
-  text-transform: uppercase;
   white-space: nowrap;
-  transition: color 0.45s ease;
-  animation: enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 220ms both;
-}
-
-.date::before {
-  content: "";
-  display: block;
-  width: 44px;
-  height: 1px;
-  margin: 0 auto 16px;
-  background: currentColor;
-  opacity: 0.45;
+  transition:
+    color 0.45s ease,
+    border-color 0.45s ease;
 }
 
 .themeToggle {
@@ -191,10 +252,10 @@ body::after {
   padding: 0;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
-  background: color-mix(in srgb, var(--bg-0) 70%, transparent);
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: var(--muted);
+  color: var(--ink-muted);
   cursor: pointer;
   z-index: 10;
   transition:
@@ -202,7 +263,6 @@ body::after {
     border-color 0.3s ease,
     background-color 0.3s ease,
     transform 0.15s ease;
-  animation: enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
 }
 
 .themeToggle:hover {
@@ -236,53 +296,101 @@ body::after {
   transform: rotate(calc(var(--show-sun) * -90deg));
 }
 
-@keyframes enter {
+@media (prefers-reduced-motion: no-preference) {
+  .eagle {
+    animation: markIn 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .date {
+    animation: dateIn 520ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .themeToggle {
+    animation: dateIn 520ms 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .eagle {
+      transition:
+        opacity 180ms ease,
+        filter 450ms ease,
+        transform 240ms ease;
+    }
+
+    .eagleWrap:hover .eagle {
+      opacity: 1;
+      filter:
+        invert(var(--eagle-invert))
+        drop-shadow(0 22px 18px var(--sh1-hover))
+        drop-shadow(0 2px 1px var(--sh2-hover));
+      transform: translateY(-2px) scale(1.01);
+    }
+  }
+}
+
+@keyframes markIn {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.985);
+    transform: translateY(10px) scale(0.985);
   }
+
+  to {
+    opacity: 0.96;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dateIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes float {
-  from {
-    transform: none;
-  }
-  to {
-    transform: translateY(-7px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .eagleWrap,
-  .eagle,
-  .date,
-  .themeToggle {
-    animation: none;
-  }
-
-  .parallax {
-    transition: none;
+    transform: translateY(0);
   }
 }
 
 @media (max-width: 520px) {
   .home {
     gap: 20px;
-    padding: 20px;
+    padding: 28px 18px;
+    background-size:
+      32px 32px,
+      32px 32px,
+      100% 100%;
   }
 
   .eagleWrap {
-    width: 92vw;
+    width: min(90vw, 520px);
+    transform: translateY(-0.35vh);
   }
 
   .date {
-    font-size: 12px;
-    letter-spacing: 0.26em;
-    padding-left: 0.26em;
+    max-width: 92vw;
+    padding-top: 12px;
+    font-size: 15px;
     white-space: normal;
+  }
+}
+
+@media (max-height: 520px) {
+  .home {
+    gap: 12px;
+    padding-block: 18px;
+  }
+
+  .eagleWrap {
+    width: min(70vw, 760px);
+  }
+
+  .eagle {
+    max-height: 48dvh;
+  }
+
+  .date {
+    padding-top: 10px;
+    font-size: 14px;
   }
 }

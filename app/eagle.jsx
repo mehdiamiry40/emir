@@ -36,7 +36,13 @@ export default function Eagle() {
   return (
     <div className="parallax" ref={ref}>
       <div className="eagleWrap">
-        <img className="eagle" src="/eagle-icon.svg" alt="Black eagle icon" />
+        <img
+          className="eagle"
+          src="/eagle-icon.svg"
+          alt="Black eagle icon"
+          decoding="async"
+          fetchPriority="high"
+        />
       </div>
     </div>
   );
