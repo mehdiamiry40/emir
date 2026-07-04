@@ -1,14 +1,14 @@
 import Eagle from "./eagle";
-import DateDisplay from "./date-display";
-import { formatToday } from "./date-utils";
 import ThemeToggle from "./theme-toggle";
 
+const DATE_LABEL = "Sunday, July 5, 2026";
+const DATE_ISO = "2026-07-05";
 const DESCRIPTION = "One eagle. One date.";
 
 export const metadata = {
-  title: "Eagle",
+  title: `Eagle — ${DATE_LABEL}`,
   openGraph: {
-    title: "Eagle",
+    title: `Eagle — ${DATE_LABEL}`,
     description: DESCRIPTION,
     url: "/",
     siteName: "Eagle",
@@ -18,28 +18,26 @@ export const metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Black eagle above today's date",
+        alt: `Black eagle above the date ${DATE_LABEL}`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eagle",
+    title: `Eagle — ${DATE_LABEL}`,
     description: DESCRIPTION,
     images: ["/og.png"],
   },
 };
 
-export const dynamic = "force-dynamic";
-
 export default function Home() {
-  const initialDate = formatToday(new Date());
-
   return (
     <main className="home" aria-label="Eagle homepage">
       <ThemeToggle />
       <Eagle />
-      <DateDisplay initialDate={initialDate} />
+      <time className="date" dateTime={DATE_ISO}>
+        {DATE_LABEL}
+      </time>
     </main>
   );
 }
