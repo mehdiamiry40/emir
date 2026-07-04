@@ -52,10 +52,10 @@ function Eagle(props) {
       {/* body, notched between the legs */}
       <path d="M520 112 C536 122 540 150 540 200 C540 260 534 302 526 330 L500 314 L474 330 C466 302 460 260 460 200 C460 150 464 122 480 112 Z" />
 
-      {/* head turned to its right (viewer's left), hooked beak, eye cut out */}
+      {/* head turned to its right (viewer's left): flat crown, brow, deep hooked beak, eye cut out */}
       <path
         fillRule="evenodd"
-        d="M518 118 L518 84 C518 66 508 58 493 58 C479 58 469 64 465 70 L450 72 C443 73 440 76 442 81 L447 89 L454 85 L463 89 C467 98 475 105 484 108 L484 118 Z M491 67.5 a3.5 3.5 0 1 0 0.01 0 Z"
+        d="M518 118 L518 76 Q518 56 495 54 L468 56 L462 62 L438 63 Q431 64 431 69 L436 84 L441 74 L450 70 L464 71 L468 78 Q476 84 482 86 L484 90 L484 118 Z M487 59.5 a3.5 3.5 0 1 0 0.01 0 Z"
       />
     </svg>
   );
