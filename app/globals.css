@@ -334,31 +334,32 @@ body {
   top: calc(16px + env(safe-area-inset-top));
   left: calc(16px + env(safe-area-inset-left));
   z-index: 10;
-  min-width: 78px;
-  height: 42px;
+  min-width: 88px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
-  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  padding: 0 18px;
+  border: 1px solid color-mix(in srgb, var(--ink) 78%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--paper) 72%, transparent);
+  background: var(--ink);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: var(--ink-muted);
-  font-size: 14px;
-  font-weight: 700;
+  color: var(--paper);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--ink) 16%, transparent);
+  font-size: 15px;
+  font-weight: 800;
   line-height: 1;
   text-decoration: none;
   transition:
-    color 0.3s ease,
-    border-color 0.3s ease,
-    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
     transform 0.15s ease;
 }
 
 .loginButton:hover {
-  color: var(--ink);
+  opacity: 0.88;
+  box-shadow: 0 12px 34px color-mix(in srgb, var(--ink) 22%, transparent);
   transform: translateY(-1px);
 }
 
@@ -729,7 +730,7 @@ body {
 
   .loginButton {
     left: calc(12px + env(safe-area-inset-left));
-    min-width: 70px;
+    min-width: 82px;
     height: 40px;
     padding-inline: 13px;
     font-size: 13px;

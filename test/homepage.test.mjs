@@ -36,7 +36,7 @@ test("prerendered homepage exposes the frozen July 5 date", () => {
   assert.match(prerenderedHome, /dateTime="2026-07-05"/);
   assert.match(prerenderedHome, />Sunday, July 5, 2026</);
   assert.match(prerenderedHome, /href="\/signin"/);
-  assert.match(prerenderedHome, />Login</);
+  assert.match(prerenderedHome, />Sign in</);
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/og\.jpg/);
   assert.doesNotMatch(prerenderedHome, /Today is|Saturday, July 4, 2026/);
 });

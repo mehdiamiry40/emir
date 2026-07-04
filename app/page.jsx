@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <>
       <Link className="loginButton" href={SIGNIN_PATH}>
-        Login
+        Sign in
       </Link>
       <ThemeToggle />
       <main className="home" aria-label="Eagle homepage">
