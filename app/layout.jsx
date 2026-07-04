@@ -1,23 +1,24 @@
 import "./globals.css";
+import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLORS } from "./site";
 
 export const metadata = {
-  metadataBase: new URL("https://www.emir.com.au"),
-  description: "Personal eagle homepage",
+  metadataBase: new URL(SITE_URL),
+  description: DESCRIPTION,
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-icon.png",
   },
   appleWebApp: {
     capable: true,
-    title: "Eagle",
+    title: SITE_NAME,
     statusBarStyle: "default",
   },
 };
 
 export const viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f7f4" },
-    { media: "(prefers-color-scheme: dark)", color: "#101013" },
+    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
   ],
 };
 

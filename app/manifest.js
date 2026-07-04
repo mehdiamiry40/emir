@@ -1,34 +1,14 @@
+import { DESCRIPTION, MANIFEST_ICONS, SITE_NAME, THEME_COLORS } from "./site";
+
 export default function manifest() {
   return {
-    name: "Eagle",
-    short_name: "Eagle",
-    description: "Personal eagle homepage",
+    name: SITE_NAME,
+    short_name: SITE_NAME,
+    description: DESCRIPTION,
     start_url: "/",
     display: "standalone",
-    background_color: "#f6f7f2",
-    theme_color: "#f6f7f2",
-    icons: [
-      {
-        src: "/favicon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-      },
-      {
-        src: "/apple-icon.png",
-        sizes: "180x180",
-        type: "image/png",
-      },
-      {
-        src: "/icon-512.png",
-        sizes: "512x512",
-        type: "image/png",
-      },
-      {
-        src: "/icon-512-maskable.png",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "maskable",
-      },
-    ],
+    background_color: THEME_COLORS.light,
+    theme_color: THEME_COLORS.light,
+    icons: MANIFEST_ICONS,
   };
 }

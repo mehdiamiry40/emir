@@ -1,32 +1,28 @@
 import Eagle from "./eagle";
 import ThemeToggle from "./theme-toggle";
-
-const DATE_LABEL = "Sunday, July 5, 2026";
-const DATE_ISO = "2026-07-05";
-const DESCRIPTION = "One eagle. One date.";
+import {
+  DATE_ISO,
+  DATE_LABEL,
+  SITE_NAME,
+  SOCIAL_DESCRIPTION,
+  SOCIAL_IMAGE,
+} from "./site";
 
 export const metadata = {
-  title: `Eagle — ${DATE_LABEL}`,
+  title: `${SITE_NAME} — ${DATE_LABEL}`,
   openGraph: {
-    title: `Eagle — ${DATE_LABEL}`,
-    description: DESCRIPTION,
+    title: `${SITE_NAME} — ${DATE_LABEL}`,
+    description: SOCIAL_DESCRIPTION,
     url: "/",
-    siteName: "Eagle",
+    siteName: SITE_NAME,
     type: "website",
-    images: [
-      {
-        url: "/og.jpg",
-        width: 1200,
-        height: 630,
-        alt: `Black eagle above the date ${DATE_LABEL}`,
-      },
-    ],
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: `Eagle — ${DATE_LABEL}`,
-    description: DESCRIPTION,
-    images: ["/og.jpg"],
+    title: `${SITE_NAME} — ${DATE_LABEL}`,
+    description: SOCIAL_DESCRIPTION,
+    images: [SOCIAL_IMAGE.url],
   },
 };
 
@@ -35,7 +31,7 @@ export default function Home() {
     <>
       <ThemeToggle />
       <main className="home" aria-label="Eagle homepage">
-        <h1 className="srOnly">Eagle</h1>
+        <h1 className="srOnly">{SITE_NAME}</h1>
         <Eagle />
         <time className="date" dateTime={DATE_ISO}>
           {DATE_LABEL}
