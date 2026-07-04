@@ -2,7 +2,10 @@ import "./globals.css";
 
 export const metadata = {
   title: "Eagle",
-  description: "One page. One eagle. Today's date.",
+  description: "Personal eagle homepage",
+  icons: {
+    icon: "/eagle-icon.svg",
+  },
 };
 
 export default function RootLayout({ children }) {

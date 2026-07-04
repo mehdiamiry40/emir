@@ -1,15 +1,20 @@
 {
-  "name": "emir",
-  "version": "1.0.0",
+  "name": "emir-eagle-homepage",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "next": "^15.3.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {},
+  "overrides": {
+    "postcss": "8.5.10"
   }
 }
