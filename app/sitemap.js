@@ -1,8 +1,10 @@
+import { DATE_ISO, SITE_URL } from "./site";
+
 export default function sitemap() {
   return [
     {
-      url: "https://www.emir.com.au",
-      lastModified: new Date(),
+      url: SITE_URL,
+      lastModified: new Date(DATE_ISO),
       changeFrequency: "yearly",
       priority: 1,
     },
