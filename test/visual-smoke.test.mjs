@@ -149,7 +149,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         dateVisible: true,
         eagleVisible: true,
         loginHref: "/signin",
-        loginText: "Login",
+        loginText: "Sign in",
         loginVisible: true,
         noHorizontalScroll: true,
         noVerticalScroll: true,
