@@ -37,7 +37,7 @@ body {
 }
 
 .eagleWrap {
-  width: min(94vw, 1180px);
+  width: min(86vw, 1040px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +68,7 @@ body {
   }
 
   .eagleWrap {
-    width: 94vw;
+    width: 88vw;
   }
 
   .date {
