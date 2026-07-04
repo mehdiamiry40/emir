@@ -1,8 +1,10 @@
+import Link from "next/link";
 import Eagle from "./eagle";
 import ThemeToggle from "./theme-toggle";
 import {
   DATE_ISO,
   DATE_LABEL,
+  SIGNIN_PATH,
   SITE_NAME,
   SOCIAL_DESCRIPTION,
   SOCIAL_IMAGE,
@@ -29,6 +31,9 @@ export const metadata = {
 export default function Home() {
   return (
     <>
+      <Link className="loginButton" href={SIGNIN_PATH}>
+        Login
+      </Link>
       <ThemeToggle />
       <main className="home" aria-label="Eagle homepage">
         <h1 className="srOnly">{SITE_NAME}</h1>

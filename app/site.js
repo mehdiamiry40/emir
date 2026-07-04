@@ -2,6 +2,7 @@ export const SITE_NAME = "Eagle";
 export const SITE_URL = "https://www.emir.com.au";
 export const DESCRIPTION = "Personal eagle homepage";
 export const SOCIAL_DESCRIPTION = "One eagle. One date.";
+export const SIGNIN_PATH = "/signin";
 
 export const DATE_LABEL = "Sunday, July 5, 2026";
 export const DATE_ISO = "2026-07-05";
