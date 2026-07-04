@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 
 export default function SignInForm() {
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const emailId = useId();
   const passwordId = useId();
 
@@ -28,14 +29,25 @@ export default function SignInForm() {
       </label>
       <label className="signinField" htmlFor={passwordId}>
         <span>Password</span>
-        <input
-          id={passwordId}
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          placeholder="Password"
-          required
-        />
+        <span className="signinInputWrap">
+          <input
+            id={passwordId}
+            name="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            placeholder="Password"
+            required
+          />
+          <button
+            type="button"
+            className="signinReveal"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-pressed={showPassword}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+        </span>
       </label>
       <button className="signinSubmit" type="submit">
         Sign in

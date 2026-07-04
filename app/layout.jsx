@@ -1,4 +1,5 @@
 import "./globals.css";
+import Spotlight from "./spotlight";
 import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLORS } from "./site";
 
 export const metadata = {
@@ -30,7 +31,10 @@ export default function RootLayout({ children }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Spotlight />
+      </body>
     </html>
   );
 }
