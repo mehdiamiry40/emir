@@ -23,6 +23,12 @@ export default function manifest() {
         sizes: "512x512",
         type: "image/png",
       },
+      {
+        src: "/icon-512-maskable.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
+      },
     ],
   };
 }

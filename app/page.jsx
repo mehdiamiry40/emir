@@ -15,7 +15,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/og.png",
+        url: "/og.jpg",
         width: 1200,
         height: 630,
         alt: `Black eagle above the date ${DATE_LABEL}`,
@@ -26,18 +26,21 @@ export const metadata = {
     card: "summary_large_image",
     title: `Eagle — ${DATE_LABEL}`,
     description: DESCRIPTION,
-    images: ["/og.png"],
+    images: ["/og.jpg"],
   },
 };
 
 export default function Home() {
   return (
-    <main className="home" aria-label="Eagle homepage">
+    <>
       <ThemeToggle />
-      <Eagle />
-      <time className="date" dateTime={DATE_ISO}>
-        {DATE_LABEL}
-      </time>
-    </main>
+      <main className="home" aria-label="Eagle homepage">
+        <h1 className="srOnly">Eagle</h1>
+        <Eagle />
+        <time className="date" dateTime={DATE_ISO}>
+          {DATE_LABEL}
+        </time>
+      </main>
+    </>
   );
 }
