@@ -1,3 +1,6 @@
+import Eagle from "./eagle";
+import ThemeToggle from "./theme-toggle";
+
 const DATE_LABEL = "Saturday, July 4, 2026";
 const DATE_ISO = "2026-07-04";
 
@@ -8,9 +11,8 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="home" aria-label="Eagle homepage">
-      <div className="eagleWrap">
-        <img className="eagle" src="/eagle-icon.svg" alt="Black eagle icon" />
-      </div>
+      <ThemeToggle />
+      <Eagle />
       <time className="date" dateTime={DATE_ISO}>
         {DATE_LABEL}
       </time>
