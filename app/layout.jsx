@@ -4,7 +4,7 @@ export const metadata = {
   title: "Eagle",
   description: "Personal eagle homepage",
   icons: {
-    icon: "/eagle-icon.svg",
+    icon: "/favicon.svg",
   },
 };
 
