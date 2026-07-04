@@ -57,8 +57,35 @@ body {
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.1;
+  min-height: 1.1em; /* reserve space so the date doesn't shift layout when it mounts */
   text-align: center;
   white-space: nowrap;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.eagleWrap {
+  animation: rise 700ms ease-out both;
+}
+
+.date {
+  animation: rise 700ms ease-out 150ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eagleWrap,
+  .date {
+    animation: none;
+  }
 }
 
 @media (max-width: 520px) {

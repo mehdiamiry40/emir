@@ -1,11 +1,15 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Eagle",
   description: "Personal eagle homepage",
   icons: {
     icon: "/favicon.svg",
+    apple: "/apple-icon.png",
   },
+};
+
+export const viewport = {
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }) {

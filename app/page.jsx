@@ -45,6 +45,7 @@ export default function Home() {
 
   return (
     <main className="home" aria-label="Eagle homepage">
+      <title>{today ? `Eagle — ${today.label}` : "Eagle"}</title>
       <div className="eagleWrap">
         <img className="eagle" src="/eagle-icon.svg" alt="Black eagle icon" />
       </div>
