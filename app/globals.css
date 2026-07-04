@@ -1,48 +1,105 @@
+:root {
+  color-scheme: light;
+  background: #ffffff;
+  color: #0b0b0b;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
 
 html,
 body {
+  width: 100%;
   height: 100%;
   margin: 0;
   overflow: hidden;
 }
 
 body {
-  background: #f4f2ec;
-  color: #141414;
-  font-family: Georgia, "Times New Roman", serif;
+  background: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #0e0e0e;
-    color: #ececec;
-  }
-}
-
-.stage {
-  height: 100dvh;
+.home {
   width: 100vw;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1rem, 4vh, 3rem);
+  gap: clamp(18px, 4vh, 36px);
+  overflow: hidden;
+  padding: clamp(18px, 4vw, 56px);
+}
+
+.eagleWrap {
+  width: min(86vw, 1040px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .eagle {
-  width: min(90vw, 120vh);
-  height: auto;
   display: block;
+  width: 100%;
+  height: auto;
+  max-height: 68dvh;
+  object-fit: contain;
 }
 
 .date {
-  margin: 0;
-  font-size: clamp(1.1rem, 2.6vw, 1.8rem);
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
+  color: #111111;
+  font-size: clamp(18px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.1;
+  min-height: 1.1em; /* reserve space so the date doesn't shift layout when it mounts */
   text-align: center;
-  padding-left: 0.35em; /* offset letter-spacing so text is optically centered */
+  white-space: nowrap;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.eagleWrap {
+  animation: rise 700ms ease-out both;
+}
+
+.date {
+  animation: rise 700ms ease-out 150ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eagleWrap,
+  .date {
+    animation: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .home {
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .eagleWrap {
+    width: 88vw;
+  }
+
+  .date {
+    font-size: 18px;
+    white-space: normal;
+  }
 }
