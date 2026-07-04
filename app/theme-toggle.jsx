@@ -11,6 +11,20 @@ function storedTheme() {
   }
 }
 
+function systemTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
+function currentTheme() {
+  const domTheme = document.documentElement.dataset.theme;
+  return (
+    storedTheme() ??
+    (domTheme === "light" || domTheme === "dark" ? domTheme : systemTheme())
+  );
+}
+
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(null);
 
@@ -18,7 +32,6 @@ export default function ThemeToggle() {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     setTheme(storedTheme() ?? (mq.matches ? "dark" : "light"));
 
-    // track live OS theme changes while no manual choice is stored
     const onSystemChange = () => {
       if (!storedTheme()) setTheme(mq.matches ? "dark" : "light");
     };
@@ -27,7 +40,8 @@ export default function ThemeToggle() {
   }, []);
 
   const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
+    const activeTheme = theme ?? currentTheme();
+    const next = activeTheme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.dataset.theme = next;
     try {
@@ -40,9 +54,15 @@ export default function ThemeToggle() {
       type="button"
       className="themeToggle"
       onClick={toggle}
-      aria-pressed={theme ? theme === "dark" : undefined}
+      aria-pressed={
+        theme === "dark" ? true : theme === "light" ? false : undefined
+      }
       aria-label={
-        theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        theme == null
+          ? "Toggle theme"
+          : theme === "dark"
+            ? "Switch to light mode"
+            : "Switch to dark mode"
       }
     >
       <svg

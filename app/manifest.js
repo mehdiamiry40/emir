@@ -5,8 +5,8 @@ export default function manifest() {
     description: "Personal eagle homepage",
     start_url: "/",
     display: "standalone",
-    background_color: "#f7f7f4",
-    theme_color: "#f7f7f4",
+    background_color: "#f6f7f2",
+    theme_color: "#f6f7f2",
     icons: [
       {
         src: "/favicon.svg",
