@@ -92,7 +92,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
     const state = await page.evaluate(() => {
       const eagle = document.querySelector(".eagle");
       const date = document.querySelector(".date");
-      const login = document.querySelector(".loginButton");
+      const login = document.querySelector(".signinCta");
 
       function rectFor(element) {
         const rect = element?.getBoundingClientRect();

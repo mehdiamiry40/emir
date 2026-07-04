@@ -31,9 +31,6 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <Link className="loginButton" href={SIGNIN_PATH}>
-        Sign in
-      </Link>
       <ThemeToggle />
       <main className="home" aria-label="Eagle homepage">
         <h1 className="srOnly">{SITE_NAME}</h1>
@@ -41,6 +38,9 @@ export default function Home() {
         <time className="date" dateTime={DATE_ISO}>
           {DATE_LABEL}
         </time>
+        <Link className="signinCta" href={SIGNIN_PATH}>
+          Sign in
+        </Link>
       </main>
     </>
   );
