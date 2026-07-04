@@ -15,10 +15,15 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState(null);
 
   useEffect(() => {
-    const system = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-    setTheme(storedTheme() ?? system);
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    setTheme(storedTheme() ?? (mq.matches ? "dark" : "light"));
+
+    // track live OS theme changes while no manual choice is stored
+    const onSystemChange = () => {
+      if (!storedTheme()) setTheme(mq.matches ? "dark" : "light");
+    };
+    mq.addEventListener("change", onSystemChange);
+    return () => mq.removeEventListener("change", onSystemChange);
   }, []);
 
   const toggle = () => {

@@ -296,6 +296,81 @@ body {
   transform: rotate(calc(var(--show-sun) * -90deg));
 }
 
+.notFoundCode {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(64px, 14vw, 160px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.notFoundText {
+  border-top: none;
+  padding-top: 0;
+}
+
+.homeLink {
+  color: var(--ink-muted);
+  font-size: clamp(15px, 1.7vw, 20px);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 2px;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.homeLink:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.homeLink:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --ink-muted: var(--ink);
+    --hairline: color-mix(in srgb, var(--ink) 55%, transparent);
+    --grid: transparent;
+  }
+}
+
+@media print {
+  html,
+  body {
+    overflow: visible;
+  }
+
+  :root {
+    --ink: #000;
+    --ink-muted: #333;
+  }
+
+  .home {
+    height: auto;
+    min-height: 90vh;
+    background: #fff;
+  }
+
+  .home::before,
+  .home::after,
+  .eagleWrap::after,
+  .themeToggle {
+    display: none;
+  }
+
+  .eagle {
+    filter: none;
+    animation: none;
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .eagle {
     animation: markIn 720ms cubic-bezier(0.16, 1, 0.3, 1) both;

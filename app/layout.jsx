@@ -1,10 +1,16 @@
 import "./globals.css";
 
 export const metadata = {
+  metadataBase: new URL("https://www.emir.com.au"),
   description: "Personal eagle homepage",
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Eagle",
+    statusBarStyle: "default",
   },
 };
 
