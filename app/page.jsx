@@ -1,8 +1,8 @@
 import Eagle from "./eagle";
 import ThemeToggle from "./theme-toggle";
 
-const DATE_LABEL = "Saturday, July 4, 2026";
-const DATE_ISO = "2026-07-04";
+const DATE_LABEL = "Sunday, July 5, 2026";
+const DATE_ISO = "2026-07-05";
 
 const DESCRIPTION = "One eagle. One date.";
 
