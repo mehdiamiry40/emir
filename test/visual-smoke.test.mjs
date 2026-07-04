@@ -69,7 +69,7 @@ async function startServer() {
   throw new Error(`Timed out waiting for next start:\n${output}`);
 }
 
-test("homepage is visible and non-scrollable on desktop and mobile", async (t) => {
+test("homepage and sign-in page are visible and non-scrollable", async (t) => {
   const { server, url } = await startServer();
   t.after(async () => {
     server.kill();
@@ -92,6 +92,7 @@ test("homepage is visible and non-scrollable on desktop and mobile", async (t) =
     const state = await page.evaluate(() => {
       const eagle = document.querySelector(".eagle");
       const date = document.querySelector(".date");
+      const login = document.querySelector(".loginButton");
 
       function rectFor(element) {
         const rect = element?.getBoundingClientRect();
@@ -121,12 +122,16 @@ test("homepage is visible and non-scrollable on desktop and mobile", async (t) =
 
       const eagleRect = rectFor(eagle);
       const dateRect = rectFor(date);
+      const loginRect = rectFor(login);
 
       return {
         dateTime: date?.getAttribute("datetime"),
         dateText: date?.textContent?.trim(),
         eagleVisible: inViewport(eagleRect),
         dateVisible: inViewport(dateRect),
+        loginHref: login?.getAttribute("href"),
+        loginText: login?.textContent?.trim(),
+        loginVisible: inViewport(loginRect),
         noHorizontalScroll:
           document.documentElement.scrollWidth <= window.innerWidth + 1 &&
           document.body.scrollWidth <= window.innerWidth + 1,
@@ -143,10 +148,83 @@ test("homepage is visible and non-scrollable on desktop and mobile", async (t) =
         dateText: "Sunday, July 5, 2026",
         dateVisible: true,
         eagleVisible: true,
+        loginHref: "/signin",
+        loginText: "Login",
+        loginVisible: true,
         noHorizontalScroll: true,
         noVerticalScroll: true,
       },
       `${viewport.label} layout should keep the eagle/date visible without scroll`,
+    );
+
+    await page.goto(`${url}/signin`, { waitUntil: "load" });
+
+    const signInState = await page.evaluate(() => {
+      const panel = document.querySelector(".signinPanel");
+      const email = document.querySelector('input[name="email"]');
+      const password = document.querySelector('input[name="password"]');
+      const submit = document.querySelector(".signinSubmit");
+      const home = document.querySelector(".loginButton");
+
+      function rectFor(element) {
+        const rect = element?.getBoundingClientRect();
+        return rect
+          ? {
+              bottom: rect.bottom,
+              height: rect.height,
+              left: rect.left,
+              right: rect.right,
+              top: rect.top,
+              width: rect.width,
+            }
+          : null;
+      }
+
+      function inViewport(rect) {
+        return (
+          rect &&
+          rect.width > 0 &&
+          rect.height > 0 &&
+          rect.left >= -1 &&
+          rect.top >= -1 &&
+          rect.right <= window.innerWidth + 1 &&
+          rect.bottom <= window.innerHeight + 1
+        );
+      }
+
+      return {
+        emailVisible: inViewport(rectFor(email)),
+        homeHref: home?.getAttribute("href"),
+        homeText: home?.textContent?.trim(),
+        panelVisible: inViewport(rectFor(panel)),
+        passwordVisible: inViewport(rectFor(password)),
+        submitText: submit?.textContent?.trim(),
+        submitVisible: inViewport(rectFor(submit)),
+        title: document.querySelector(".signinTitle")?.textContent?.trim(),
+        noHorizontalScroll:
+          document.documentElement.scrollWidth <= window.innerWidth + 1 &&
+          document.body.scrollWidth <= window.innerWidth + 1,
+        noVerticalScroll:
+          document.documentElement.scrollHeight <= window.innerHeight + 1 &&
+          document.body.scrollHeight <= window.innerHeight + 1,
+      };
+    });
+
+    assert.deepEqual(
+      signInState,
+      {
+        emailVisible: true,
+        homeHref: "/",
+        homeText: "Home",
+        noHorizontalScroll: true,
+        noVerticalScroll: true,
+        panelVisible: true,
+        passwordVisible: true,
+        submitText: "Sign in",
+        submitVisible: true,
+        title: "Sign in",
+      },
+      `${viewport.label} sign-in layout should stay visible without scroll`,
     );
   }
 });

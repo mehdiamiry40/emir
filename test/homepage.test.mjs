@@ -12,6 +12,10 @@ const prerenderedNotFound = await readFile(
   new URL("../.next/server/app/_not-found.html", import.meta.url),
   "utf8",
 );
+const prerenderedSignIn = await readFile(
+  new URL("../.next/server/app/signin.html", import.meta.url),
+  "utf8",
+);
 const prerenderedManifest = JSON.parse(
   await readFile(
     new URL("../.next/server/app/manifest.webmanifest.body", import.meta.url),
@@ -31,6 +35,8 @@ test("prerendered homepage exposes the frozen July 5 date", () => {
   assert.match(prerenderedHome, /<title>Eagle — Sunday, July 5, 2026<\/title>/);
   assert.match(prerenderedHome, /dateTime="2026-07-05"/);
   assert.match(prerenderedHome, />Sunday, July 5, 2026</);
+  assert.match(prerenderedHome, /href="\/signin"/);
+  assert.match(prerenderedHome, />Login</);
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/og\.jpg/);
   assert.doesNotMatch(prerenderedHome, /Today is|Saturday, July 4, 2026/);
 });
@@ -39,6 +45,15 @@ test("prerendered 404 page exposes the not-found title and content", () => {
   assert.match(prerenderedNotFound, /<title>Eagle — Not found<\/title>/);
   assert.match(prerenderedNotFound, /<h1 class="notFoundCode">404<\/h1>/);
   assert.match(prerenderedNotFound, />This page has flown away\.</);
+});
+
+test("prerendered sign-in page exposes the expected form", () => {
+  assert.match(prerenderedSignIn, /<title>Eagle — Sign in<\/title>/);
+  assert.match(prerenderedSignIn, /aria-label="Sign in"/);
+  assert.match(prerenderedSignIn, /<h1 class="signinTitle" id="signin-title">Sign in<\/h1>/);
+  assert.match(prerenderedSignIn, /name="email"/);
+  assert.match(prerenderedSignIn, /name="password"/);
+  assert.match(prerenderedSignIn, />Home</);
 });
 
 test("manifest uses the current light background color", () => {
