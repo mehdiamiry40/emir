@@ -1,30 +1,27 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useActionState, useId, useState } from "react";
+import { signIn } from "./actions";
+
+const initialState = { error: null };
 
 export default function SignInForm() {
-  const [message, setMessage] = useState("");
+  const [state, formAction, pending] = useActionState(signIn, initialState);
   const [showPassword, setShowPassword] = useState(false);
   const emailId = useId();
   const passwordId = useId();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setMessage("Sign in is not connected yet.");
-  };
-
   return (
-    <form className="signinForm" onSubmit={handleSubmit}>
+    <form className="signinForm" action={formAction}>
       <label className="signinField" htmlFor={emailId}>
         <span>Email</span>
         <input
           id={emailId}
           name="email"
           type="email"
-          autoComplete="email"
+          autoComplete="username"
           inputMode="email"
           placeholder="you@example.com"
-          required
         />
       </label>
       <label className="signinField" htmlFor={passwordId}>
@@ -49,12 +46,12 @@ export default function SignInForm() {
           </button>
         </span>
       </label>
-      <button className="signinSubmit" type="submit">
-        Sign in
+      <button className="signinSubmit" type="submit" disabled={pending}>
+        {pending ? "Signing in…" : "Sign in"}
       </button>
-      {message ? (
-        <p className="signinStatus" aria-live="polite">
-          {message}
+      {state?.error ? (
+        <p className="signinStatus" role="alert">
+          {state.error}
         </p>
       ) : null}
     </form>

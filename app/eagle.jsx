@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Eagle() {
   const ref = useRef(null);
+  const [flapping, setFlapping] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -33,15 +34,24 @@ export default function Eagle() {
     };
   }, []);
 
+  const flap = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setFlapping(true);
+  };
+
   return (
     <div className="parallax" ref={ref}>
       <div className="eagleWrap">
         <img
-          className="eagle"
+          className={flapping ? "eagle flap" : "eagle"}
           src="/eagle-icon.svg"
           alt="Black eagle icon"
           decoding="async"
           fetchPriority="high"
+          onClick={flap}
+          onAnimationEnd={(e) => {
+            if (e.animationName === "flap") setFlapping(false);
+          }}
         />
       </div>
     </div>
