@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { THEME_COLORS } from "./site";
 
 function storedTheme() {
   try {
@@ -25,6 +26,16 @@ function currentTheme() {
   );
 }
 
+function applyTheme(next) {
+  document.documentElement.dataset.theme = next;
+  try {
+    localStorage.setItem("theme", next);
+  } catch {}
+  document
+    .querySelectorAll('meta[name="theme-color"]')
+    .forEach((m) => m.setAttribute("content", THEME_COLORS[next]));
+}
+
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(null);
 
@@ -39,14 +50,49 @@ export default function ThemeToggle() {
     return () => mq.removeEventListener("change", onSystemChange);
   }, []);
 
-  const toggle = () => {
+  const toggle = (event) => {
     const activeTheme = theme ?? currentTheme();
     const next = activeTheme === "dark" ? "light" : "dark";
     setTheme(next);
-    document.documentElement.dataset.theme = next;
-    try {
-      localStorage.setItem("theme", next);
-    } catch {}
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (typeof document.startViewTransition !== "function" || reduceMotion) {
+      applyTheme(next);
+      return;
+    }
+
+    // circular reveal radiating from the toggle button
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const root = document.documentElement;
+    root.classList.add("themeSnap");
+    const vt = document.startViewTransition(() => applyTheme(next));
+    vt.ready
+      .then(() => {
+        root.animate(
+          {
+            clipPath: [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${radius}px at ${x}px ${y}px)`,
+            ],
+          },
+          {
+            duration: 480,
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+            pseudoElement: "::view-transition-new(root)",
+          }
+        );
+      })
+      .catch(() => {});
+    vt.finished.finally(() => root.classList.remove("themeSnap"));
   };
 
   return (
