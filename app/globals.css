@@ -203,7 +203,7 @@ body {
 
 .eagleWrap {
   position: relative;
-  width: min(clamp(310px, 72vw, 880px), calc(100dvh * 1.5));
+  width: min(clamp(217px, 50vw, 616px), calc(100dvh * 1.05));
   aspect-ratio: 237 / 57;
   display: flex;
   align-items: center;
@@ -240,7 +240,7 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 56dvh;
+  max-height: 39dvh;
   object-fit: contain;
   opacity: 0.96;
   filter:
@@ -899,7 +899,7 @@ html.themeSnap *::after {
   }
 
   .eagleWrap {
-    width: min(88vw, 520px);
+    width: min(62vw, 364px);
     transform: translateY(-0.35vh);
   }
 
@@ -963,11 +963,11 @@ html.themeSnap *::after {
   }
 
   .eagleWrap {
-    width: min(70vw, 760px);
+    width: min(49vw, 532px);
   }
 
   .eagle {
-    max-height: 48dvh;
+    max-height: 34dvh;
   }
 
   .date {

@@ -2,12 +2,7 @@ import Link from "next/link";
 import Eagle from "./eagle";
 import ThemeToggle from "./theme-toggle";
 import { getDate } from "../lib/date";
-import {
-  SIGNIN_PATH,
-  SITE_NAME,
-  SOCIAL_DESCRIPTION,
-  SOCIAL_IMAGE,
-} from "./site";
+import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
 
 export const revalidate = 60;
 
@@ -21,13 +16,11 @@ export async function generateMetadata() {
       url: "/",
       siteName: SITE_NAME,
       type: "website",
-      images: [SOCIAL_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: `${SITE_NAME} — ${date.label}`,
       description: SOCIAL_DESCRIPTION,
-      images: [SOCIAL_IMAGE.url],
     },
   };
 }
