@@ -1,10 +1,12 @@
-import { DATE_ISO, SITE_URL } from "./site";
+import { getDate } from "../lib/date";
+import { SITE_URL } from "./site";
 
-export default function sitemap() {
+export default async function sitemap() {
+  const date = await getDate();
   return [
     {
       url: SITE_URL,
-      lastModified: new Date(DATE_ISO),
+      lastModified: new Date(date.iso),
       changeFrequency: "yearly",
       priority: 1,
     },

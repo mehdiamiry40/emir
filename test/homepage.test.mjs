@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 
 const siteSource = await readFile(new URL("../app/site.js", import.meta.url), "utf8");
 const pageSource = await readFile(new URL("../app/page.jsx", import.meta.url), "utf8");
+const dateLibSource = await readFile(new URL("../lib/date.js", import.meta.url), "utf8");
 const prerenderedHome = await readFile(
   new URL("../.next/server/app/index.html", import.meta.url),
   "utf8",
@@ -26,9 +27,16 @@ const prerenderedManifest = JSON.parse(
 test("homepage keeps the requested frozen July 5 date", () => {
   assert.match(siteSource, /DATE_LABEL\s*=\s*"Sunday, July 5, 2026"/);
   assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-05"/);
-  assert.match(pageSource, /dateTime=\{DATE_ISO\}/);
-  assert.match(pageSource, /\{DATE_LABEL\}/);
-  assert.doesNotMatch(pageSource, /DATE_LABEL\s*=|DATE_ISO\s*=|new Date\(|formatToday|DateDisplay|force-dynamic/);
+  // the page renders the fixed date resolved by lib/date.js
+  assert.match(pageSource, /getDate\(\)/);
+  assert.match(pageSource, /dateTime=\{date\.iso\}/);
+  assert.match(pageSource, /\{date\.label\}/);
+  // no clocks or live-date machinery: the date must never advance on its own
+  assert.doesNotMatch(
+    pageSource,
+    /new Date\(|formatToday|DateDisplay|force-dynamic|setInterval|setTimeout/,
+  );
+  assert.doesNotMatch(dateLibSource, /new Date\(\)/);
 });
 
 test("prerendered homepage exposes the frozen July 5 date", () => {

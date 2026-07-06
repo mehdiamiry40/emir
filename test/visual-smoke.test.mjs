@@ -76,7 +76,9 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
     await once(server, "exit").catch(() => {});
   });
 
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({
+    executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined,
+  });
   t.after(() => browser.close());
 
   const page = await browser.newPage();
