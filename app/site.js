@@ -4,19 +4,12 @@ export const DESCRIPTION = "Personal eagle homepage";
 export const SOCIAL_DESCRIPTION = "One eagle. One date.";
 export const SIGNIN_PATH = "/signin";
 
-export const DATE_LABEL = "Sunday, July 5, 2026";
-export const DATE_ISO = "2026-07-05";
+export const DATE_LABEL = "Monday, July 6, 2026";
+export const DATE_ISO = "2026-07-06";
 
 export const THEME_COLORS = {
   light: "#f6f7f2",
   dark: "#101013",
-};
-
-export const SOCIAL_IMAGE = {
-  url: "/og.jpg",
-  width: 1200,
-  height: 630,
-  alt: `Black eagle above the date ${DATE_LABEL}`,
 };
 
 export const MANIFEST_ICONS = [

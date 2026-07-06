@@ -14,6 +14,9 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   description: DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-icon.png",
