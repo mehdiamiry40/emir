@@ -1,7 +1,6 @@
 import "./globals.css";
 import { Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import Spotlight from "./spotlight";
 import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLORS } from "./site";
 
 const spaceGrotesk = Space_Grotesk({
@@ -37,6 +36,7 @@ export const viewport = {
 
 const themeInit = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 
+/** @param {{ children: import("react").ReactNode }} props */
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={spaceGrotesk.variable} suppressHydrationWarning>
@@ -45,7 +45,6 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         {children}
-        <Spotlight />
         <Analytics />
       </body>
     </html>

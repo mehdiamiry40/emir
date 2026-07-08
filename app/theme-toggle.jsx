@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { THEME_COLORS } from "./site";
 
+/** @typedef {"light" | "dark"} Theme */
+
+/** @returns {Theme | null} */
 function storedTheme() {
   try {
     const t = localStorage.getItem("theme");
@@ -12,12 +15,14 @@ function storedTheme() {
   }
 }
 
+/** @returns {Theme} */
 function systemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
 }
 
+/** @returns {Theme} */
 function currentTheme() {
   const domTheme = document.documentElement.dataset.theme;
   return (
@@ -26,6 +31,7 @@ function currentTheme() {
   );
 }
 
+/** @param {Theme} next */
 function applyTheme(next) {
   document.documentElement.dataset.theme = next;
   try {
@@ -37,7 +43,7 @@ function applyTheme(next) {
 }
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState(null);
+  const [theme, setTheme] = useState(/** @type {Theme | null} */ (null));
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -50,6 +56,7 @@ export default function ThemeToggle() {
     return () => mq.removeEventListener("change", onSystemChange);
   }, []);
 
+  /** @param {import("react").MouseEvent<HTMLButtonElement>} event */
   const toggle = (event) => {
     const activeTheme = theme ?? currentTheme();
     const next = activeTheme === "dark" ? "light" : "dark";

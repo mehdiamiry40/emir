@@ -698,21 +698,6 @@ body {
   caret-color: var(--ink);
 }
 
-/* cursor spotlight — faint sheen following the pointer */
-.spotlight {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(
-    260px circle at var(--mx, 50%) var(--my, 40%),
-    color-mix(in srgb, var(--ink) 5%, transparent),
-    transparent 70%
-  );
-  transition: opacity 0.5s ease;
-}
-
 /* theme switch: circular reveal via the View Transitions API */
 ::view-transition-old(root),
 ::view-transition-new(root) {
