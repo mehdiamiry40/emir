@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   --paper: #2a0010;
   --paper-deep: #080003;
   --paper-mid: #52001c;
@@ -12,7 +12,6 @@
   --accent-red: #b20a3d;
   --eagle-filter: invert(78%) sepia(43%) saturate(565%) hue-rotate(3deg)
     brightness(104%) contrast(92%);
-  --show-sun: 0;
   background: var(--paper);
   color: var(--ink);
   font-family:
@@ -22,42 +21,6 @@
     ui-sans-serif,
     system-ui,
     sans-serif;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --paper: #080003;
-  --paper-deep: #020001;
-  --paper-mid: #320011;
-  --paper-glow: #6e0026;
-  --ink: #fffaf2;
-  --ink-muted: rgba(255, 250, 242, 0.62);
-  --hairline: rgba(248, 214, 128, 0.24);
-  --accent: #e1bf68;
-  --accent-hot: #ffecad;
-  --accent-red: #94002e;
-  --eagle-filter: invert(81%) sepia(51%) saturate(447%) hue-rotate(3deg)
-    brightness(108%) contrast(91%);
-  --show-sun: 1;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --paper: #080003;
-    --paper-deep: #020001;
-    --paper-mid: #320011;
-    --paper-glow: #6e0026;
-    --ink: #fffaf2;
-    --ink-muted: rgba(255, 250, 242, 0.62);
-    --hairline: rgba(248, 214, 128, 0.24);
-    --accent: #e1bf68;
-    --accent-hot: #ffecad;
-    --accent-red: #94002e;
-    --eagle-filter: invert(81%) sepia(51%) saturate(447%) hue-rotate(3deg)
-      brightness(108%) contrast(91%);
-    --show-sun: 1;
-  }
 }
 
 * {
@@ -81,9 +44,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   font-synthesis: none;
-  transition:
-    background-color 0.4s ease,
-    color 0.4s ease;
 }
 
 ::selection {
@@ -274,27 +234,6 @@ body {
   text-transform: uppercase;
 }
 
-.dateWeekday {
-  display: block;
-  color: var(--ink);
-  font-weight: 300;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35), 0 18px 34px rgba(0, 0, 0, 0.28);
-}
-
-.dateRest {
-  display: block;
-  background:
-    linear-gradient(100deg, #7c621f 0%, #f6e7a7 19%, #b99435 36%, #fff4bc 54%, #8b6d22 76%, #f0d06b 100%);
-  color: var(--accent);
-  -webkit-background-clip: text;
-  background-clip: text;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.74),
-    0 3px 0 rgba(88, 62, 12, 0.4),
-    0 20px 36px rgba(0, 0, 0, 0.42);
-  -webkit-text-fill-color: transparent;
-}
-
 .footerDate {
   display: block;
   color: var(--accent-hot);
@@ -363,54 +302,6 @@ body {
 
 .topSignin::after {
   margin-left: 8px;
-}
-
-.themeToggle {
-  position: fixed;
-  top: clamp(18px, 4.2vw, 60px);
-  right: clamp(24px, 5vw, 72px);
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--hairline);
-  background: rgba(20, 0, 8, 0.72);
-  color: var(--ink-muted);
-  backdrop-filter: blur(14px);
-  cursor: pointer;
-  z-index: 10;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease,
-    background-color 0.4s ease;
-}
-
-.themeToggle:hover {
-  color: var(--accent-hot);
-  border-color: rgba(255, 224, 142, 0.7);
-}
-
-.themeToggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.themeToggle svg {
-  grid-area: 1 / 1;
-  transition:
-    opacity 0.3s ease,
-    transform 0.4s ease;
-}
-
-.iconSun {
-  opacity: var(--show-sun);
-  transform: rotate(calc((1 - var(--show-sun)) * 90deg));
-}
-
-.iconMoon {
-  opacity: calc(1 - var(--show-sun));
-  transform: rotate(calc(var(--show-sun) * -90deg));
 }
 
 .srOnly {
@@ -705,29 +596,6 @@ body {
   outline-offset: 2px;
 }
 
-/* theme switch: circular reveal via the View Transitions API */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 2;
-}
-
-/* suppress per-property transitions while the reveal snapshot animates */
-html.themeSnap,
-html.themeSnap *,
-html.themeSnap *::before,
-html.themeSnap *::after {
-  transition: none !important;
-}
-
 @media (prefers-contrast: more) {
   :root {
     --ink-muted: var(--ink);
@@ -742,9 +610,7 @@ html.themeSnap *::after {
     background: #fff;
   }
 
-  :root,
-  :root[data-theme="dark"],
-  :root:not([data-theme="light"]) {
+  :root {
     --paper: #fff;
     --ink: #000;
     --ink-muted: #333;
@@ -758,8 +624,14 @@ html.themeSnap *::after {
     min-height: 90vh;
   }
 
-  .themeToggle {
+  /* the on-screen eagle is a background mask, which doesn't print —
+     show the plain img instead */
+  .eagleWrap::after {
     display: none;
+  }
+
+  .eagle {
+    opacity: 1;
   }
 
   .eagle,
@@ -783,7 +655,6 @@ html.themeSnap *::after {
 
   .topRow,
   .bottomRow,
-  .themeToggle,
   .loginButton {
     animation: fadeUp 500ms 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
@@ -888,11 +759,6 @@ html.themeSnap *::after {
 
   .topSignin::after {
     margin-left: 6px;
-  }
-
-  .themeToggle {
-    top: 14px;
-    right: 18px;
   }
 
   .loginButton {

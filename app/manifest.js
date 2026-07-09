@@ -1,4 +1,4 @@
-import { DESCRIPTION, MANIFEST_ICONS, SITE_NAME, THEME_COLORS } from "./site";
+import { DESCRIPTION, MANIFEST_ICONS, SITE_NAME, THEME_COLOR } from "./site";
 
 export default function manifest() {
   return {
@@ -7,8 +7,8 @@ export default function manifest() {
     description: DESCRIPTION,
     start_url: "/",
     display: "standalone",
-    background_color: THEME_COLORS.light,
-    theme_color: THEME_COLORS.light,
+    background_color: THEME_COLOR,
+    theme_color: THEME_COLOR,
     icons: MANIFEST_ICONS,
   };
 }

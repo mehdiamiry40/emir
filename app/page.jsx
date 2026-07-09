@@ -32,14 +32,14 @@ export default async function Home() {
       <main className="home homePoster" aria-label="Eagle homepage">
         <h1 className="srOnly">{SITE_NAME}</h1>
         <header className="topRow">
-          <span className="wordmark">EMIR</span>
+          <span className="wordmark">{SITE_NAME}</span>
           <Eagle />
           <Link className="signinCta topSignin" href={SIGNIN_PATH}>
             Sign in
           </Link>
         </header>
         <div className="hero">
-          <blockquote className="heroQuote">Rise above the noise.</blockquote>
+          <p className="heroQuote">Rise above the noise.</p>
         </div>
         <footer className="bottomRow">
           <span>emir.com.au</span>
