@@ -15,7 +15,7 @@ export default function Eagle() {
       <img
         className={flapping ? "eagle flap" : "eagle"}
         src="/eagle-icon.svg"
-        alt="Black eagle icon"
+        alt="Gold eagle icon"
         decoding="async"
         fetchPriority="high"
         onClick={flap}

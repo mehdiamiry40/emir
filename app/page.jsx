@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Eagle from "./eagle";
-import ThemeToggle from "./theme-toggle";
 import { getDate } from "../lib/date";
 import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
 
@@ -27,29 +26,26 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const date = await getDate();
-  const [weekday, ...rest] = date.label.split(" ");
 
   return (
     <>
-      <ThemeToggle />
       <main className="home homePoster" aria-label="Eagle homepage">
         <h1 className="srOnly">{SITE_NAME}</h1>
-        <header className="topRow" aria-hidden="true">
-          <span className="wordmark">{SITE_NAME}</span>
-        </header>
-        <div className="hero">
+        <header className="topRow">
+          <span className="wordmark">EMIR</span>
           <Eagle />
-          <time className="date" dateTime={date.iso}>
-            <span className="dateWeekday">{weekday}</span>{" "}
-            <span className="dateRest">{rest.join(" ")}</span>
-          </time>
-          <Link className="signinCta" href={SIGNIN_PATH}>
+          <Link className="signinCta topSignin" href={SIGNIN_PATH}>
             Sign in
           </Link>
+        </header>
+        <div className="hero">
+          <blockquote className="heroQuote">Rise above the noise.</blockquote>
         </div>
-        <footer className="bottomRow" aria-hidden="true">
+        <footer className="bottomRow">
           <span>emir.com.au</span>
-          <span>MMXXVI</span>
+          <time className="date footerDate" dateTime={date.iso}>
+            {date.label}
+          </time>
         </footer>
       </main>
     </>
