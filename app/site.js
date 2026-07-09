@@ -8,8 +8,8 @@ export const DATE_LABEL = "Thursday, July 9, 2026";
 export const DATE_ISO = "2026-07-09";
 
 export const THEME_COLORS = {
-  light: "#f6f7f2",
-  dark: "#101013",
+  light: "#ffffff",
+  dark: "#0a0a0a",
 };
 
 export const MANIFEST_ICONS = [

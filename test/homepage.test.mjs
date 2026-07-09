@@ -42,7 +42,9 @@ test("homepage keeps the requested frozen July 9 date", () => {
 test("prerendered homepage exposes the frozen July 9 date", () => {
   assert.match(prerenderedHome, /<title>Eagle — Thursday, July 9, 2026<\/title>/);
   assert.match(prerenderedHome, /dateTime="2026-07-09"/);
-  assert.match(prerenderedHome, />Thursday, July 9, 2026</);
+  // the date renders as two flush-left lines: red weekday, ink remainder
+  assert.match(prerenderedHome, /class="dateWeekday">Thursday,</);
+  assert.match(prerenderedHome, /class="dateRest">July 9, 2026</);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
   // social card is generated dynamically so it always shows the current date
@@ -67,8 +69,8 @@ test("prerendered sign-in page exposes the expected form", () => {
 });
 
 test("manifest uses the current light background color", () => {
-  assert.equal(prerenderedManifest.background_color, "#f6f7f2");
-  assert.equal(prerenderedManifest.theme_color, "#f6f7f2");
+  assert.equal(prerenderedManifest.background_color, "#ffffff");
+  assert.equal(prerenderedManifest.theme_color, "#ffffff");
   assert.ok(
     prerenderedManifest.icons.some(
       (icon) => icon.src === "/icon-512-maskable.png" && icon.purpose === "maskable",

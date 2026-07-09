@@ -12,10 +12,11 @@ export default async function OpengraphImage() {
   const [date, eagle, font] = await Promise.all([
     getDate(),
     readFile(join(process.cwd(), "public/eagle-icon.svg")),
-    readFile(join(process.cwd(), "assets/space-grotesk-600.ttf")),
+    readFile(join(process.cwd(), "assets/inter-700.ttf")),
   ]);
 
   const eagleSrc = `data:image/svg+xml;base64,${eagle.toString("base64")}`;
+  const [weekday, ...rest] = date.label.split(" ");
 
   return new ImageResponse(
     (
@@ -25,25 +26,40 @@ export default async function OpengraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          background:
-            "linear-gradient(180deg, #fdfdfb 0%, #f6f7f2 55%, #e5e8df 100%)",
+          justifyContent: "space-between",
+          background: "#ffffff",
+          padding: "64px 72px",
+          fontFamily: "Inter",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={eagleSrc} width={860} height={207} alt="" />
         <div
           style={{
-            marginTop: 44,
-            paddingTop: 28,
-            borderTop: "1px solid rgba(7, 7, 7, 0.22)",
-            fontSize: 42,
-            fontFamily: "Space Grotesk",
-            color: "rgba(7, 7, 7, 0.78)",
+            display: "flex",
+            paddingBottom: 20,
+            borderBottom: "2px solid rgba(10, 10, 10, 0.18)",
+            fontSize: 28,
+            fontWeight: 700,
+            color: "#0a0a0a",
           }}
         >
-          {date.label}
+          Eagle
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={eagleSrc} width={640} height={154} alt="" />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            fontSize: 76,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            lineHeight: 1.05,
+          }}
+        >
+          <div style={{ color: "#e10600", display: "flex" }}>{weekday}</div>
+          <div style={{ color: "#0a0a0a", display: "flex" }}>
+            {rest.join(" ")}
+          </div>
         </div>
       </div>
     ),
@@ -51,9 +67,9 @@ export default async function OpengraphImage() {
       ...size,
       fonts: [
         {
-          name: "Space Grotesk",
+          name: "Inter",
           data: font,
-          weight: 600,
+          weight: 700,
           style: "normal",
         },
       ],

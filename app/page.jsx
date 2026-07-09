@@ -27,28 +27,30 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const date = await getDate();
+  const [weekday, ...rest] = date.label.split(" ");
 
   return (
     <>
       <ThemeToggle />
-      <main className="home" aria-label="Eagle homepage">
+      <main className="home homePoster" aria-label="Eagle homepage">
         <h1 className="srOnly">{SITE_NAME}</h1>
-        <span className="cornerMark cornerTL" aria-hidden="true">
-          {SITE_NAME}
-        </span>
-        <span className="cornerMark cornerBL" aria-hidden="true">
-          emir.com.au
-        </span>
-        <span className="cornerMark cornerBR" aria-hidden="true">
-          MMXXVI
-        </span>
-        <Eagle />
-        <time className="date" dateTime={date.iso}>
-          {date.label}
-        </time>
-        <Link className="signinCta" href={SIGNIN_PATH}>
-          Sign in
-        </Link>
+        <header className="topRow" aria-hidden="true">
+          <span className="wordmark">{SITE_NAME}</span>
+        </header>
+        <div className="hero">
+          <Eagle />
+          <time className="date" dateTime={date.iso}>
+            <span className="dateWeekday">{weekday}</span>{" "}
+            <span className="dateRest">{rest.join(" ")}</span>
+          </time>
+          <Link className="signinCta" href={SIGNIN_PATH}>
+            Sign in
+          </Link>
+        </div>
+        <footer className="bottomRow" aria-hidden="true">
+          <span>emir.com.au</span>
+          <span>MMXXVI</span>
+        </footer>
       </main>
     </>
   );
