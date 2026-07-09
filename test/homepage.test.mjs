@@ -49,7 +49,7 @@ test("prerendered homepage exposes the frozen July 9 date", () => {
   assert.match(prerenderedHome, /dateTime="2026-07-09"/);
   assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-09">Thursday, July 9, 2026<\/time>/);
   assert.match(prerenderedHome, />EMIR</);
-  assert.match(prerenderedHome, /class="heroQuote">Rise above the noise\.<\/p>/);
+  assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
   assert.doesNotMatch(prerenderedHome, /themeToggle/);
