@@ -39,11 +39,7 @@ export default async function Home() {
           </Link>
         </header>
         <div className="hero">
-          <p className="heroQuote">
-            <span className="heroLight heroLead">Rise</span>
-            <span className="heroGold">Above</span>
-            <span className="heroLight heroTail">the noise.</span>
-          </p>
+          <p className="heroQuote">Rise above the noise.</p>
         </div>
         <footer className="bottomRow">
           <span>emir.com.au</span>
