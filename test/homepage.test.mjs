@@ -39,11 +39,9 @@ test("homepage keeps the requested frozen July 7 date", () => {
   assert.doesNotMatch(dateLibSource, /new Date\(\)/);
 });
 
-test("date override is disabled unless explicitly enabled", async () => {
-  assert.match(
-    dateLibSource,
-    /process\.env\.ENABLE_DATE_OVERRIDE\s*===\s*"true"\s*&&\s*process\.env\.EDGE_CONFIG/,
-  );
+test("date cannot be overridden by production runtime storage", () => {
+  assert.doesNotMatch(dateLibSource, /process\.env/);
+  assert.doesNotMatch(dateLibSource, /EDGE_CONFIG|ENABLE_DATE_OVERRIDE|@vercel\/edge-config/);
 });
 
 test("prerendered homepage exposes the frozen July 7 date", () => {
@@ -52,7 +50,7 @@ test("prerendered homepage exposes the frozen July 7 date", () => {
   assert.match(prerenderedHome, />Tuesday, July 7, 2026</);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
-  // social card is generated dynamically so it always shows the current date
+  // social card is generated dynamically and uses the same frozen date source
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/opengraph-image/);
   assert.match(prerenderedHome, /rel="canonical" href="https:\/\/www\.emir\.com\.au"/);
   assert.doesNotMatch(prerenderedHome, /Today is|Monday, July 6, 2026/);

@@ -78,8 +78,7 @@ export default function AdminPanel({ initialDate, storageConfigured }) {
       </button>
       {!storageConfigured ? (
         <p className="signinStatus">
-          Date saving is disabled. The public date comes from app/site.js unless
-          ENABLE_DATE_OVERRIDE and Vercel Edge Config are configured.
+          Date saving is disabled. The public date is frozen in app/site.js.
         </p>
       ) : null}
       {status ? (
