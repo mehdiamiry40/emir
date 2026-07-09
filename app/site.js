@@ -4,8 +4,8 @@ export const DESCRIPTION = "Personal eagle homepage";
 export const SOCIAL_DESCRIPTION = "One eagle. One date.";
 export const SIGNIN_PATH = "/signin";
 
-export const DATE_LABEL = "Tuesday, July 7, 2026";
-export const DATE_ISO = "2026-07-07";
+export const DATE_LABEL = "Thursday, July 9, 2026";
+export const DATE_ISO = "2026-07-09";
 
 export const THEME_COLORS = {
   light: "#f6f7f2",
