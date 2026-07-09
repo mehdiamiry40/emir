@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Eagle from "./eagle";
-import ThemeToggle from "./theme-toggle";
 import { getDate } from "../lib/date";
 import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
 
@@ -30,25 +29,24 @@ export default async function Home() {
 
   return (
     <>
-      <ThemeToggle />
-      <main className="home" aria-label="Eagle homepage">
+      <main className="home homePoster" aria-label="Eagle homepage">
         <h1 className="srOnly">{SITE_NAME}</h1>
-        <span className="cornerMark cornerTL" aria-hidden="true">
-          {SITE_NAME}
-        </span>
-        <span className="cornerMark cornerBL" aria-hidden="true">
-          emir.com.au
-        </span>
-        <span className="cornerMark cornerBR" aria-hidden="true">
-          MMXXVI
-        </span>
-        <Eagle />
-        <time className="date" dateTime={date.iso}>
-          {date.label}
-        </time>
-        <Link className="signinCta" href={SIGNIN_PATH}>
-          Sign in
-        </Link>
+        <header className="topRow">
+          <span className="wordmark">{SITE_NAME}</span>
+          <Eagle />
+          <Link className="signinCta topSignin" href={SIGNIN_PATH}>
+            Sign in
+          </Link>
+        </header>
+        <div className="hero">
+          <p className="heroQuote">Rise above the noise.</p>
+        </div>
+        <footer className="bottomRow">
+          <span>emir.com.au</span>
+          <time className="date footerDate" dateTime={date.iso}>
+            {date.label}
+          </time>
+        </footer>
       </main>
     </>
   );

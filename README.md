@@ -40,7 +40,9 @@ do not add clocks, midnight timers, or "current date" logic.**
 
 ## Deployment notes
 
-Vercel deploys this repo. Recommended setup:
+Vercel deploys this repo; **www.emir.com.au currently serves the
+`claude/eagle-icon-homepage-tu0el3` branch** (the repo default), while
+PRs typically merge to `main`. Recommended one-time cleanup:
 
 1. GitHub → Settings → General → default branch → `main`
 2. Vercel → Settings → Git → production branch → `main`

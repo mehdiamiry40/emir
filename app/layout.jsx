@@ -1,11 +1,10 @@
 import "./globals.css";
-import { Space_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLORS } from "./site";
+import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLOR } from "./site";
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
@@ -28,21 +27,13 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
-    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
-  ],
+  themeColor: THEME_COLOR,
 };
-
-const themeInit = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 
 /** @param {{ children: import("react").ReactNode }} props */
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={spaceGrotesk.variable} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
-      </head>
+    <html lang="en" className={inter.variable}>
       <body>
         {children}
         <Analytics />

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import ThemeToggle from "../theme-toggle";
 import { SESSION_COOKIE, verifySessionToken } from "../../lib/session";
 import { getDate } from "../../lib/date";
 import { SITE_NAME } from "../site";
@@ -28,7 +27,6 @@ export default async function AdminPage() {
       <Link className="loginButton" href="/">
         Home
       </Link>
-      <ThemeToggle />
       <main className="home signinHome" aria-label="Admin">
         <section className="signinPanel" aria-labelledby="admin-title">
           <p className="signinEyebrow">{SITE_NAME}</p>
