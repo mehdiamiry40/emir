@@ -21,9 +21,7 @@ export default async function AdminPage() {
   }
 
   const date = await getDate();
-  const storageConfigured = Boolean(
-    process.env.EDGE_CONFIG_ID && process.env.VERCEL_API_TOKEN
-  );
+  const storageConfigured = false;
 
   return (
     <>
