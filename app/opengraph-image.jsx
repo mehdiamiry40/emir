@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { getDate } from "../lib/date";
+import { SITE_NAME } from "./site";
 
 export const revalidate = 60;
 export const alt = "Black eagle above the site's date";
@@ -43,7 +44,7 @@ export default async function OpengraphImage() {
             color: "#fff8eb",
           }}
         >
-          Eagle
+          {SITE_NAME}
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

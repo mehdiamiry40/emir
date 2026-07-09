@@ -1,5 +1,4 @@
 import Link from "next/link";
-import ThemeToggle from "../theme-toggle";
 import { SITE_NAME } from "../site";
 import SignInForm from "./signin-form";
 
@@ -13,7 +12,6 @@ export default function SignInPage() {
       <Link className="loginButton" href="/">
         Home
       </Link>
-      <ThemeToggle />
       <main className="home signinHome" aria-label="Sign in">
         <section className="signinPanel" aria-labelledby="signin-title">
           <div className="signinMark" aria-hidden="true">

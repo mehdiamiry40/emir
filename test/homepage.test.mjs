@@ -45,7 +45,7 @@ test("date cannot be overridden by production runtime storage", () => {
 });
 
 test("prerendered homepage exposes the frozen July 9 date", () => {
-  assert.match(prerenderedHome, /<title>Eagle — Thursday, July 9, 2026<\/title>/);
+  assert.match(prerenderedHome, /<title>EMIR — Thursday, July 9, 2026<\/title>/);
   assert.match(prerenderedHome, /dateTime="2026-07-09"/);
   assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-09">Thursday, July 9, 2026<\/time>/);
   assert.match(prerenderedHome, />EMIR</);
@@ -61,13 +61,13 @@ test("prerendered homepage exposes the frozen July 9 date", () => {
 });
 
 test("prerendered 404 page exposes the not-found title and content", () => {
-  assert.match(prerenderedNotFound, /<title>Eagle — Not found<\/title>/);
+  assert.match(prerenderedNotFound, /<title>EMIR — Not found<\/title>/);
   assert.match(prerenderedNotFound, /<h1 class="notFoundCode">404<\/h1>/);
   assert.match(prerenderedNotFound, />This page has flown away\.</);
 });
 
 test("prerendered sign-in page exposes the expected form", () => {
-  assert.match(prerenderedSignIn, /<title>Eagle — Sign in<\/title>/);
+  assert.match(prerenderedSignIn, /<title>EMIR — Sign in<\/title>/);
   assert.match(prerenderedSignIn, /aria-label="Sign in"/);
   assert.match(prerenderedSignIn, /<h1 class="signinTitle" id="signin-title">Sign in<\/h1>/);
   assert.match(prerenderedSignIn, /name="email"/);
