@@ -22,7 +22,10 @@ export default async function AdminPage() {
 
   const date = await getDate();
   const storageConfigured = Boolean(
-    process.env.EDGE_CONFIG_ID && process.env.VERCEL_API_TOKEN
+    process.env.ENABLE_DATE_OVERRIDE === "true" &&
+      process.env.EDGE_CONFIG &&
+      process.env.EDGE_CONFIG_ID &&
+      process.env.VERCEL_API_TOKEN
   );
 
   return (
