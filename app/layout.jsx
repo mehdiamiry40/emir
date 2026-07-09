@@ -1,11 +1,18 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Bodoni_Moda, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLORS } from "./site";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-display",
+  display: "swap",
+});
+
+const quote = Bodoni_Moda({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-quote",
   display: "swap",
 });
 
@@ -38,7 +45,7 @@ const themeInit = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="
 /** @param {{ children: import("react").ReactNode }} props */
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${quote.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
