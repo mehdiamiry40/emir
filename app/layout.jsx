@@ -1,18 +1,11 @@
 import "./globals.css";
-import { Cinzel, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLOR } from "./site";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-display",
-  display: "swap",
-});
-
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  weight: ["400", "700", "900"],
-  variable: "--font-quote",
   display: "swap",
 });
 
@@ -40,7 +33,7 @@ export const viewport = {
 /** @param {{ children: import("react").ReactNode }} props */
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${cinzel.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
         {children}
         <Analytics />
