@@ -119,7 +119,7 @@ test("sign-in flow protects the admin page", async (t) => {
   await page.waitForSelector(".adminPreview");
   assert.ok((await page.textContent(".adminPreview"))?.includes("2026"));
 
-  // authenticated but unconfigured storage: API responds 501
+  // authenticated date changes are disabled: API responds 501
   const saveStatus = await page.evaluate(async () => {
     const res = await fetch("/api/date", {
       method: "POST",

@@ -1,8 +1,6 @@
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySessionToken } from "../../../lib/session";
-import { formatDate } from "../../../lib/date";
 
 const ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -18,39 +16,11 @@ export async function POST(request) {
     return NextResponse.json({ error: "Invalid date." }, { status: 400 });
   }
 
-  const id = process.env.EDGE_CONFIG_ID;
-  const token = process.env.VERCEL_API_TOKEN;
-  if (!id || !token) {
-    return NextResponse.json(
-      {
-        error:
-          "Storage is not configured — set EDGE_CONFIG_ID and VERCEL_API_TOKEN.",
-      },
-      { status: 501 }
-    );
-  }
-
-  const teamId = process.env.VERCEL_TEAM_ID;
-  const res = await fetch(
-    `https://api.vercel.com/v1/edge-config/${id}/items${teamId ? `?teamId=${teamId}` : ""}`,
+  return NextResponse.json(
     {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        items: [{ operation: "upsert", key: "date", value: iso }],
-      }),
-    }
+      error:
+        "Date changes are disabled. Update DATE_LABEL and DATE_ISO in app/site.js to change the frozen date.",
+    },
+    { status: 501 }
   );
-  if (!res.ok) {
-    return NextResponse.json(
-      { error: `Edge Config update failed (${res.status}).` },
-      { status: 502 }
-    );
-  }
-
-  revalidatePath("/");
-  return NextResponse.json({ ok: true, date: formatDate(iso) });
 }
