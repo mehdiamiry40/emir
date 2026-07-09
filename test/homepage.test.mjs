@@ -39,6 +39,13 @@ test("homepage keeps the requested frozen July 7 date", () => {
   assert.doesNotMatch(dateLibSource, /new Date\(\)/);
 });
 
+test("date override is disabled unless explicitly enabled", async () => {
+  assert.match(
+    dateLibSource,
+    /process\.env\.ENABLE_DATE_OVERRIDE\s*===\s*"true"\s*&&\s*process\.env\.EDGE_CONFIG/,
+  );
+});
+
 test("prerendered homepage exposes the frozen July 7 date", () => {
   assert.match(prerenderedHome, /<title>Eagle — Tuesday, July 7, 2026<\/title>/);
   assert.match(prerenderedHome, /dateTime="2026-07-07"/);

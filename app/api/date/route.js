@@ -18,6 +18,16 @@ export async function POST(request) {
     return NextResponse.json({ error: "Invalid date." }, { status: 400 });
   }
 
+  if (process.env.ENABLE_DATE_OVERRIDE !== "true") {
+    return NextResponse.json(
+      {
+        error:
+          "Date override is disabled — set ENABLE_DATE_OVERRIDE=true to use admin date storage.",
+      },
+      { status: 501 }
+    );
+  }
+
   const id = process.env.EDGE_CONFIG_ID;
   const token = process.env.VERCEL_API_TOKEN;
   if (!id || !token) {
