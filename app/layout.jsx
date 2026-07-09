@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Cinzel, Inter } from "next/font/google";
+import { Cinzel_Decorative, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLOR } from "./site";
 
@@ -9,7 +9,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const cinzel = Cinzel({
+const cinzel = Cinzel_Decorative({
   subsets: ["latin"],
   weight: ["700"],
   variable: "--font-quote",
