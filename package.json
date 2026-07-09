@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "npm run typecheck && next build && node --test"
+    "test": "next build && npm run typecheck && node --test"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
