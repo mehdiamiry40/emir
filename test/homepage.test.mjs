@@ -47,11 +47,13 @@ test("date cannot be overridden by production runtime storage", () => {
 test("prerendered homepage exposes the frozen July 9 date", () => {
   assert.match(prerenderedHome, /<title>Eagle — Thursday, July 9, 2026<\/title>/);
   assert.match(prerenderedHome, /dateTime="2026-07-09"/);
-  // the date renders as two flush-left lines: red weekday, ink remainder
-  assert.match(prerenderedHome, /class="dateWeekday">Thursday,</);
-  assert.match(prerenderedHome, /class="dateRest">July 9, 2026</);
+  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-09">Thursday, July 9, 2026<\/time>/);
+  assert.match(prerenderedHome, />EMIR</);
+  assert.match(prerenderedHome, /class="heroQuote">Rise above the noise\.<\/blockquote>/);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
+  assert.doesNotMatch(prerenderedHome, /themeToggle/);
+  assert.doesNotMatch(prerenderedHome, /MMXXVI/);
   // social card is generated dynamically and uses the same frozen date source
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/opengraph-image/);
   assert.match(prerenderedHome, /rel="canonical" href="https:\/\/www\.emir\.com\.au"/);
@@ -74,8 +76,8 @@ test("prerendered sign-in page exposes the expected form", () => {
 });
 
 test("manifest uses the current light background color", () => {
-  assert.equal(prerenderedManifest.background_color, "#ffffff");
-  assert.equal(prerenderedManifest.theme_color, "#ffffff");
+  assert.equal(prerenderedManifest.background_color, "#2a0010");
+  assert.equal(prerenderedManifest.theme_color, "#2a0010");
   assert.ok(
     prerenderedManifest.icons.some(
       (icon) => icon.src === "/icon-512-maskable.png" && icon.purpose === "maskable",

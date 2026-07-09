@@ -27,7 +27,8 @@ export default async function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#ffffff",
+          background:
+            "radial-gradient(circle at 58% 48%, rgba(142, 0, 48, 0.72), transparent 34%), linear-gradient(145deg, #080003, #2a0010 48%, #52001c)",
           padding: "64px 72px",
           fontFamily: "Inter",
         }}
@@ -36,28 +37,37 @@ export default async function OpengraphImage() {
           style={{
             display: "flex",
             paddingBottom: 20,
-            borderBottom: "2px solid rgba(10, 10, 10, 0.18)",
+            borderBottom: "2px solid rgba(248, 214, 128, 0.34)",
             fontSize: 28,
             fontWeight: 700,
-            color: "#0a0a0a",
+            color: "#fff8eb",
           }}
         >
           Eagle
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={eagleSrc} width={640} height={154} alt="" />
+        <img
+          src={eagleSrc}
+          width={640}
+          height={154}
+          alt=""
+          style={{
+            filter:
+              "invert(78%) sepia(43%) saturate(565%) hue-rotate(3deg) brightness(104%) contrast(92%)",
+          }}
+        />
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             fontSize: 76,
             fontWeight: 700,
-            letterSpacing: "-0.03em",
+            letterSpacing: 0,
             lineHeight: 1.05,
           }}
         >
-          <div style={{ color: "#e10600", display: "flex" }}>{weekday}</div>
-          <div style={{ color: "#0a0a0a", display: "flex" }}>
+          <div style={{ color: "#fff8eb", display: "flex" }}>{weekday}</div>
+          <div style={{ color: "#e1bf68", display: "flex" }}>
             {rest.join(" ")}
           </div>
         </div>
