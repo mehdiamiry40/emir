@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function Eagle() {
-  const ref = useRef(null);
+  const ref = useRef(/** @type {HTMLDivElement | null} */ (null));
   const [flapping, setFlapping] = useState(false);
 
   useEffect(() => {

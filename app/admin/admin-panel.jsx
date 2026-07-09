@@ -2,6 +2,9 @@
 
 import { useId, useState } from "react";
 
+/** @typedef {{ kind: "ok" | "err", text: string }} SaveStatus */
+
+/** @param {string} iso */
 function previewLabel(iso) {
   try {
     return new Intl.DateTimeFormat("en-US", {
@@ -16,9 +19,14 @@ function previewLabel(iso) {
   }
 }
 
+/**
+ * @param {object} props
+ * @param {{ iso: string, label: string }} props.initialDate
+ * @param {boolean} props.storageConfigured
+ */
 export default function AdminPanel({ initialDate, storageConfigured }) {
   const [iso, setIso] = useState(initialDate.iso);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(/** @type {SaveStatus | null} */ (null));
   const [saving, setSaving] = useState(false);
   const dateId = useId();
 

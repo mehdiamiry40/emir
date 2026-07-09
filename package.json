@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "next build && node --test"
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck && next build && node --test"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -20,6 +21,9 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
-    "playwright": "^1.61.1"
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "playwright": "^1.61.1",
+    "typescript": "^6.0.3"
   }
 }

@@ -33,6 +33,15 @@ export default async function Home() {
       <ThemeToggle />
       <main className="home" aria-label="Eagle homepage">
         <h1 className="srOnly">{SITE_NAME}</h1>
+        <span className="cornerMark cornerTL" aria-hidden="true">
+          {SITE_NAME}
+        </span>
+        <span className="cornerMark cornerBL" aria-hidden="true">
+          emir.com.au
+        </span>
+        <span className="cornerMark cornerBR" aria-hidden="true">
+          MMXXVI
+        </span>
         <Eagle />
         <time className="date" dateTime={date.iso}>
           {date.label}

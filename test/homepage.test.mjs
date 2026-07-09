@@ -24,9 +24,9 @@ const prerenderedManifest = JSON.parse(
   ),
 );
 
-test("homepage keeps the requested frozen July 6 date", () => {
-  assert.match(siteSource, /DATE_LABEL\s*=\s*"Monday, July 6, 2026"/);
-  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-06"/);
+test("homepage keeps the requested frozen July 7 date", () => {
+  assert.match(siteSource, /DATE_LABEL\s*=\s*"Tuesday, July 7, 2026"/);
+  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-07"/);
   // the page renders the fixed date resolved by lib/date.js
   assert.match(pageSource, /getDate\(\)/);
   assert.match(pageSource, /dateTime=\{date\.iso\}/);
@@ -39,16 +39,16 @@ test("homepage keeps the requested frozen July 6 date", () => {
   assert.doesNotMatch(dateLibSource, /new Date\(\)/);
 });
 
-test("prerendered homepage exposes the frozen July 6 date", () => {
-  assert.match(prerenderedHome, /<title>Eagle — Monday, July 6, 2026<\/title>/);
-  assert.match(prerenderedHome, /dateTime="2026-07-06"/);
-  assert.match(prerenderedHome, />Monday, July 6, 2026</);
+test("prerendered homepage exposes the frozen July 7 date", () => {
+  assert.match(prerenderedHome, /<title>Eagle — Tuesday, July 7, 2026<\/title>/);
+  assert.match(prerenderedHome, /dateTime="2026-07-07"/);
+  assert.match(prerenderedHome, />Tuesday, July 7, 2026</);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
   // social card is generated dynamically so it always shows the current date
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/opengraph-image/);
   assert.match(prerenderedHome, /rel="canonical" href="https:\/\/www\.emir\.com\.au"/);
-  assert.doesNotMatch(prerenderedHome, /Today is|Sunday, July 5, 2026/);
+  assert.doesNotMatch(prerenderedHome, /Today is|Monday, July 6, 2026/);
 });
 
 test("prerendered 404 page exposes the not-found title and content", () => {
