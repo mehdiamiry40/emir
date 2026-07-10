@@ -4,6 +4,11 @@ import SignInForm from "./signin-form";
 
 export const metadata = {
   title: `${SITE_NAME} — Sign in`,
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
 };
 
 export default function SignInPage() {

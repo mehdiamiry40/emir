@@ -11,18 +11,22 @@ export default function Eagle() {
   };
 
   return (
-    <div className="eagleWrap">
+    <button
+      className="eagleWrap"
+      type="button"
+      aria-label="Animate eagle"
+      onClick={flap}
+    >
       <img
         className={flapping ? "eagle flap" : "eagle"}
         src="/eagle-icon.svg"
-        alt="Gold eagle icon"
+        alt=""
         decoding="async"
         fetchPriority="high"
-        onClick={flap}
         onAnimationEnd={(e) => {
           if (e.animationName === "flap") setFlapping(false);
         }}
       />
-    </div>
+    </button>
   );
 }

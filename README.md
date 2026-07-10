@@ -1,10 +1,9 @@
-# Eagle
+# EMIR
 
 One page. One eagle. One date. Live at [www.emir.com.au](https://www.emir.com.au).
 
-A single-screen Next.js site: a traced eagle mark centered above a fixed
-date, with an adaptive light/dark theme, no scrolling, and a password-
-protected admin page.
+A single-screen Next.js site with a traced gold eagle, an engraved quote,
+a deliberately fixed date, no scrolling, and a password-protected private page.
 
 ## Commands
 
@@ -19,8 +18,14 @@ npm test        # build + smoke/visual/a11y tests (Playwright + axe)
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `ADMIN_PASSWORD` | for sign-in | Password for `/signin` → `/admin`. Unset = sign-in disabled. |
-| `SESSION_SECRET` | optional | HMAC key for session cookies (defaults to a hash of `ADMIN_PASSWORD`). |
+| `ADMIN_PASSWORD` | yes | Password for `/signin` → `/admin`. |
+| `SESSION_SECRET` | yes | Independent HMAC key for session cookies; use at least 32 random bytes. |
+| `UPSTASH_REDIS_REST_URL` | production | Durable Redis endpoint used for sign-in rate limiting. |
+| `UPSTASH_REDIS_REST_TOKEN` | production | Token for the rate-limit Redis database. |
+
+Production sign-in fails closed when session or rate-limit configuration is
+missing. Copy `.env.example` to `.env.local` for local setup. Development uses
+an in-memory limiter when Upstash is not configured; production never does.
 
 The date comes from `app/site.js` (`DATE_LABEL` / `DATE_ISO`) and only changes
 via a commit. Runtime storage and environment variables must not override it.
@@ -30,20 +35,14 @@ do not add clocks, midnight timers, or "current date" logic.**
 
 ## Structure
 
-- `app/page.jsx` — the eagle + date + sign-in CTA
+- `app/page.jsx` — the eagle, quote, fixed date, and sign-in CTA
 - `app/signin/` — password sign-in (server action, HMAC session cookie)
-- `app/admin/` — protected admin page
-- `app/api/date/` — authenticated endpoint that rejects date changes
-- `lib/session.js`, `lib/date.js` — auth + date resolution
+- `app/admin/` — protected read-only private page
+- `lib/session.js`, `lib/rate-limit.js`, `lib/date.js` — auth + date resolution
 - `public/eagle-icon.svg` — the traced eagle used everywhere
 - `test/` — smoke, visual, and axe accessibility tests (run in CI)
 
 ## Deployment notes
 
-Vercel deploys this repo; **www.emir.com.au currently serves the
-`claude/eagle-icon-homepage-tu0el3` branch** (the repo default), while
-PRs typically merge to `main`. Recommended one-time cleanup:
-
-1. GitHub → Settings → General → default branch → `main`
-2. Vercel → Settings → Git → production branch → `main`
-3. GitHub → Settings → Branches → protect `main`, require the `test` check
+Vercel deploys `main` to [www.emir.com.au](https://www.emir.com.au). Protect
+`main` in GitHub and require the `test` check before merge.
