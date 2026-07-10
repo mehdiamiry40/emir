@@ -5,10 +5,14 @@ import { SESSION_COOKIE, verifySessionToken } from "../../lib/session";
 import { getDate } from "../../lib/date";
 import { SITE_NAME } from "../site";
 import { signOut } from "../signin/actions";
-import AdminPanel from "./admin-panel";
 
 export const metadata = {
   title: `${SITE_NAME} — Admin`,
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
 };
 
 export const dynamic = "force-dynamic";
@@ -20,7 +24,6 @@ export default async function AdminPage() {
   }
 
   const date = await getDate();
-  const storageConfigured = false;
 
   return (
     <>
@@ -33,7 +36,12 @@ export default async function AdminPage() {
           <h1 className="signinTitle" id="admin-title">
             Admin
           </h1>
-          <AdminPanel initialDate={date} storageConfigured={storageConfigured} />
+          <div className="adminSummary">
+            <span className="signinField">Frozen date</span>
+            <time className="adminPreview" dateTime={date.iso}>
+              {date.label}
+            </time>
+          </div>
           <form action={signOut}>
             <button className="adminSignout" type="submit">
               Sign out

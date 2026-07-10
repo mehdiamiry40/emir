@@ -92,7 +92,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
     await page.goto(url, { waitUntil: "load" });
 
     const state = await page.evaluate(() => {
-      const eagle = document.querySelector(".eagle");
+      const eagle = document.querySelector(".eagleWrap");
       const date = document.querySelector(".date");
       const login = document.querySelector(".signinCta");
 
@@ -129,11 +129,15 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       return {
         dateTime: date?.getAttribute("datetime"),
         dateText: date?.textContent?.trim(),
+        dateFontSize: Number.parseFloat(getComputedStyle(date).fontSize),
+        eagleLabel: eagle?.getAttribute("aria-label"),
+        eagleTag: eagle?.tagName,
         eagleVisible: inViewport(eagleRect),
         dateVisible: inViewport(dateRect),
         loginHref: login?.getAttribute("href"),
         loginText: login?.textContent?.trim(),
         loginVisible: inViewport(loginRect),
+        quoteTextNodes: document.querySelectorAll(".heroQuote text").length,
         noHorizontalScroll:
           document.documentElement.scrollWidth <= window.innerWidth + 1 &&
           document.body.scrollWidth <= window.innerWidth + 1,
@@ -148,11 +152,15 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       {
         dateTime: "2026-07-09",
         dateText: "Thursday, July 9, 2026",
+        dateFontSize: 11,
         dateVisible: true,
+        eagleLabel: "Animate eagle",
+        eagleTag: "BUTTON",
         eagleVisible: true,
         loginHref: "/signin",
         loginText: "Sign in",
         loginVisible: true,
+        quoteTextNodes: 6,
         noHorizontalScroll: true,
         noVerticalScroll: true,
       },
@@ -163,7 +171,6 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
 
     const signInState = await page.evaluate(() => {
       const panel = document.querySelector(".signinPanel");
-      const email = document.querySelector('input[name="email"]');
       const password = document.querySelector('input[name="password"]');
       const submit = document.querySelector(".signinSubmit");
       const home = document.querySelector(".loginButton");
@@ -195,7 +202,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       }
 
       return {
-        emailVisible: inViewport(rectFor(email)),
+        emailPresent: Boolean(document.querySelector('input[name="email"]')),
         homeHref: home?.getAttribute("href"),
         homeText: home?.textContent?.trim(),
         panelVisible: inViewport(rectFor(panel)),
@@ -215,7 +222,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
     assert.deepEqual(
       signInState,
       {
-        emailVisible: true,
+        emailPresent: false,
         homeHref: "/",
         homeText: "Home",
         noHorizontalScroll: true,

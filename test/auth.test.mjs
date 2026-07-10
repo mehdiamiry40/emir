@@ -42,7 +42,12 @@ async function startServer() {
     {
       cwd: projectRoot,
       stdio: ["ignore", "pipe", "pipe"],
-      env: { ...process.env, ADMIN_PASSWORD: TEST_PASSWORD },
+      env: {
+        ...process.env,
+        ADMIN_PASSWORD: TEST_PASSWORD,
+        SESSION_SECRET: "test-session-secret-with-at-least-32-bytes",
+        AUTH_RATE_LIMIT_TEST_MODE: "memory",
+      },
     },
   );
 
@@ -79,18 +84,17 @@ test("sign-in flow protects the admin page", async (t) => {
     await once(server, "exit").catch(() => {});
   });
 
+  const publicResponse = await fetch(url);
+  assert.match(
+    publicResponse.headers.get("content-security-policy") ?? "",
+    /default-src 'self'/,
+  );
+  assert.equal(publicResponse.headers.get("x-powered-by"), null);
+
   // unauthenticated /admin redirects to /signin
   const adminResponse = await fetch(`${url}/admin`, { redirect: "manual" });
   assert.equal(adminResponse.status, 307);
   assert.match(adminResponse.headers.get("location") ?? "", /\/signin$/);
-
-  // unauthenticated date API is rejected
-  const apiResponse = await fetch(`${url}/api/date`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ iso: "2030-01-01" }),
-  });
-  assert.equal(apiResponse.status, 401);
 
   const browser = await chromium.launch({
     executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined,
@@ -112,23 +116,12 @@ test("sign-in flow protects the admin page", async (t) => {
   );
   assert.match(page.url(), /\/signin$/);
 
-  // correct password lands on /admin with the date editor
+  // correct password lands on the read-only private page
   await page.fill('input[name="password"]', TEST_PASSWORD);
   await page.click(".signinSubmit");
   await page.waitForURL("**/admin", { timeout: 15000 });
   await page.waitForSelector(".adminPreview");
   assert.ok((await page.textContent(".adminPreview"))?.includes("2026"));
-
-  // authenticated date changes are disabled: API responds 501
-  const saveStatus = await page.evaluate(async () => {
-    const res = await fetch("/api/date", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ iso: "2030-01-01" }),
-    });
-    return res.status;
-  });
-  assert.equal(saveStatus, 501);
 
   // sign out returns home and /admin is locked again
   await page.click(".adminSignout");

@@ -3,8 +3,6 @@ import Eagle from "./eagle";
 import { getDate } from "../lib/date";
 import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
 
-export const revalidate = 60;
-
 const QUOTE_TEXT = "Rise above the noise.";
 const EXTRUSION_STEPS = [12, 10, 8, 6, 4, 2];
 const DESKTOP_QUOTE_LINES = [
@@ -32,6 +30,7 @@ function QuoteLine({ line, centerX, xScale }) {
 }
 
 function QuoteSvg({ className, id, lines, viewBox, centerX, xScale }) {
+  const glyphs = `quoteGlyphs-${id}`;
   const gold = `quoteGold-${id}`;
   const sheen = `quoteSheen-${id}`;
   const edge = `quoteEdge-${id}`;
@@ -53,6 +52,11 @@ function QuoteSvg({ className, id, lines, viewBox, centerX, xScale }) {
       focusable="false"
     >
       <defs>
+        <g id={glyphs}>
+          {lines.map((line) => (
+            <QuoteLine key={line.text} line={line} centerX={centerX} xScale={xScale} />
+          ))}
+        </g>
         <linearGradient id={gold} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#44350f" />
           <stop offset="7%" stopColor="#fff3bf" />
@@ -175,90 +179,65 @@ function QuoteSvg({ className, id, lines, viewBox, centerX, xScale }) {
           <feBlend in="SourceGraphic" in2="clippedGrain" mode="overlay" />
         </filter>
       </defs>
-      <g className="quoteText quoteExtrusion" filter={`url(#${shadow})`}>
+      <g className="quoteExtrusion" filter={`url(#${shadow})`}>
         {EXTRUSION_STEPS.map((offset) => (
-          <g key={offset} transform={`translate(${offset} ${offset * 0.82})`}>
-            {lines.map((line) => (
-              <QuoteLine
-                key={`${offset}-${line.text}`}
-                line={line}
-                centerX={centerX}
-                xScale={xScale}
-              />
-            ))}
-          </g>
-        ))}
-      </g>
-      <g className="quoteText quoteBlackRim">
-        {lines.map((line) => (
-          <QuoteLine key={`black-rim-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
-      <g className="quoteText quoteWideBevel" stroke={`url(#${rim})`}>
-        {lines.map((line) => (
-          <QuoteLine key={`wide-bevel-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
-      <g className="quoteText quoteOuterRim">
-        {lines.map((line) => (
-          <QuoteLine key={`rim-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
-      <g className="quoteText quoteFace" fill={`url(#${gold})`} filter={`url(#${texture})`}>
-        {lines.map((line) => (
-          <QuoteLine key={`face-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
-      <g className="quoteText quoteFacetShade" fill={`url(#${facetShade})`}>
-        {lines.map((line) => (
-          <QuoteLine key={`facet-shade-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
-      <g className="quoteText quoteFacetHighlight" fill={`url(#${facetHighlight})`}>
-        {lines.map((line) => (
-          <QuoteLine
-            key={`facet-highlight-${line.text}`}
-            line={line}
-            centerX={centerX}
-            xScale={xScale}
+          <use
+            key={offset}
+            className="quoteText"
+            href={`#${glyphs}`}
+            transform={`translate(${offset} ${offset * 0.82})`}
           />
         ))}
       </g>
-      <g className="quoteText quoteBrushed" fill={`url(#${brushed})`}>
-        {lines.map((line) => (
-          <QuoteLine
-            key={`brushed-${line.text}`}
-            line={line}
-            centerX={centerX}
-            xScale={xScale}
-          />
-        ))}
-      </g>
-      <g className="quoteText quoteSpecular" fill="#fff4c7" filter={`url(#${bevel})`}>
-        {lines.map((line) => (
-          <QuoteLine
-            key={`specular-${line.text}`}
-            line={line}
-            centerX={centerX}
-            xScale={xScale}
-          />
-        ))}
-      </g>
-      <g className="quoteText quoteSheen" fill={`url(#${sheen})`}>
-        {lines.map((line) => (
-          <QuoteLine key={`sheen-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
-      <g className="quoteText quoteEdgeLight" stroke={`url(#${edge})`}>
-        {lines.map((line) => (
-          <QuoteLine key={`edge-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
-      <g className="quoteText quoteInnerEdge" stroke={`url(#${inner})`}>
-        {lines.map((line) => (
-          <QuoteLine key={`inner-edge-${line.text}`} line={line} centerX={centerX} xScale={xScale} />
-        ))}
-      </g>
+      <use className="quoteText quoteBlackRim" href={`#${glyphs}`} />
+      <use
+        className="quoteText quoteWideBevel"
+        href={`#${glyphs}`}
+        stroke={`url(#${rim})`}
+      />
+      <use className="quoteText quoteOuterRim" href={`#${glyphs}`} />
+      <use
+        className="quoteText quoteFace"
+        href={`#${glyphs}`}
+        fill={`url(#${gold})`}
+        filter={`url(#${texture})`}
+      />
+      <use
+        className="quoteText quoteFacetShade"
+        href={`#${glyphs}`}
+        fill={`url(#${facetShade})`}
+      />
+      <use
+        className="quoteText quoteFacetHighlight"
+        href={`#${glyphs}`}
+        fill={`url(#${facetHighlight})`}
+      />
+      <use
+        className="quoteText quoteBrushed"
+        href={`#${glyphs}`}
+        fill={`url(#${brushed})`}
+      />
+      <use
+        className="quoteText quoteSpecular"
+        href={`#${glyphs}`}
+        fill="#fff4c7"
+        filter={`url(#${bevel})`}
+      />
+      <use
+        className="quoteText quoteSheen"
+        href={`#${glyphs}`}
+        fill={`url(#${sheen})`}
+      />
+      <use
+        className="quoteText quoteEdgeLight"
+        href={`#${glyphs}`}
+        stroke={`url(#${edge})`}
+      />
+      <use
+        className="quoteText quoteInnerEdge"
+        href={`#${glyphs}`}
+        stroke={`url(#${inner})`}
+      />
     </svg>
   );
 }

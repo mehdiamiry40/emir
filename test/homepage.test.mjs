@@ -70,14 +70,15 @@ test("prerendered sign-in page exposes the expected form", () => {
   assert.match(prerenderedSignIn, /<title>EMIR — Sign in<\/title>/);
   assert.match(prerenderedSignIn, /aria-label="Sign in"/);
   assert.match(prerenderedSignIn, /<h1 class="signinTitle" id="signin-title">Sign in<\/h1>/);
-  assert.match(prerenderedSignIn, /name="email"/);
+  assert.doesNotMatch(prerenderedSignIn, /name="email"/);
   assert.match(prerenderedSignIn, /name="password"/);
+  assert.match(prerenderedSignIn, /name="robots" content="noindex, nofollow, nocache"/);
   assert.match(prerenderedSignIn, />Home</);
 });
 
-test("manifest uses the current light background color", () => {
-  assert.equal(prerenderedManifest.background_color, "#2a0010");
-  assert.equal(prerenderedManifest.theme_color, "#2a0010");
+test("manifest uses the current background color", () => {
+  assert.equal(prerenderedManifest.background_color, "#2c000f");
+  assert.equal(prerenderedManifest.theme_color, "#2c000f");
   assert.ok(
     prerenderedManifest.icons.some(
       (icon) => icon.src === "/icon-512-maskable.png" && icon.purpose === "maskable",

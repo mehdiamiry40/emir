@@ -225,10 +225,10 @@ body {
 
 .quoteText {
   font-family:
+    var(--font-quote),
     "Bodoni 72 Smallcaps",
     "Bodoni 72",
     Didot,
-    var(--font-quote),
     "Times New Roman",
     serif;
   font-size: 174px;
@@ -320,9 +320,21 @@ body {
   position: relative;
   align-self: center;
   width: min(60vw, 620px);
+  min-height: 44px;
   aspect-ratio: 237 / 57;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.eagleWrap:focus-visible {
+  outline: 2px solid var(--accent-hot);
+  outline-offset: 5px;
 }
 
 .eagleWrap::after {
@@ -365,7 +377,7 @@ body {
 .footerDate {
   display: block;
   color: var(--accent-hot);
-  font-size: clamp(9px, 0.8vw, 11px);
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   line-height: 1.2;
@@ -689,8 +701,13 @@ body {
   line-height: 1.35;
 }
 
+.adminSummary {
+  display: grid;
+  gap: 8px;
+}
+
 .adminPreview {
-  margin: -4px 0 0;
+  margin: 0;
   color: var(--ink);
   font-size: 18px;
   font-weight: 700;
@@ -913,11 +930,11 @@ body {
   .bottomRow {
     grid-template-columns: minmax(0, 1fr) auto;
     column-gap: 8px;
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .footerDate {
-    font-size: 7px;
+    font-size: 11px;
     letter-spacing: 0.02em;
   }
 
