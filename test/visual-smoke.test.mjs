@@ -151,7 +151,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       state,
       {
         dateTime: "2025-07-14",
-        dateText: "Monday, July 14, 2025",
+        dateText: "Tuesday, July 14, 2025",
         dateFontSize: 11,
         dateVisible: true,
         eagleLabel: "Animate eagle",
