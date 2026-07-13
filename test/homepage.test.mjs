@@ -24,9 +24,9 @@ const prerenderedManifest = JSON.parse(
   ),
 );
 
-test("homepage keeps the requested frozen July 11 date", () => {
-  assert.match(siteSource, /DATE_LABEL\s*=\s*"Saturday, July 11, 2026"/);
-  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-11"/);
+test("homepage keeps the requested frozen July 14 date", () => {
+  assert.match(siteSource, /DATE_LABEL\s*=\s*"Monday, July 14, 2025"/);
+  assert.match(siteSource, /DATE_ISO\s*=\s*"2025-07-14"/);
   // the page renders the fixed date resolved by lib/date.js
   assert.match(pageSource, /getDate\(\)/);
   assert.match(pageSource, /dateTime=\{date\.iso\}/);
@@ -44,10 +44,10 @@ test("date cannot be overridden by production runtime storage", () => {
   assert.doesNotMatch(dateLibSource, /EDGE_CONFIG|@vercel\/edge-config/);
 });
 
-test("prerendered homepage exposes the frozen July 11 date", () => {
-  assert.match(prerenderedHome, /<title>EMIR — Saturday, July 11, 2026<\/title>/);
-  assert.match(prerenderedHome, /dateTime="2026-07-11"/);
-  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-11">Saturday, July 11, 2026<\/time>/);
+test("prerendered homepage exposes the frozen July 14 date", () => {
+  assert.match(prerenderedHome, /<title>EMIR — Monday, July 14, 2025<\/title>/);
+  assert.match(prerenderedHome, /dateTime="2025-07-14"/);
+  assert.match(prerenderedHome, /class="date footerDate" dateTime="2025-07-14">Monday, July 14, 2025<\/time>/);
   assert.match(prerenderedHome, />EMIR</);
   assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
   assert.match(prerenderedHome, /href="\/signin"/);
@@ -57,7 +57,7 @@ test("prerendered homepage exposes the frozen July 11 date", () => {
   // social card is generated dynamically and uses the same frozen date source
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/opengraph-image/);
   assert.match(prerenderedHome, /rel="canonical" href="https:\/\/www\.emir\.com\.au"/);
-  assert.doesNotMatch(prerenderedHome, /Today is|Tuesday, July 7, 2026/);
+  assert.doesNotMatch(prerenderedHome, /Today is|Saturday, July 11, 2026/);
 });
 
 test("prerendered 404 page exposes the not-found title and content", () => {
