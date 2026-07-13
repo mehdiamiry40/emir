@@ -121,7 +121,7 @@ test("sign-in flow protects the admin page", async (t) => {
   await page.click(".signinSubmit");
   await page.waitForURL("**/admin", { timeout: 15000 });
   await page.waitForSelector(".adminPreview");
-  assert.ok((await page.textContent(".adminPreview"))?.includes("2025"));
+  assert.ok((await page.textContent(".adminPreview"))?.includes("2026"));
 
   // sign out returns home and /admin is locked again
   await page.click(".adminSignout");
