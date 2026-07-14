@@ -6,6 +6,8 @@ export const SIGNIN_PATH = "/signin";
 
 export const DATE_LABEL = "Tuesday, July 14, 2026";
 export const DATE_ISO = "2026-07-14";
+export const TIME_LABEL = "5:00 PM";
+export const TIME_24H = "17:00:00";
 
 export const THEME_COLOR = "#2c000f";
 

@@ -150,8 +150,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
     assert.deepEqual(
       state,
       {
-        dateTime: "2026-07-14",
-        dateText: "Tuesday, July 14, 2026",
+        dateTime: "2026-07-14T17:00:00",
+        dateText: "Tuesday, July 14, 2026 · 5:00 PM",
         dateFontSize: 11,
         dateVisible: true,
         eagleLabel: "Animate eagle",
