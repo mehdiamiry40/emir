@@ -29,8 +29,8 @@ test("homepage keeps the requested frozen July 14 date", () => {
   assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-14"/);
   // the page renders the fixed date resolved by lib/date.js
   assert.match(pageSource, /getDate\(\)/);
-  assert.match(pageSource, /dateTime=\{date\.iso\}/);
-  assert.match(pageSource, /\{date\.label\}/);
+  assert.match(pageSource, /dateTime=\{`\$\{date\.iso\}T\$\{TIME_24H\}`\}/);
+  assert.match(pageSource, /\$\{date\.label\} · \$\{TIME_LABEL\}/);
   // no clocks or live-date machinery: the date must never advance on its own
   assert.doesNotMatch(
     pageSource,
@@ -46,8 +46,11 @@ test("date cannot be overridden by production runtime storage", () => {
 
 test("prerendered homepage exposes the frozen July 14 date", () => {
   assert.match(prerenderedHome, /<title>EMIR — Tuesday, July 14, 2026<\/title>/);
-  assert.match(prerenderedHome, /dateTime="2026-07-14"/);
-  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-14">Tuesday, July 14, 2026<\/time>/);
+  assert.match(prerenderedHome, /dateTime="2026-07-14T17:00:00"/);
+  assert.match(
+    prerenderedHome,
+    /class="date footerDate" dateTime="2026-07-14T17:00:00">Tuesday, July 14, 2026 · 5:00 PM<\/time>/,
+  );
   assert.match(prerenderedHome, />EMIR</);
   assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
   assert.match(prerenderedHome, /href="\/signin"/);

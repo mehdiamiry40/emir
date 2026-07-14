@@ -1,7 +1,13 @@
 import Link from "next/link";
 import Eagle from "./eagle";
 import { getDate } from "../lib/date";
-import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
+import {
+  SIGNIN_PATH,
+  SITE_NAME,
+  SOCIAL_DESCRIPTION,
+  TIME_24H,
+  TIME_LABEL,
+} from "./site";
 
 const QUOTE_TEXT = "Rise above the noise.";
 const EXTRUSION_STEPS = [12, 10, 8, 6, 4, 2];
@@ -298,8 +304,8 @@ export default async function Home() {
         </div>
         <footer className="bottomRow">
           <span>emir.com.au</span>
-          <time className="date footerDate" dateTime={date.iso}>
-            {date.label}
+          <time className="date footerDate" dateTime={`${date.iso}T${TIME_24H}`}>
+            {`${date.label} · ${TIME_LABEL}`}
           </time>
         </footer>
       </main>
