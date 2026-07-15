@@ -95,6 +95,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       const eagle = document.querySelector(".eagleWrap");
       const date = document.querySelector(".date");
       const login = document.querySelector(".signinCta");
+      const quote = document.querySelector(".heroQuote");
 
       function rectFor(element) {
         const rect = element?.getBoundingClientRect();
@@ -125,6 +126,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       const eagleRect = rectFor(eagle);
       const dateRect = rectFor(date);
       const loginRect = rectFor(login);
+      const quoteRect = rectFor(quote);
 
       return {
         dateTime: date?.getAttribute("datetime"),
@@ -137,7 +139,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginHref: login?.getAttribute("href"),
         loginText: login?.textContent?.trim(),
         loginVisible: inViewport(loginRect),
-        quoteTextNodes: document.querySelectorAll(".heroQuote text").length,
+        quoteText: quote?.textContent?.trim(),
+        quoteVisible: inViewport(quoteRect),
         noHorizontalScroll:
           document.documentElement.scrollWidth <= window.innerWidth + 1 &&
           document.body.scrollWidth <= window.innerWidth + 1,
@@ -160,7 +163,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginHref: "/signin",
         loginText: "Sign in",
         loginVisible: true,
-        quoteTextNodes: 6,
+        quoteText: "Rise above the noise.",
+        quoteVisible: true,
         noHorizontalScroll: true,
         noVerticalScroll: true,
       },

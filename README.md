@@ -2,8 +2,9 @@
 
 One page. One eagle. One date. Live at [www.emir.com.au](https://www.emir.com.au).
 
-A single-screen Next.js site with a traced gold eagle, an engraved quote,
-a deliberately fixed date, no scrolling, and a password-protected private page.
+A single-screen Next.js site in a monochrome minimalist style: a traced black
+eagle, a typographic quote, a deliberately fixed date, no scrolling, and a
+password-protected private page.
 
 ## Commands
 
