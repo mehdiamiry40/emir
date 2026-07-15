@@ -1,17 +1,10 @@
 :root {
-  color-scheme: dark;
-  --paper: #2c000f;
-  --paper-deep: #040001;
-  --paper-mid: #54001c;
-  --paper-glow: #9b0037;
-  --ink: #fff8eb;
-  --ink-muted: rgba(255, 248, 235, 0.68);
-  --hairline: rgba(248, 214, 128, 0.28);
-  --accent: #d8b65f;
-  --accent-hot: #ffdf8a;
-  --accent-red: #b20a3d;
-  --eagle-filter: invert(78%) sepia(43%) saturate(565%) hue-rotate(3deg)
-    brightness(104%) contrast(92%);
+  color-scheme: light;
+  --paper: #fafafa;
+  --surface: #ffffff;
+  --ink: #111111;
+  --ink-muted: rgba(17, 17, 17, 0.64);
+  --hairline: rgba(17, 17, 17, 0.16);
   background: var(--paper);
   color: var(--ink);
   font-family:
@@ -37,10 +30,7 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(circle at 59% 46%, rgba(151, 0, 53, 0.62), transparent 30rem),
-    radial-gradient(circle at 17% 72%, rgba(94, 0, 32, 0.7), transparent 34rem),
-    linear-gradient(137deg, #020001, var(--paper) 48%, #110006 100%);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   font-synthesis: none;
@@ -63,77 +53,9 @@ body {
   gap: clamp(16px, 3.8vh, 38px);
   overflow: hidden;
   padding: clamp(24px, 5vw, 72px);
-  isolation: isolate;
-  background:
-    radial-gradient(
-      ellipse 54% 68% at 59% 49%,
-      rgba(164, 0, 57, 0.78) 0%,
-      rgba(104, 0, 35, 0.56) 28%,
-      rgba(52, 0, 17, 0.42) 54%,
-      transparent 76%
-    ),
-    radial-gradient(ellipse 78% 80% at 10% 74%, rgba(92, 0, 31, 0.8), transparent 63%),
-    linear-gradient(142deg, #030001 0%, #26000d 45%, #480018 70%, #0a0004 100%);
 }
 
-.home::before,
-.home::after {
-  position: absolute;
-  inset: -18vmax;
-  z-index: 0;
-  pointer-events: none;
-  content: "";
-}
-
-.home::before {
-  background:
-    repeating-radial-gradient(
-      ellipse at 59% 50%,
-      transparent 0 32px,
-      rgba(255, 22, 101, 0.18) 34px,
-      rgba(236, 0, 78, 0.48) 36px,
-      rgba(92, 0, 31, 0.72) 38px,
-      rgba(255, 30, 104, 0.2) 40px,
-      transparent 43px,
-      transparent 69px
-    ),
-    repeating-radial-gradient(
-      ellipse at 12% 59%,
-      transparent 0 56px,
-      rgba(244, 3, 83, 0.33) 58px,
-      rgba(93, 0, 30, 0.62) 61px,
-      rgba(255, 20, 95, 0.17) 63px,
-      transparent 66px,
-      transparent 118px
-    ),
-    repeating-conic-gradient(
-      from -31deg at 59% 50%,
-      rgba(247, 10, 88, 0.28) 0deg,
-      rgba(247, 10, 88, 0.28) 0.42deg,
-      transparent 0.78deg,
-      transparent 5.8deg,
-      rgba(113, 0, 38, 0.28) 6.05deg,
-      transparent 6.45deg,
-      transparent 11.6deg
-    );
-  opacity: 0.96;
-  transform: rotate(-6deg) scale(1.14);
-}
-
-.home::after {
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 59% 49%, transparent 0 23%, rgba(26, 0, 9, 0.1) 43%, rgba(3, 0, 1, 0.58) 100%),
-    linear-gradient(90deg, rgba(3, 0, 1, 0.7), transparent 26%, transparent 72%, rgba(3, 0, 1, 0.64)),
-    linear-gradient(180deg, rgba(3, 0, 1, 0.5), transparent 22%, transparent 77%, rgba(3, 0, 1, 0.63));
-}
-
-.home > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* homepage: Swiss poster grid — header rule / flush-left hero / footer rule */
+/* homepage: Swiss poster grid — header rule / centered hero / footer rule */
 .homePoster {
   align-items: stretch;
   justify-content: space-between;
@@ -147,8 +69,6 @@ body {
   column-gap: clamp(16px, 3vw, 40px);
   padding-bottom: 14px;
   border-bottom: 1px solid var(--hairline);
-  color: var(--ink);
-  text-shadow: 0 2px 16px rgba(255, 255, 255, 0.14);
 }
 
 .topRow .eagleWrap {
@@ -196,124 +116,28 @@ body {
   text-align: center;
 }
 
-/* Layered SVG type recreates the reference's engraved champagne-gold finish. */
 .heroQuote {
-  position: relative;
-  z-index: 0;
-  width: min(545px, 45vw);
   margin: 0;
-  line-height: 0;
-  filter:
-    drop-shadow(0 13px 8px rgba(0, 0, 0, 0.36))
-    sepia(0.06)
-    saturate(1.03)
-    hue-rotate(2deg)
-    brightness(0.88)
-    contrast(1.04);
-}
-
-.quoteSvg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-.quoteSvgMobile {
-  display: none;
 }
 
 .quoteText {
+  margin: 0;
   font-family:
     var(--font-quote),
-    "Bodoni 72 Smallcaps",
     "Bodoni 72",
     Didot,
     "Times New Roman",
     serif;
-  font-size: 174px;
+  font-size: clamp(40px, 8.6vw, 128px);
   font-weight: 400;
   font-variant-ligatures: none;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
   text-transform: uppercase;
-  paint-order: stroke fill;
 }
 
-.quoteExtrusion {
-  fill: #3b2d0e;
-  stroke: #100604;
-  stroke-width: 2.8;
-  opacity: 0.98;
-}
-
-.quoteBlackRim {
-  fill: #160805;
-  stroke: #070100;
-  stroke-width: 8.4;
-  stroke-linejoin: miter;
-  opacity: 0.86;
-}
-
-.quoteWideBevel {
-  fill: none;
-  stroke-width: 6.4;
-  stroke-linejoin: miter;
-  opacity: 0.92;
-}
-
-.quoteOuterRim {
-  fill: none;
-  stroke: #2d2108;
-  stroke-width: 1.9;
-  stroke-linejoin: miter;
-}
-
-.quoteFace {
-  stroke: #f3df9c;
-  stroke-width: 0.7;
-  stroke-linejoin: miter;
-}
-
-.quoteFacetShade {
-  opacity: 0.9;
-  mix-blend-mode: multiply;
-}
-
-.quoteFacetHighlight {
-  opacity: 0.7;
-  mix-blend-mode: screen;
-}
-
-.quoteBrushed {
-  opacity: 0.12;
-  mix-blend-mode: overlay;
-}
-
-.quoteSpecular {
-  opacity: 0.12;
-  mix-blend-mode: screen;
-}
-
-.quoteSheen {
-  opacity: 0.42;
-  mix-blend-mode: screen;
-}
-
-.quoteEdgeLight {
-  fill: none;
-  stroke-width: 1.9;
-  stroke-linejoin: miter;
-  opacity: 0.86;
-  paint-order: stroke;
-}
-
-.quoteInnerEdge {
-  fill: none;
-  stroke-width: 0.8;
-  stroke-linejoin: miter;
-  opacity: 0.72;
-  mix-blend-mode: screen;
-  paint-order: stroke;
+.quoteLine {
+  display: block;
 }
 
 .eagleWrap {
@@ -333,23 +157,8 @@ body {
 }
 
 .eagleWrap:focus-visible {
-  outline: 2px solid var(--accent-hot);
+  outline: 2px solid var(--ink);
   outline-offset: 5px;
-}
-
-.eagleWrap::after {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(135deg, rgba(255, 237, 172, 0.98), rgba(167, 126, 39, 0.98));
-  filter:
-    drop-shadow(0 1px 0 rgba(255, 244, 184, 0.95))
-    drop-shadow(0 20px 32px rgba(0, 0, 0, 0.42));
-  content: "";
-  mask: url("/eagle-icon.svg") center / contain no-repeat;
-  -webkit-mask: url("/eagle-icon.svg") center / contain no-repeat;
 }
 
 .eagle {
@@ -359,30 +168,24 @@ body {
   max-height: 34dvh;
   object-fit: contain;
   object-position: center;
-  opacity: 0;
   user-select: none;
   -webkit-user-drag: none;
 }
 
 .date {
   display: block;
-  font-size: clamp(29px, 5.35vw, 78px);
-  font-weight: 800;
   letter-spacing: 0;
-  line-height: 0.95;
   font-variant-numeric: tabular-nums;
   text-transform: uppercase;
 }
 
 .footerDate {
-  display: block;
-  color: var(--accent-hot);
+  color: var(--ink);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   line-height: 1.2;
   text-align: center;
-  text-shadow: none;
   white-space: nowrap;
 }
 
@@ -392,21 +195,16 @@ body {
   justify-content: center;
   height: 52px;
   padding: 0 28px;
-  border: 1px solid rgba(255, 224, 142, 0.74);
-  background:
-    linear-gradient(135deg, rgba(255, 237, 172, 0.96), rgba(167, 126, 39, 0.96));
-  color: #210007;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
   transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.62),
-    0 18px 42px rgba(0, 0, 0, 0.28);
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .signinCta::after {
@@ -416,12 +214,8 @@ body {
 }
 
 .signinCta:hover {
-  border-color: var(--accent-hot);
-  color: #160004;
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 22px 54px rgba(0, 0, 0, 0.34);
+  background: transparent;
+  color: var(--ink);
 }
 
 .signinCta:hover::after {
@@ -429,7 +223,7 @@ body {
 }
 
 .signinCta:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
 
@@ -458,7 +252,7 @@ body {
 
 .notFoundCode {
   margin: 0;
-  color: var(--accent);
+  color: var(--ink);
   font-size: clamp(72px, 15vw, 176px);
   font-weight: 800;
   letter-spacing: 0;
@@ -485,12 +279,12 @@ body {
 }
 
 .homeLink:hover {
-  color: var(--accent);
-  border-color: var(--accent);
+  color: var(--ink-muted);
+  border-color: var(--ink-muted);
 }
 
 .homeLink:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
 
@@ -503,25 +297,21 @@ body {
   height: 40px;
   padding: 0 16px;
   border: 1px solid var(--hairline);
-  background: rgba(20, 0, 8, 0.72);
+  background: var(--paper);
   color: var(--ink);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
   z-index: 10;
-  backdrop-filter: blur(14px);
-  transition:
-    border-color 0.2s ease,
-    background-color 0.4s ease;
+  transition: border-color 0.2s ease;
 }
 
 .loginButton:hover {
-  border-color: rgba(255, 224, 142, 0.7);
-  color: var(--accent-hot);
+  border-color: var(--ink);
 }
 
 .loginButton:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
@@ -537,13 +327,7 @@ body {
   align-items: stretch;
   padding: clamp(24px, 4vw, 36px);
   border: 1px solid var(--hairline);
-  background:
-    linear-gradient(145deg, rgba(45, 0, 16, 0.88), rgba(12, 0, 5, 0.88)),
-    radial-gradient(circle at 80% 0%, rgba(255, 222, 132, 0.14), transparent 36%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 28px 90px rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(18px);
+  background: var(--surface);
 }
 
 .signinMark {
@@ -558,12 +342,11 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  filter: var(--eagle-filter);
 }
 
 .signinEyebrow {
   margin: 0 0 6px;
-  color: var(--accent-hot);
+  color: var(--ink-muted);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -598,28 +381,26 @@ body {
   height: 46px;
   border: 1px solid var(--hairline);
   border-radius: 0;
-  background: rgba(255, 248, 235, 0.06);
+  background: var(--surface);
   color: var(--ink);
   font: inherit;
   font-size: 15px;
   font-weight: 500;
   outline: none;
   padding: 0 13px;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.4s ease;
+  transition: border-color 0.2s ease;
 }
 
 .signinField input::placeholder {
-  color: color-mix(in srgb, var(--ink-muted) 55%, transparent);
+  color: var(--ink-muted);
 }
 
 .signinField input:focus {
-  border-color: var(--accent-hot);
+  border-color: var(--ink);
 }
 
 .signinField input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #2a0010 inset;
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
   -webkit-text-fill-color: var(--ink);
   caret-color: var(--ink);
 }
@@ -657,7 +438,7 @@ body {
 }
 
 .signinReveal:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 1px;
 }
 
@@ -665,22 +446,22 @@ body {
   width: 100%;
   height: 48px;
   margin-top: 4px;
-  border: 1px solid rgba(255, 224, 142, 0.72);
+  border: 1px solid var(--ink);
   border-radius: 0;
-  background: linear-gradient(135deg, #fff1b3, #b98b2e);
-  color: #210007;
+  background: var(--ink);
+  color: var(--paper);
   cursor: pointer;
   font: inherit;
   font-size: 15px;
   font-weight: 700;
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease;
+    color 0.2s ease;
 }
 
 .signinSubmit:hover:not(:disabled) {
-  border-color: var(--accent-hot);
-  color: #160004;
+  background: transparent;
+  color: var(--ink);
 }
 
 .signinSubmit:disabled {
@@ -689,7 +470,7 @@ body {
 }
 
 .signinSubmit:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
@@ -732,12 +513,12 @@ body {
 }
 
 .adminSignout:hover {
-  color: var(--accent-hot);
-  border-color: rgba(255, 224, 142, 0.7);
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 .adminSignout:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
@@ -752,60 +533,16 @@ body {
   html,
   body {
     overflow: visible;
-    background: #fff;
   }
 
   :root {
     --paper: #fff;
-    --ink: #000;
-    --ink-muted: #333;
-    --hairline: rgba(0, 0, 0, 0.3);
-    --accent: #000;
-    --eagle-filter: none;
+    --surface: #fff;
   }
 
   .home {
     height: auto;
     min-height: 90vh;
-    background: #fff;
-  }
-
-  .home::before,
-  .home::after {
-    display: none;
-  }
-
-  /* the on-screen eagle is a background mask, which doesn't print —
-     show the plain img instead */
-  .eagleWrap::after {
-    display: none;
-  }
-
-  .eagle {
-    opacity: 1;
-  }
-
-  .heroQuote {
-    filter: none;
-  }
-
-  .quoteExtrusion,
-  .quoteBlackRim,
-  .quoteWideBevel,
-  .quoteOuterRim,
-  .quoteFacetShade,
-  .quoteFacetHighlight,
-  .quoteBrushed,
-  .quoteSpecular,
-  .quoteSheen,
-  .quoteEdgeLight,
-  .quoteInnerEdge {
-    display: none;
-  }
-
-  .quoteFace {
-    fill: #000;
-    stroke: none;
   }
 
   .eagle,
@@ -819,7 +556,7 @@ body {
     animation: fadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .date {
+  .heroQuote {
     animation: fadeUp 500ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
@@ -877,22 +614,6 @@ body {
   animation: flap 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.eagleWrap:has(.eagle.flap)::after {
-  animation: flap 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@media (max-width: 1120px) {
-  .heroQuote {
-    width: min(490px, 45vw);
-  }
-}
-
-@media (max-width: 820px) {
-  .heroQuote {
-    width: min(340px, 44vw);
-  }
-}
-
 @media (max-width: 520px) {
   .home {
     padding: 20px 18px;
@@ -911,20 +632,8 @@ body {
     gap: 24px;
   }
 
-  .heroQuote {
-    width: min(44.5vw, 170px);
-  }
-
-  .quoteSvgDesktop {
-    display: none;
-  }
-
-  .quoteSvgMobile {
-    display: block;
-  }
-
-  .date {
-    font-size: clamp(22px, 7.14vw, 31px);
+  .quoteText {
+    font-size: clamp(36px, 11vw, 56px);
   }
 
   .bottomRow {
@@ -973,8 +682,8 @@ body {
     max-height: 24dvh;
   }
 
-  .date {
-    font-size: clamp(28px, 6vh, 56px);
+  .quoteText {
+    font-size: clamp(32px, 9vh, 72px);
   }
 
   .signinCta {

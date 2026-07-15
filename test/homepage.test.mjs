@@ -80,8 +80,8 @@ test("prerendered sign-in page exposes the expected form", () => {
 });
 
 test("manifest uses the current background color", () => {
-  assert.equal(prerenderedManifest.background_color, "#2c000f");
-  assert.equal(prerenderedManifest.theme_color, "#2c000f");
+  assert.equal(prerenderedManifest.background_color, "#fafafa");
+  assert.equal(prerenderedManifest.theme_color, "#fafafa");
   assert.ok(
     prerenderedManifest.icons.some(
       (icon) => icon.src === "/icon-512-maskable.png" && icon.purpose === "maskable",
