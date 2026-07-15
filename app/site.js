@@ -4,10 +4,8 @@ export const DESCRIPTION = "EMIR — a monochrome personal homepage built around
 export const SOCIAL_DESCRIPTION = "EMIR — Rise above the noise.";
 export const SIGNIN_PATH = "/signin";
 
-export const DATE_LABEL = "Tuesday, July 14, 2026";
-export const DATE_ISO = "2026-07-14";
-export const TIME_LABEL = "5:00 PM";
-export const TIME_24H = "17:00:00";
+export const DATE_LABEL = "Wednesday, July 15, 2026";
+export const DATE_ISO = "2026-07-15";
 
 export const THEME_COLOR = "#fafafa";
 
