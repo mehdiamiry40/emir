@@ -1,13 +1,14 @@
 :root {
-  color-scheme: light;
-  --paper: #fafafa;
-  --surface: #ffffff;
-  --ink: #111111;
-  --ink-muted: rgba(17, 17, 17, 0.64);
-  --hairline: rgba(17, 17, 17, 0.16);
-  --hairline-strong: rgba(17, 17, 17, 0.32);
-  --eagle-invert: 0;
-  background: var(--paper);
+  color-scheme: dark;
+  --canvas: #2f64c7;
+  --canvas-deep: #123d8f;
+  --canvas-panel: #17499f;
+  --ink: #ffffff;
+  --ink-muted: #edf4ff;
+  --hairline: rgba(255, 255, 255, 0.3);
+  --hairline-soft: rgba(255, 255, 255, 0.14);
+  --focus: #ffffff;
+  background: var(--canvas);
   color: var(--ink);
   font-family:
     var(--font-display),
@@ -16,19 +17,6 @@
     ui-sans-serif,
     system-ui,
     sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --paper: #0f0f0f;
-    --surface: #161616;
-    --ink: #f5f5f5;
-    --ink-muted: rgba(245, 245, 245, 0.68);
-    --hairline: rgba(245, 245, 245, 0.2);
-    --hairline-strong: rgba(245, 245, 245, 0.38);
-    --eagle-invert: 1;
-  }
 }
 
 * {
@@ -45,16 +33,20 @@ body {
 }
 
 body {
-  background: var(--paper);
+  background: var(--canvas);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
+}
+
+button,
+input {
+  font: inherit;
 }
 
 ::selection {
   background: var(--ink);
-  color: var(--paper);
+  color: var(--canvas-deep);
 }
 
 .home {
@@ -66,101 +58,222 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(16px, 3.8vh, 38px);
   overflow: hidden;
-  padding: clamp(24px, 5vw, 72px);
+  padding: 24px 32px;
+  background: var(--canvas);
+  isolation: isolate;
 }
 
-/* homepage: Swiss poster grid — header rule / centered hero / footer rule */
-.homePoster {
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 0;
+.signalHome::before,
+.signalHome::after {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--hairline-soft);
+  content: "";
+}
+
+.signalHome::before {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+}
+
+.signalHome::after {
+  top: 41%;
+  right: 0;
+  left: 0;
+  height: 1px;
 }
 
 .topRow {
+  position: absolute;
+  top: 18px;
+  right: 32px;
+  left: 32px;
+  z-index: 5;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  column-gap: clamp(16px, 3vw, 40px);
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.topRow .eagleWrap {
-  grid-column: 2;
-  width: min(25vw, 276px);
+  gap: 24px;
+  min-height: 44px;
 }
 
 .wordmark {
-  font-size: clamp(16px, 1.8vw, 24px);
-  font-weight: 300;
-  letter-spacing: 0.24em;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
   text-transform: uppercase;
   user-select: none;
 }
 
-.bottomRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: clamp(12px, 3vw, 34px);
-  padding-top: 14px;
-  border-top: 1px solid var(--hairline);
-  color: var(--ink-muted);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
-  user-select: none;
-}
-
-.bottomRow > :last-child {
-  text-align: right;
-  justify-self: end;
-}
-
-.hero {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(22px, 5vh, 44px);
-  width: 100%;
-  text-align: center;
-}
-
-.heroQuote {
-  margin: 0;
-}
-
-.quoteText {
-  margin: 0;
-  font-family:
-    var(--font-quote),
-    "Bodoni 72",
-    Didot,
-    "Times New Roman",
-    serif;
-  font-size: clamp(44px, 9vw, 132px);
-  font-weight: 400;
-  font-variant-ligatures: none;
-  font-optical-sizing: auto;
-  letter-spacing: 0.015em;
-  line-height: 1.02;
-  text-transform: uppercase;
-}
-
-.quoteLine {
+.wordmarkMark {
+  position: relative;
+  width: 24px;
+  height: 20px;
   display: block;
 }
 
+.wordmarkMark i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  display: block;
+  background: currentColor;
+}
+
+.wordmarkMark i:nth-child(1) {
+  top: 0;
+  left: 8px;
+}
+
+.wordmarkMark i:nth-child(2) {
+  top: 7px;
+  left: 0;
+}
+
+.wordmarkMark i:nth-child(3) {
+  top: 7px;
+  left: 16px;
+}
+
+.wordmarkMark i:nth-child(4) {
+  top: 14px;
+  left: 8px;
+}
+
+.siteStatus {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 3px;
+  border: 1px solid rgba(7, 37, 101, 0.36);
+  border-radius: 4px;
+  background: rgba(13, 54, 139, 0.9);
+  box-shadow: 0 8px 22px rgba(14, 48, 119, 0.18);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.siteStatus > * {
+  min-width: 92px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  white-space: nowrap;
+}
+
+.siteStatusActive {
+  border-radius: 2px;
+  background: var(--ink);
+  color: var(--canvas-deep);
+}
+
+.signalStage {
+  position: absolute;
+  top: 41%;
+  left: 50%;
+  z-index: 1;
+  width: min(68vmin, 620px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.signalField,
+.signalRays {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.signalRays {
+  transform-origin: center;
+}
+
+.signalRay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 1px;
+  display: block;
+  background: rgba(255, 255, 255, 0.24);
+  transform-origin: 0 50%;
+}
+
+.signalRay::after {
+  position: absolute;
+  top: -1.5px;
+  right: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.52);
+  content: "";
+}
+
+.signalRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.signalRingOuter {
+  width: 100%;
+  height: 100%;
+}
+
+.signalRingInner {
+  width: 25%;
+  height: 25%;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.signalCore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  display: block;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.95),
+    0 0 24px rgba(255, 255, 255, 0.68),
+    0 0 48px rgba(255, 255, 255, 0.42);
+  transform: translate(-50%, -50%);
+}
+
+.signalStage .eagleWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  width: 72%;
+  transform: translate(-50%, -50%);
+}
+
 .eagleWrap {
-  position: relative;
   align-self: center;
-  width: min(60vw, 620px);
   min-height: 44px;
   aspect-ratio: 237 / 57;
   display: flex;
@@ -173,95 +286,149 @@ body {
   cursor: pointer;
 }
 
+.eagleWrap::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--ink);
+  filter:
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))
+    drop-shadow(0 10px 24px rgba(12, 47, 125, 0.32));
+  content: "";
+  mask: url("/eagle-icon.svg") center / contain no-repeat;
+  -webkit-mask: url("/eagle-icon.svg") center / contain no-repeat;
+}
+
 .eagleWrap:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 5px;
+  outline: 2px solid var(--focus);
+  outline-offset: 7px;
 }
 
 .eagle {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 34dvh;
   object-fit: contain;
   object-position: center;
-  filter: invert(var(--eagle-invert));
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
   user-select: none;
   -webkit-user-drag: none;
 }
 
-.eagleWrap:hover .eagle {
-  transform: translateY(-1px) scale(1.015);
+.hero {
+  position: absolute;
+  bottom: 64px;
+  left: 32px;
+  z-index: 3;
+  width: min(670px, 58vw);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
 }
 
-.date {
-  display: block;
-  letter-spacing: 0;
-  font-variant-numeric: tabular-nums;
-  text-transform: uppercase;
-}
-
-.footerDate {
+.heroQuote {
+  margin: 0;
   color: var(--ink);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  text-align: center;
-  white-space: nowrap;
+  font-size: 70px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.96;
+  text-wrap: balance;
+}
+
+.heroQuote span {
+  display: block;
 }
 
 .signinCta {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  height: 52px;
-  padding: 0 28px;
-  border: 1px solid var(--ink);
+  justify-content: space-between;
+  min-width: 160px;
+  height: 44px;
+  padding: 3px 3px 3px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 3px;
   background: var(--ink);
-  color: var(--paper);
-  font-size: 16px;
+  color: var(--canvas-deep);
+  font-size: 13px;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.15s ease;
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .signinCta::after {
-  content: "→" / "";
-  transition: transform 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  margin-left: 18px;
+  border-radius: 2px;
+  background: var(--canvas-deep);
+  color: var(--ink);
+  content: "↗";
+  font-size: 18px;
+  line-height: 1;
 }
 
 .signinCta:hover {
-  background: transparent;
-  color: var(--ink);
-}
-
-.signinCta:hover::after {
-  transform: translateX(4px);
-}
-
-.signinCta:active {
-  transform: translateY(1px);
+  box-shadow: 0 12px 30px rgba(13, 52, 132, 0.26);
+  transform: translateY(-2px);
 }
 
 .signinCta:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 3px;
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
 }
 
 .topSignin {
+  grid-column: 3;
   justify-self: end;
-  gap: 8px;
-  height: 40px;
-  padding: 0 18px;
-  font-size: 12px;
-  letter-spacing: 0.04em;
+}
+
+.heroSignin {
+  min-width: 220px;
+}
+
+.bottomRow {
+  position: absolute;
+  right: 32px;
+  bottom: 20px;
+  left: 32px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.bottomRow > :last-child {
+  justify-self: end;
+  text-align: right;
+}
+
+.date,
+.footerDate {
+  display: block;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .srOnly {
@@ -271,201 +438,197 @@ body {
   margin: -1px;
   padding: 0;
   overflow: hidden;
+  border: 0;
   clip-path: inset(50%);
   white-space: nowrap;
-  border: 0;
 }
 
 .notFoundCode {
   margin: 0;
   color: var(--ink);
-  font-family:
-    var(--font-quote),
-    "Bodoni 72",
-    Didot,
-    "Times New Roman",
-    serif;
-  font-size: clamp(110px, 22vw, 240px);
+  font-size: 144px;
   font-weight: 400;
-  font-optical-sizing: auto;
-  letter-spacing: 0.02em;
-  line-height: 1;
+  letter-spacing: 0;
+  line-height: 0.9;
 }
 
 .notFoundText {
-  margin: 0;
+  margin: 18px 0 30px;
   color: var(--ink-muted);
-  font-size: clamp(15px, 1.8vw, 20px);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .homeLink {
-  color: var(--ink);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--canvas-deep);
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   text-decoration: none;
-  border-bottom: 1px solid var(--ink);
-  padding-bottom: 3px;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
 }
 
 .homeLink:hover {
-  color: var(--ink-muted);
-  border-color: var(--ink-muted);
+  transform: translateY(-1px);
 }
 
 .homeLink:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--focus);
   outline-offset: 4px;
 }
 
 .loginButton {
   position: fixed;
-  top: clamp(18px, 4.2vw, 60px);
-  left: clamp(24px, 5vw, 72px);
+  top: 18px;
+  left: 32px;
+  z-index: 10;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ink-muted);
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--canvas-deep);
   font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-weight: 700;
   text-decoration: none;
-  z-index: 10;
-  transition: color 0.2s ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .loginButton::before {
-  content: "←" / "";
   margin-right: 8px;
-  transition: transform 0.2s ease;
+  content: "←";
 }
 
 .loginButton:hover {
-  color: var(--ink);
-}
-
-.loginButton:hover::before {
-  transform: translateX(-3px);
+  box-shadow: 0 12px 30px rgba(13, 52, 132, 0.26);
+  transform: translateY(-1px);
 }
 
 .loginButton:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--focus);
   outline-offset: 4px;
 }
 
 .signinHome {
-  gap: 0;
-  padding-inline: clamp(18px, 4vw, 48px);
+  padding: 24px;
 }
 
-/* sign-in: editorial column framed by the same hairline rules as the poster */
+.signinHome::before,
+.signinHome::after {
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  content: "";
+}
+
+.signinHome::before {
+  width: min(72vmin, 680px);
+  aspect-ratio: 1;
+}
+
+.signinHome::after {
+  width: min(48vmin, 460px);
+  aspect-ratio: 1;
+}
+
 .signinPanel {
-  width: min(92vw, 400px);
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 410px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: clamp(28px, 5vh, 44px) 0;
-  border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
+  padding: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 4px;
+  background: var(--canvas-deep);
+  box-shadow: 0 28px 80px rgba(9, 39, 103, 0.3);
 }
 
 .signinMark {
-  width: min(180px, 50vw);
-  height: 44px;
+  width: min(190px, 54vw);
+  height: 48px;
   display: flex;
   align-items: center;
-  margin-bottom: clamp(20px, 4vh, 30px);
+  margin-bottom: 26px;
 }
 
 .signinMark img {
   display: block;
   width: 100%;
   height: auto;
-  filter: invert(var(--eagle-invert));
+  filter: brightness(0) invert(1);
 }
 
 .signinEyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 7px;
   color: var(--ink-muted);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0;
   line-height: 1.2;
   text-transform: uppercase;
 }
 
 .signinTitle {
-  margin: 0 0 28px;
+  margin: 0 0 26px;
   color: var(--ink);
-  font-family:
-    var(--font-quote),
-    "Bodoni 72",
-    Didot,
-    "Times New Roman",
-    serif;
-  font-size: clamp(36px, 7vw, 48px);
+  font-size: 40px;
   font-weight: 400;
-  font-optical-sizing: auto;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   line-height: 1;
-  text-transform: uppercase;
 }
 
 .signinForm {
   display: grid;
-  gap: 18px;
+  gap: 14px;
 }
 
 .signinField {
   display: grid;
   gap: 8px;
   color: var(--ink-muted);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .signinField input {
   width: 100%;
-  height: 44px;
-  border: 0;
-  border-bottom: 1px solid var(--hairline-strong);
-  border-radius: 0;
-  background: transparent;
-  color: var(--ink);
-  font: inherit;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: normal;
-  text-transform: none;
+  height: 48px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 2px;
   outline: none;
-  padding: 0 2px;
-  transition: border-color 0.2s ease;
+  background: #0d347d;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 500;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
 }
 
 .signinField input::placeholder {
-  color: var(--ink-muted);
+  color: #cbdcff;
 }
 
 .signinField input:focus {
-  border-bottom-color: var(--ink);
-  box-shadow: 0 1px 0 var(--ink);
+  border-color: var(--ink);
+  background: #0a2c6d;
 }
 
 .signinField input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px var(--paper) inset;
+  -webkit-box-shadow: 0 0 0 1000px #0d347d inset;
   -webkit-text-fill-color: var(--ink);
   caret-color: var(--ink);
 }
@@ -476,26 +639,24 @@ body {
 }
 
 .signinInputWrap input {
-  padding-right: 64px;
+  padding-right: 68px;
 }
 
 .signinReveal {
   position: absolute;
   top: 50%;
-  right: 0;
+  right: 6px;
+  min-width: 52px;
   height: 34px;
   padding: 0 8px;
   border: 0;
   background: transparent;
   color: var(--ink-muted);
   cursor: pointer;
-  font: inherit;
   font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: 700;
   text-transform: uppercase;
   transform: translateY(-50%);
-  transition: color 0.2s ease;
 }
 
 .signinReveal:hover {
@@ -503,53 +664,47 @@ body {
 }
 
 .signinReveal:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--focus);
   outline-offset: 1px;
 }
 
 .signinSubmit {
   width: 100%;
-  height: 50px;
-  margin-top: 10px;
+  height: 48px;
+  margin-top: 4px;
   border: 1px solid var(--ink);
-  border-radius: 0;
+  border-radius: 2px;
   background: var(--ink);
-  color: var(--paper);
+  color: var(--canvas-deep);
   cursor: pointer;
-  font: inherit;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.15s ease;
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .signinSubmit:hover:not(:disabled) {
-  background: transparent;
-  color: var(--ink);
-}
-
-.signinSubmit:active:not(:disabled) {
-  transform: translateY(1px);
+  box-shadow: 0 12px 30px rgba(4, 24, 71, 0.34);
+  transform: translateY(-1px);
 }
 
 .signinSubmit:disabled {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: default;
 }
 
 .signinSubmit:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 
 .signinStatus {
-  margin: 4px 0 0;
-  color: var(--ink);
+  margin: 2px 0 0;
+  color: var(--ink-muted);
   font-size: 13px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
 .adminSummary {
@@ -561,105 +716,90 @@ body {
   margin: 0;
   color: var(--ink);
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
 .adminSignout {
   width: 100%;
   height: 46px;
-  margin-top: 18px;
-  border: 1px solid var(--hairline-strong);
-  border-radius: 0;
+  margin-top: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
   background: transparent;
-  color: var(--ink-muted);
+  color: var(--ink);
   cursor: pointer;
-  font: inherit;
   font-size: 14px;
   font-weight: 700;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
 }
 
 .adminSignout:hover {
-  color: var(--ink);
   border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .adminSignout:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 
 @media (prefers-contrast: more) {
   :root {
     --ink-muted: var(--ink);
-    --hairline: color-mix(in srgb, var(--ink) 55%, transparent);
-    --hairline-strong: color-mix(in srgb, var(--ink) 70%, transparent);
-  }
-}
-
-@media print {
-  html,
-  body {
-    overflow: visible;
+    --hairline: rgba(255, 255, 255, 0.72);
   }
 
-  :root {
-    color-scheme: light;
-    --paper: #fff;
-    --surface: #fff;
-    --ink: #000;
-    --ink-muted: #333;
-    --hairline: rgba(0, 0, 0, 0.3);
-    --hairline-strong: rgba(0, 0, 0, 0.5);
-    --eagle-invert: 0;
-  }
-
-  .home {
-    height: auto;
-    min-height: 90vh;
-  }
-
-  .eagle,
-  .date {
-    animation: none;
+  .signalRay,
+  .signalRing {
+    opacity: 0.88;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .eagleWrap {
-    animation: fadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  .signalRays {
+    animation: signalDrift 52s linear infinite;
   }
 
-  .quoteLine {
-    animation: fadeUp 600ms 60ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .quoteLine + .quoteLine {
-    animation-delay: 170ms;
-  }
-
-  .signinCta {
-    animation: fadeUp 500ms 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  .signalCore {
+    animation: corePulse 2.8s ease-in-out infinite;
   }
 
   .topRow,
+  .hero,
   .bottomRow,
+  .signinPanel,
   .loginButton {
-    animation: fadeUp 500ms 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: fadeUp 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .signinPanel {
-    animation: fadeUp 500ms 60ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  .signalStage {
+    animation: signalIn 760ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes signalDrift {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes corePulse {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.14);
   }
 }
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
 
   to {
@@ -668,22 +808,33 @@ body {
   }
 }
 
-/* easter egg: click the eagle for a wing-beat */
+@keyframes signalIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 @keyframes flap {
   0% {
     transform: none;
   }
 
   22% {
-    transform: translateY(-11px) scale(1.02, 0.95) rotate(-1deg);
+    transform: translateY(-10px) scale(1.02, 0.94);
   }
 
   48% {
-    transform: translateY(5px) scale(0.99, 1.03) rotate(0.8deg);
+    transform: translateY(4px) scale(0.99, 1.03);
   }
 
   72% {
-    transform: translateY(-4px) scale(1.01, 0.99);
+    transform: translateY(-3px) scale(1.01, 0.99);
   }
 
   100% {
@@ -691,91 +842,212 @@ body {
   }
 }
 
-.eagle.flap {
+.eagle.flap,
+.eagleWrap:has(.eagle.flap)::after {
   animation: flap 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@media (max-width: 520px) {
-  .home {
-    padding: 20px 18px;
-  }
-
-  .topRow {
-    grid-template-columns: minmax(0, 1fr) auto minmax(40px, 1fr);
-    column-gap: 10px;
-  }
-
-  .topRow .eagleWrap {
-    width: min(31vw, 126px);
-  }
-
-  .wordmark {
-    letter-spacing: 0.16em;
+@media (max-width: 900px) {
+  .heroQuote {
+    font-size: 56px;
   }
 
   .hero {
-    gap: 24px;
+    width: min(560px, 72vw);
+  }
+}
+
+@media (max-width: 620px) {
+  .home {
+    padding: 16px;
   }
 
-  /* one word per line: the small-screen poster */
-  .quoteText {
-    font-size: clamp(52px, 15.5vw, 68px);
-    line-height: 1.04;
-  }
-
-  .quoteLine {
-    word-spacing: 100vw;
-  }
-
-  .bottomRow {
+  .topRow {
+    top: 14px;
+    right: 16px;
+    left: 16px;
     grid-template-columns: minmax(0, 1fr) auto;
-    column-gap: 8px;
-    font-size: 11px;
-    letter-spacing: 0.06em;
+    gap: 14px;
   }
 
-  .footerDate {
-    font-size: 11px;
-    letter-spacing: 0.02em;
+  .wordmark {
+    font-size: 16px;
   }
 
-  .signinCta {
-    height: 48px;
-    padding: 0 22px;
-    font-size: 15px;
+  .wordmarkMark {
+    width: 21px;
+    transform: scale(0.88);
+    transform-origin: left center;
+  }
+
+  .siteStatus {
+    display: none;
   }
 
   .topSignin {
-    gap: 6px;
-    height: 34px;
-    padding: 0 12px;
+    grid-column: 2;
+    min-width: 124px;
+    height: 40px;
+  }
+
+  .topSignin::after {
+    width: 32px;
+    height: 32px;
+  }
+
+  .signalHome::after {
+    top: 31%;
+  }
+
+  .signalStage {
+    top: 31%;
+    width: min(84vw, 340px);
+  }
+
+  .hero {
+    bottom: 66px;
+    left: 16px;
+    width: calc(100vw - 32px);
+    gap: 14px;
+  }
+
+  .heroQuote {
+    font-size: 42px;
+  }
+
+  .heroSignin {
+    min-width: 158px;
+    height: 40px;
+  }
+
+  .heroSignin::after {
+    width: 32px;
+    height: 32px;
+  }
+
+  .bottomRow {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    gap: 10px;
     font-size: 10px;
+  }
+
+  .date,
+  .footerDate {
+    font-size: 11px;
   }
 
   .loginButton {
     top: 14px;
-    left: 18px;
+    left: 16px;
+    min-height: 40px;
+  }
+
+  .signinPanel {
+    width: 100%;
+    max-width: 390px;
+    padding: 28px;
+  }
+
+  .signinTitle {
+    font-size: 36px;
+  }
+
+  .notFoundCode {
+    font-size: 112px;
   }
 }
 
-@media (max-height: 560px) {
-  .hero {
-    gap: 16px;
+@media (max-height: 620px) and (min-width: 621px) {
+  .signalStage {
+    top: 39%;
+    width: min(62vmin, 380px);
   }
 
-  .eagleWrap {
-    width: min(40vw, 360px);
+  .signalHome::after {
+    top: 39%;
+  }
+
+  .hero {
+    bottom: 54px;
+    gap: 12px;
+  }
+
+  .heroQuote {
+    font-size: 48px;
+  }
+
+  .heroSignin {
+    height: 40px;
+  }
+
+  .heroSignin::after {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-height: 680px) and (max-width: 620px) {
+  .signalStage {
+    top: 30%;
+    width: min(68vw, 270px);
+  }
+
+  .hero {
+    bottom: 54px;
+    gap: 10px;
+  }
+
+  .heroQuote {
+    font-size: 36px;
+  }
+
+  .heroSignin {
+    height: 38px;
+  }
+
+  .heroSignin::after {
+    width: 30px;
+    height: 30px;
+  }
+
+  .bottomRow {
+    bottom: 12px;
+  }
+}
+
+@media print {
+  html,
+  body {
+    overflow: visible;
+    background: #ffffff;
+  }
+
+  :root {
+    --canvas: #ffffff;
+    --canvas-deep: #000000;
+    --ink: #000000;
+    --ink-muted: #222222;
+  }
+
+  .home {
+    min-height: 90vh;
+    height: auto;
+    background: #ffffff;
+  }
+
+  .signalHome::before,
+  .signalHome::after,
+  .signalField {
+    display: none;
+  }
+
+  .eagleWrap::after {
+    display: none;
   }
 
   .eagle {
-    max-height: 24dvh;
-  }
-
-  .quoteText {
-    font-size: clamp(32px, 9vh, 72px);
-  }
-
-  .signinCta {
-    height: 44px;
+    opacity: 1;
   }
 }

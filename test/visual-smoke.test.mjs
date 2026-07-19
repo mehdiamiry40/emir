@@ -95,7 +95,6 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       const eagle = document.querySelector(".eagleWrap");
       const date = document.querySelector(".date");
       const login = document.querySelector(".signinCta");
-      const quote = document.querySelector(".heroQuote");
 
       function rectFor(element) {
         const rect = element?.getBoundingClientRect();
@@ -126,7 +125,6 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       const eagleRect = rectFor(eagle);
       const dateRect = rectFor(date);
       const loginRect = rectFor(login);
-      const quoteRect = rectFor(quote);
 
       return {
         dateTime: date?.getAttribute("datetime"),
@@ -139,8 +137,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginHref: login?.getAttribute("href"),
         loginText: login?.textContent?.trim(),
         loginVisible: inViewport(loginRect),
-        quoteText: quote?.textContent?.trim(),
-        quoteVisible: inViewport(quoteRect),
+        heroLabel: document.querySelector(".heroQuote")?.getAttribute("aria-label"),
+        signalRayCount: document.querySelectorAll(".signalRay").length,
         noHorizontalScroll:
           document.documentElement.scrollWidth <= window.innerWidth + 1 &&
           document.body.scrollWidth <= window.innerWidth + 1,
@@ -163,8 +161,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginHref: "/signin",
         loginText: "Sign in",
         loginVisible: true,
-        quoteText: "Rise above the noise.",
-        quoteVisible: true,
+        heroLabel: "Rise above the noise.",
+        signalRayCount: 96,
         noHorizontalScroll: true,
         noVerticalScroll: true,
       },

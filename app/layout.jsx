@@ -1,25 +1,11 @@
 import "./globals.css";
-import { Bodoni_Moda, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import {
-  DESCRIPTION,
-  SITE_NAME,
-  SITE_URL,
-  THEME_COLOR,
-  THEME_COLOR_DARK,
-} from "./site";
+import { DESCRIPTION, SITE_NAME, SITE_URL, THEME_COLOR } from "./site";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-display",
-  display: "swap",
-});
-
-// variable weight unlocks the optical-size axis for crisp display rendering
-const quote = Bodoni_Moda({
-  subsets: ["latin"],
-  axes: ["opsz"],
-  variable: "--font-quote",
   display: "swap",
 });
 
@@ -41,16 +27,13 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: THEME_COLOR },
-    { media: "(prefers-color-scheme: dark)", color: THEME_COLOR_DARK },
-  ],
+  themeColor: THEME_COLOR,
 };
 
 /** @param {{ children: import("react").ReactNode }} props */
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${quote.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
         {children}
         <Analytics />
