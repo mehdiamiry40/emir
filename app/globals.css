@@ -3,8 +3,9 @@
   --canvas: #2f64c7;
   --canvas-deep: #123d8f;
   --canvas-panel: #17499f;
-  --ink: #ffffff;
+  --ink: #fafaf7;
   --ink-muted: #edf4ff;
+  --navy: #0d347d;
   --hairline: rgba(255, 255, 255, 0.3);
   --hairline-soft: rgba(255, 255, 255, 0.14);
   --focus: #ffffff;
@@ -64,29 +65,6 @@ input {
   isolation: isolate;
 }
 
-.signalHome::before,
-.signalHome::after {
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-  background: var(--hairline-soft);
-  content: "";
-}
-
-.signalHome::before {
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-}
-
-.signalHome::after {
-  top: 41%;
-  right: 0;
-  left: 0;
-  height: 1px;
-}
-
 .topRow {
   position: absolute;
   top: 18px;
@@ -115,38 +93,20 @@ input {
 }
 
 .wordmarkMark {
-  position: relative;
-  width: 24px;
+  width: 27px;
   height: 20px;
-  display: block;
+  display: grid;
+  grid-template-columns: repeat(7, 3px);
+  grid-template-rows: repeat(5, 3px);
+  gap: 1px;
+  align-content: center;
 }
 
 .wordmarkMark i {
-  position: absolute;
-  width: 7px;
-  height: 7px;
+  width: 3px;
+  height: 3px;
   display: block;
   background: currentColor;
-}
-
-.wordmarkMark i:nth-child(1) {
-  top: 0;
-  left: 8px;
-}
-
-.wordmarkMark i:nth-child(2) {
-  top: 7px;
-  left: 0;
-}
-
-.wordmarkMark i:nth-child(3) {
-  top: 7px;
-  left: 16px;
-}
-
-.wordmarkMark i:nth-child(4) {
-  top: 14px;
-  left: 8px;
 }
 
 .siteStatus {
@@ -155,10 +115,10 @@ input {
   align-items: center;
   min-height: 44px;
   padding: 3px;
-  border: 1px solid rgba(7, 37, 101, 0.36);
+  border: 1px solid rgba(7, 37, 101, 0.28);
   border-radius: 4px;
-  background: rgba(13, 54, 139, 0.9);
-  box-shadow: 0 8px 22px rgba(14, 48, 119, 0.18);
+  background: rgba(13, 52, 125, 0.88);
+  box-shadow: 0 8px 24px rgba(9, 37, 98, 0.16);
   color: var(--ink);
   font-size: 13px;
   font-weight: 600;
@@ -184,83 +144,25 @@ input {
 
 .signalStage {
   position: absolute;
-  top: 41%;
+  top: 49%;
   left: 50%;
   z-index: 1;
-  width: min(68vmin, 620px);
+  width: min(61vmin, 560px);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
 }
 
-.signalField,
-.signalRays {
+.signalField {
   position: absolute;
   inset: 0;
-  border-radius: 50%;
+  overflow: visible;
 }
 
-.signalRays {
-  transform-origin: center;
-}
-
-.signalRay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  height: 1px;
-  display: block;
-  background: rgba(255, 255, 255, 0.24);
-  transform-origin: 0 50%;
-}
-
-.signalRay::after {
-  position: absolute;
-  top: -1.5px;
-  right: -2px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--ink);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.52);
-  content: "";
-}
-
-.signalRing {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  border: 1px solid rgba(255, 255, 255, 0.34);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.signalRingOuter {
+.signalCanvas {
   width: 100%;
   height: 100%;
-}
-
-.signalRingInner {
-  width: 25%;
-  height: 25%;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.signalCore {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
   display: block;
   border-radius: 50%;
-  background: var(--ink);
-  box-shadow:
-    0 0 8px rgba(255, 255, 255, 0.95),
-    0 0 24px rgba(255, 255, 255, 0.68),
-    0 0 48px rgba(255, 255, 255, 0.42);
-  transform: translate(-50%, -50%);
 }
 
 .signalStage .eagleWrap {
@@ -268,7 +170,7 @@ input {
   top: 50%;
   left: 50%;
   z-index: 3;
-  width: 72%;
+  width: 64%;
   transform: translate(-50%, -50%);
 }
 
@@ -292,9 +194,7 @@ input {
   z-index: 1;
   pointer-events: none;
   background: var(--ink);
-  filter:
-    drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))
-    drop-shadow(0 10px 24px rgba(12, 47, 125, 0.32));
+  filter: none;
   content: "";
   mask: url("/eagle-icon.svg") center / contain no-repeat;
   -webkit-mask: url("/eagle-icon.svg") center / contain no-repeat;
@@ -522,37 +422,29 @@ input {
   padding: 24px;
 }
 
-.signinHome::before,
-.signinHome::after {
+.signinStage {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(78vmin, 720px);
+  aspect-ratio: 1;
+  opacity: 0.48;
   pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 50%;
-  content: "";
-}
-
-.signinHome::before {
-  width: min(72vmin, 680px);
-  aspect-ratio: 1;
-}
-
-.signinHome::after {
-  width: min(48vmin, 460px);
-  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
 }
 
 .signinPanel {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: min(92vw, 410px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   padding: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.26);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4px;
-  background: var(--canvas-deep);
-  box-shadow: 0 28px 80px rgba(9, 39, 103, 0.3);
+  background: rgba(18, 61, 143, 0.98);
+  box-shadow: 0 28px 80px rgba(9, 39, 103, 0.34);
 }
 
 .signinMark {
@@ -748,22 +640,9 @@ input {
     --ink-muted: var(--ink);
     --hairline: rgba(255, 255, 255, 0.72);
   }
-
-  .signalRay,
-  .signalRing {
-    opacity: 0.88;
-  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .signalRays {
-    animation: signalDrift 52s linear infinite;
-  }
-
-  .signalCore {
-    animation: corePulse 2.8s ease-in-out infinite;
-  }
-
   .topRow,
   .hero,
   .bottomRow,
@@ -774,25 +653,6 @@ input {
 
   .signalStage {
     animation: signalIn 760ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-}
-
-@keyframes signalDrift {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes corePulse {
-  0%,
-  100% {
-    opacity: 0.78;
-    transform: translate(-50%, -50%) scale(0.82);
-  }
-
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.14);
   }
 }
 
@@ -895,13 +755,9 @@ input {
     height: 32px;
   }
 
-  .signalHome::after {
-    top: 31%;
-  }
-
   .signalStage {
-    top: 31%;
-    width: min(84vw, 340px);
+    top: 37%;
+    width: min(88vw, 350px);
   }
 
   .hero {
@@ -961,12 +817,8 @@ input {
 
 @media (max-height: 620px) and (min-width: 621px) {
   .signalStage {
-    top: 39%;
-    width: min(62vmin, 380px);
-  }
-
-  .signalHome::after {
-    top: 39%;
+    top: 46%;
+    width: min(58vmin, 360px);
   }
 
   .hero {
@@ -990,8 +842,8 @@ input {
 
 @media (max-height: 680px) and (max-width: 620px) {
   .signalStage {
-    top: 30%;
-    width: min(68vw, 270px);
+    top: 34%;
+    width: min(72vw, 280px);
   }
 
   .hero {
@@ -1037,8 +889,6 @@ input {
     background: #ffffff;
   }
 
-  .signalHome::before,
-  .signalHome::after,
   .signalField {
     display: none;
   }

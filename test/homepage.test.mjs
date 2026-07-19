@@ -4,6 +4,10 @@ import assert from "node:assert/strict";
 
 const siteSource = await readFile(new URL("../app/site.js", import.meta.url), "utf8");
 const pageSource = await readFile(new URL("../app/page.jsx", import.meta.url), "utf8");
+const signalSource = await readFile(
+  new URL("../app/signal-field.jsx", import.meta.url),
+  "utf8",
+);
 const dateLibSource = await readFile(new URL("../lib/date.js", import.meta.url), "utf8");
 const prerenderedHome = await readFile(
   new URL("../.next/server/app/index.html", import.meta.url),
@@ -51,7 +55,9 @@ test("prerendered homepage exposes the frozen July 20 date", () => {
   assert.match(prerenderedHome, />EMIR</);
   assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
   assert.match(prerenderedHome, /aria-label="Rise above the noise\."/);
-  assert.equal((prerenderedHome.match(/class="signalRay"/g) || []).length, 96);
+  assert.match(signalSource, /RAY_COUNT\s*=\s*128/);
+  assert.match(prerenderedHome, /data-ray-count="128"/);
+  assert.match(prerenderedHome, /<canvas class="signalCanvas"><\/canvas>/);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
   assert.doesNotMatch(prerenderedHome, /themeToggle/);
