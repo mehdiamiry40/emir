@@ -5,6 +5,8 @@
   --ink: #111111;
   --ink-muted: rgba(17, 17, 17, 0.64);
   --hairline: rgba(17, 17, 17, 0.16);
+  --hairline-strong: rgba(17, 17, 17, 0.32);
+  --eagle-invert: 0;
   background: var(--paper);
   color: var(--ink);
   font-family:
@@ -14,6 +16,19 @@
     ui-sans-serif,
     system-ui,
     sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #0f0f0f;
+    --surface: #161616;
+    --ink: #f5f5f5;
+    --ink-muted: rgba(245, 245, 245, 0.68);
+    --hairline: rgba(245, 245, 245, 0.2);
+    --hairline-strong: rgba(245, 245, 245, 0.38);
+    --eagle-invert: 1;
+  }
 }
 
 * {
@@ -34,6 +49,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
@@ -77,9 +93,9 @@ body {
 }
 
 .wordmark {
-  font-size: clamp(18px, 2vw, 28px);
+  font-size: clamp(16px, 1.8vw, 24px);
   font-weight: 300;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   user-select: none;
 }
@@ -94,7 +110,7 @@ body {
   color: var(--ink-muted);
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
   user-select: none;
@@ -128,11 +144,12 @@ body {
     Didot,
     "Times New Roman",
     serif;
-  font-size: clamp(40px, 8.6vw, 128px);
+  font-size: clamp(44px, 9vw, 132px);
   font-weight: 400;
   font-variant-ligatures: none;
-  letter-spacing: 0.02em;
-  line-height: 1.05;
+  font-optical-sizing: auto;
+  letter-spacing: 0.015em;
+  line-height: 1.02;
   text-transform: uppercase;
 }
 
@@ -168,8 +185,14 @@ body {
   max-height: 34dvh;
   object-fit: contain;
   object-position: center;
+  filter: invert(var(--eagle-invert));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   -webkit-user-drag: none;
+}
+
+.eagleWrap:hover .eagle {
+  transform: translateY(-1px) scale(1.015);
 }
 
 .date {
@@ -183,7 +206,7 @@ body {
   color: var(--ink);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   line-height: 1.2;
   text-align: center;
   white-space: nowrap;
@@ -193,6 +216,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   height: 52px;
   padding: 0 28px;
   border: 1px solid var(--ink);
@@ -204,12 +228,12 @@ body {
   text-decoration: none;
   transition:
     background-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.15s ease;
 }
 
 .signinCta::after {
-  content: "→";
-  margin-left: 12px;
+  content: "→" / "";
   transition: transform 0.2s ease;
 }
 
@@ -222,6 +246,10 @@ body {
   transform: translateX(4px);
 }
 
+.signinCta:active {
+  transform: translateY(1px);
+}
+
 .signinCta:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
@@ -229,13 +257,11 @@ body {
 
 .topSignin {
   justify-self: end;
+  gap: 8px;
   height: 40px;
   padding: 0 18px;
   font-size: 12px;
-}
-
-.topSignin::after {
-  margin-left: 8px;
+  letter-spacing: 0.04em;
 }
 
 .srOnly {
@@ -253,26 +279,37 @@ body {
 .notFoundCode {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(72px, 15vw, 176px);
-  font-weight: 800;
-  letter-spacing: 0;
+  font-family:
+    var(--font-quote),
+    "Bodoni 72",
+    Didot,
+    "Times New Roman",
+    serif;
+  font-size: clamp(110px, 22vw, 240px);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  letter-spacing: 0.02em;
   line-height: 1;
 }
 
 .notFoundText {
   margin: 0;
   color: var(--ink-muted);
-  font-size: clamp(16px, 2vw, 22px);
+  font-size: clamp(15px, 1.8vw, 20px);
   font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .homeLink {
   color: var(--ink);
-  font-size: clamp(15px, 1.7vw, 20px);
+  font-size: 14px;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: none;
-  border-bottom: 2px solid var(--ink);
-  padding-bottom: 2px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 3px;
   transition:
     color 0.2s ease,
     border-color 0.2s ease;
@@ -294,25 +331,37 @@ body {
   left: clamp(24px, 5vw, 72px);
   display: inline-flex;
   align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border: 1px solid var(--hairline);
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 700;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-decoration: none;
   z-index: 10;
-  transition: border-color 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+.loginButton::before {
+  content: "←" / "";
+  margin-right: 8px;
+  transition: transform 0.2s ease;
 }
 
 .loginButton:hover {
-  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.loginButton:hover::before {
+  transform: translateX(-3px);
 }
 
 .loginButton:focus-visible {
   outline: 2px solid var(--ink);
-  outline-offset: 2px;
+  outline-offset: 4px;
 }
 
 .signinHome {
@@ -320,19 +369,20 @@ body {
   padding-inline: clamp(18px, 4vw, 48px);
 }
 
+/* sign-in: editorial column framed by the same hairline rules as the poster */
 .signinPanel {
   width: min(92vw, 400px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: clamp(24px, 4vw, 36px);
-  border: 1px solid var(--hairline);
-  background: var(--surface);
+  padding: clamp(28px, 5vh, 44px) 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .signinMark {
-  width: min(190px, 54vw);
-  height: 48px;
+  width: min(180px, 50vw);
+  height: 44px;
   display: flex;
   align-items: center;
   margin-bottom: clamp(20px, 4vh, 30px);
@@ -342,52 +392,66 @@ body {
   display: block;
   width: 100%;
   height: auto;
+  filter: invert(var(--eagle-invert));
 }
 
 .signinEyebrow {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   color: var(--ink-muted);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
   line-height: 1.2;
   text-transform: uppercase;
 }
 
 .signinTitle {
-  margin: 0 0 24px;
+  margin: 0 0 28px;
   color: var(--ink);
-  font-size: clamp(30px, 6vw, 40px);
-  font-weight: 800;
-  letter-spacing: 0;
+  font-family:
+    var(--font-quote),
+    "Bodoni 72",
+    Didot,
+    "Times New Roman",
+    serif;
+  font-size: clamp(36px, 7vw, 48px);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  letter-spacing: 0.02em;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 .signinForm {
   display: grid;
-  gap: 14px;
+  gap: 18px;
 }
 
 .signinField {
   display: grid;
-  gap: 7px;
+  gap: 8px;
   color: var(--ink-muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .signinField input {
   width: 100%;
-  height: 46px;
-  border: 1px solid var(--hairline);
+  height: 44px;
+  border: 0;
+  border-bottom: 1px solid var(--hairline-strong);
   border-radius: 0;
-  background: var(--surface);
+  background: transparent;
   color: var(--ink);
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
   outline: none;
-  padding: 0 13px;
+  padding: 0 2px;
   transition: border-color 0.2s ease;
 }
 
@@ -396,11 +460,12 @@ body {
 }
 
 .signinField input:focus {
-  border-color: var(--ink);
+  border-bottom-color: var(--ink);
+  box-shadow: 0 1px 0 var(--ink);
 }
 
 .signinField input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+  -webkit-box-shadow: 0 0 0 1000px var(--paper) inset;
   -webkit-text-fill-color: var(--ink);
   caret-color: var(--ink);
 }
@@ -417,17 +482,17 @@ body {
 .signinReveal {
   position: absolute;
   top: 50%;
-  right: 6px;
-  height: 32px;
-  padding: 0 10px;
+  right: 0;
+  height: 34px;
+  padding: 0 8px;
   border: 0;
   background: transparent;
   color: var(--ink-muted);
   cursor: pointer;
   font: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   transform: translateY(-50%);
   transition: color 0.2s ease;
@@ -444,8 +509,8 @@ body {
 
 .signinSubmit {
   width: 100%;
-  height: 48px;
-  margin-top: 4px;
+  height: 50px;
+  margin-top: 10px;
   border: 1px solid var(--ink);
   border-radius: 0;
   background: var(--ink);
@@ -456,12 +521,17 @@ body {
   font-weight: 700;
   transition:
     background-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.15s ease;
 }
 
 .signinSubmit:hover:not(:disabled) {
   background: transparent;
   color: var(--ink);
+}
+
+.signinSubmit:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .signinSubmit:disabled {
@@ -475,8 +545,8 @@ body {
 }
 
 .signinStatus {
-  margin: 2px 0 0;
-  color: var(--ink-muted);
+  margin: 4px 0 0;
+  color: var(--ink);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
@@ -497,9 +567,9 @@ body {
 
 .adminSignout {
   width: 100%;
-  height: 44px;
-  margin-top: 14px;
-  border: 1px solid var(--hairline);
+  height: 46px;
+  margin-top: 18px;
+  border: 1px solid var(--hairline-strong);
   border-radius: 0;
   background: transparent;
   color: var(--ink-muted);
@@ -526,6 +596,7 @@ body {
   :root {
     --ink-muted: var(--ink);
     --hairline: color-mix(in srgb, var(--ink) 55%, transparent);
+    --hairline-strong: color-mix(in srgb, var(--ink) 70%, transparent);
   }
 }
 
@@ -536,8 +607,14 @@ body {
   }
 
   :root {
+    color-scheme: light;
     --paper: #fff;
     --surface: #fff;
+    --ink: #000;
+    --ink-muted: #333;
+    --hairline: rgba(0, 0, 0, 0.3);
+    --hairline-strong: rgba(0, 0, 0, 0.5);
+    --eagle-invert: 0;
   }
 
   .home {
@@ -556,8 +633,12 @@ body {
     animation: fadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .heroQuote {
-    animation: fadeUp 500ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  .quoteLine {
+    animation: fadeUp 600ms 60ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .quoteLine + .quoteLine {
+    animation-delay: 170ms;
   }
 
   .signinCta {
@@ -628,18 +709,29 @@ body {
     width: min(31vw, 126px);
   }
 
+  .wordmark {
+    letter-spacing: 0.16em;
+  }
+
   .hero {
     gap: 24px;
   }
 
+  /* one word per line: the small-screen poster */
   .quoteText {
-    font-size: clamp(36px, 11vw, 56px);
+    font-size: clamp(52px, 15.5vw, 68px);
+    line-height: 1.04;
+  }
+
+  .quoteLine {
+    word-spacing: 100vw;
   }
 
   .bottomRow {
     grid-template-columns: minmax(0, 1fr) auto;
     column-gap: 8px;
     font-size: 11px;
+    letter-spacing: 0.06em;
   }
 
   .footerDate {
@@ -654,13 +746,10 @@ body {
   }
 
   .topSignin {
+    gap: 6px;
     height: 34px;
     padding: 0 12px;
     font-size: 10px;
-  }
-
-  .topSignin::after {
-    margin-left: 6px;
   }
 
   .loginButton {
