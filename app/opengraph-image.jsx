@@ -8,14 +8,15 @@ export const alt = "White eagle signal and statement on a cobalt background";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const RAYS = Array.from({ length: 72 }, (_, index) => {
-  const angle = (index / 72) * Math.PI * 2;
+const RAYS = Array.from({ length: 96 }, (_, index) => {
+  const angle = (index / 96) * Math.PI * 2;
   return {
-    angle: index * 5,
+    angle: index * 3.75,
     x: 50 + Math.cos(angle) * 48,
     y: 50 + Math.sin(angle) * 48,
   };
 });
+const RAY_LINES = Array.from({ length: 48 }, (_, index) => index * 3.75);
 
 export default async function OpengraphImage() {
   const [date, eagle, font] = await Promise.all([
@@ -43,29 +44,6 @@ export default async function OpengraphImage() {
         <div
           style={{
             position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 600,
-            width: 1,
-            display: "flex",
-            background: "rgba(255,255,255,0.14)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 275,
-            right: 0,
-            left: 0,
-            height: 1,
-            display: "flex",
-            background: "rgba(255,255,255,0.14)",
-          }}
-        />
-
-        <div
-          style={{
-            position: "absolute",
             top: 36,
             right: 48,
             left: 48,
@@ -87,24 +65,38 @@ export default async function OpengraphImage() {
               fontSize: 17,
             }}
           >
-            {date.label}
+            20.07.26
           </div>
         </div>
 
         <div
           style={{
             position: "absolute",
-            top: 76,
+            top: 82,
             left: 390,
             width: 420,
             height: 420,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            border: "1px solid rgba(255,255,255,0.3)",
             borderRadius: 210,
           }}
         >
+          {RAY_LINES.map((angle) => (
+            <div
+              key={`ray-${angle}`}
+              style={{
+                position: "absolute",
+                top: 210,
+                left: 8,
+                width: 404,
+                height: 1,
+                display: "flex",
+                background: "rgba(250,250,247,0.24)",
+                transform: `rotate(${angle}deg)`,
+              }}
+            />
+          ))}
           {RAYS.map((ray) => (
             <div
               key={`dot-${ray.angle}`}
@@ -112,30 +104,20 @@ export default async function OpengraphImage() {
                 position: "absolute",
                 left: `${ray.x}%`,
                 top: `${ray.y}%`,
-                width: 5,
-                height: 5,
+                width: 4,
+                height: 4,
                 display: "flex",
-                borderRadius: 3,
-                background: "#ffffff",
+                borderRadius: 2,
+                background: "#fafaf7",
                 transform: "translate(-50%, -50%)",
               }}
             />
           ))}
-          <div
-            style={{
-              position: "absolute",
-              width: 126,
-              height: 126,
-              display: "flex",
-              border: "1px solid rgba(255,255,255,0.22)",
-              borderRadius: 63,
-            }}
-          />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={eagleSrc}
-            width={330}
-            height={80}
+            width={276}
+            height={67}
             alt=""
             style={{
               position: "absolute",
@@ -151,14 +133,14 @@ export default async function OpengraphImage() {
             left: 48,
             display: "flex",
             flexDirection: "column",
-            fontSize: 65,
+            fontSize: 62,
             fontWeight: 700,
             letterSpacing: 0,
             lineHeight: 0.94,
           }}
         >
-          <div style={{ display: "flex" }}>RISE ABOVE</div>
-          <div style={{ display: "flex" }}>THE NOISE.</div>
+          <div style={{ display: "flex" }}>Rise above</div>
+          <div style={{ display: "flex" }}>the noise.</div>
         </div>
 
         <div
@@ -172,7 +154,7 @@ export default async function OpengraphImage() {
             fontWeight: 700,
           }}
         >
-          EMIR.COM.AU
+          {date.label}
         </div>
       </div>
     ),

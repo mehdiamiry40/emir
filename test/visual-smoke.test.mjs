@@ -90,11 +90,15 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
   for (const viewport of viewports) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.goto(url, { waitUntil: "load" });
+    await page.locator('.signalCanvas[data-ready="true"]').waitFor({
+      state: "visible",
+    });
 
     const state = await page.evaluate(() => {
       const eagle = document.querySelector(".eagleWrap");
       const date = document.querySelector(".date");
       const login = document.querySelector(".signinCta");
+      const signal = document.querySelector(".signalCanvas");
 
       function rectFor(element) {
         const rect = element?.getBoundingClientRect();
@@ -125,6 +129,14 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       const eagleRect = rectFor(eagle);
       const dateRect = rectFor(date);
       const loginRect = rectFor(login);
+      const signalContext = signal?.getContext("2d", { willReadFrequently: true });
+      const signalPixels = signalContext
+        ? signalContext.getImageData(0, 0, signal.width, signal.height).data
+        : [];
+      let visibleSignalSamples = 0;
+      for (let index = 3; index < signalPixels.length; index += 16) {
+        if (signalPixels[index] > 0) visibleSignalSamples += 1;
+      }
 
       return {
         dateTime: date?.getAttribute("datetime"),
@@ -138,7 +150,11 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginText: login?.textContent?.trim(),
         loginVisible: inViewport(loginRect),
         heroLabel: document.querySelector(".heroQuote")?.getAttribute("aria-label"),
-        signalRayCount: document.querySelectorAll(".signalRay").length,
+        signalCanvasReady: signal?.dataset.ready === "true",
+        signalHasPixels: visibleSignalSamples > 100,
+        signalRayCount: Number(
+          document.querySelector(".signalField")?.dataset.rayCount,
+        ),
         noHorizontalScroll:
           document.documentElement.scrollWidth <= window.innerWidth + 1 &&
           document.body.scrollWidth <= window.innerWidth + 1,
@@ -162,7 +178,9 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginText: "Sign in",
         loginVisible: true,
         heroLabel: "Rise above the noise.",
-        signalRayCount: 96,
+        signalCanvasReady: true,
+        signalHasPixels: true,
+        signalRayCount: 128,
         noHorizontalScroll: true,
         noVerticalScroll: true,
       },

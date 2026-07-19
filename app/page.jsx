@@ -1,29 +1,28 @@
 import Link from "next/link";
 import Eagle from "./eagle";
+import SignalField from "./signal-field";
 import { getDate } from "../lib/date";
 import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
 
 const QUOTE_TEXT = "Rise above the noise.";
-const SIGNAL_RAYS = Array.from({ length: 96 }, (_, index) => index);
-
-function SignalField() {
-  return (
-    <div className="signalField" aria-hidden="true">
-      <div className="signalRays">
-        {SIGNAL_RAYS.map((ray) => (
-          <span
-            className="signalRay"
-            key={ray}
-            style={{ transform: `rotate(${ray * 3.75}deg)` }}
-          />
-        ))}
-      </div>
-      <span className="signalRing signalRingOuter" />
-      <span className="signalRing signalRingInner" />
-      <span className="signalCore" />
-    </div>
-  );
-}
+const WORDMARK_PIXELS = [
+  [4, 1],
+  [3, 2],
+  [4, 2],
+  [5, 2],
+  [1, 3],
+  [2, 3],
+  [4, 3],
+  [6, 3],
+  [7, 3],
+  [2, 4],
+  [3, 4],
+  [4, 4],
+  [5, 4],
+  [6, 4],
+  [3, 5],
+  [5, 5],
+];
 
 export async function generateMetadata() {
   const date = await getDate();
@@ -52,10 +51,12 @@ export default async function Home() {
       <header className="topRow">
         <span className="wordmark" aria-label={SITE_NAME}>
           <span className="wordmarkMark" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-            <i />
+            {WORDMARK_PIXELS.map(([column, row], index) => (
+              <i
+                key={`${column}-${row}-${index}`}
+                style={{ gridColumn: column, gridRow: row }}
+              />
+            ))}
           </span>
           <span>{SITE_NAME}</span>
         </span>

@@ -36,6 +36,7 @@ do not add clocks, midnight timers, or "current date" logic.**
 ## Structure
 
 - `app/page.jsx` — the eagle signal, statement, fixed date, and sign-in CTA
+- `app/signal-field.jsx` — responsive canvas signal with reduced-motion support
 - `app/signin/` — password sign-in (server action, HMAC session cookie)
 - `app/admin/` — protected read-only private page
 - `lib/session.js`, `lib/rate-limit.js`, `lib/date.js` — auth + date resolution

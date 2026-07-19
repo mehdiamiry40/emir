@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SignalField from "../signal-field";
 import { SITE_NAME } from "../site";
 import SignInForm from "./signin-form";
 
@@ -18,6 +19,9 @@ export default function SignInPage() {
         Home
       </Link>
       <main className="home signinHome" aria-label="Sign in">
+        <div className="signinStage">
+          <SignalField className="signinSignalField" />
+        </div>
         <section className="signinPanel" aria-labelledby="signin-title">
           <div className="signinMark" aria-hidden="true">
             <img src="/eagle-icon.svg" alt="" decoding="async" />
