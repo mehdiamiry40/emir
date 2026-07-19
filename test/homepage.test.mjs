@@ -24,9 +24,9 @@ const prerenderedManifest = JSON.parse(
   ),
 );
 
-test("homepage keeps the requested frozen July 11 date", () => {
-  assert.match(siteSource, /DATE_LABEL\s*=\s*"Saturday, July 11, 2026"/);
-  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-11"/);
+test("homepage keeps the requested frozen July 20 date", () => {
+  assert.match(siteSource, /DATE_LABEL\s*=\s*"Monday, July 20, 2026"/);
+  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-20"/);
   // the page renders the fixed date resolved by lib/date.js
   assert.match(pageSource, /getDate\(\)/);
   assert.match(pageSource, /dateTime=\{date\.iso\}/);
@@ -44,12 +44,14 @@ test("date cannot be overridden by production runtime storage", () => {
   assert.doesNotMatch(dateLibSource, /EDGE_CONFIG|@vercel\/edge-config/);
 });
 
-test("prerendered homepage exposes the frozen July 11 date", () => {
-  assert.match(prerenderedHome, /<title>EMIR — Saturday, July 11, 2026<\/title>/);
-  assert.match(prerenderedHome, /dateTime="2026-07-11"/);
-  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-11">Saturday, July 11, 2026<\/time>/);
+test("prerendered homepage exposes the frozen July 20 date", () => {
+  assert.match(prerenderedHome, /<title>EMIR — Monday, July 20, 2026<\/title>/);
+  assert.match(prerenderedHome, /dateTime="2026-07-20">20\.07\.26<\/time>/);
+  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-20">Monday, July 20, 2026<\/time>/);
   assert.match(prerenderedHome, />EMIR</);
   assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
+  assert.match(prerenderedHome, /aria-label="Rise above the noise\."/);
+  assert.equal((prerenderedHome.match(/class="signalRay"/g) || []).length, 96);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
   assert.doesNotMatch(prerenderedHome, /themeToggle/);
@@ -77,8 +79,8 @@ test("prerendered sign-in page exposes the expected form", () => {
 });
 
 test("manifest uses the current background color", () => {
-  assert.equal(prerenderedManifest.background_color, "#2c000f");
-  assert.equal(prerenderedManifest.theme_color, "#2c000f");
+  assert.equal(prerenderedManifest.background_color, "#2f64c7");
+  assert.equal(prerenderedManifest.theme_color, "#2f64c7");
   assert.ok(
     prerenderedManifest.icons.some(
       (icon) => icon.src === "/icon-512-maskable.png" && icon.purpose === "maskable",

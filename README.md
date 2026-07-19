@@ -2,7 +2,7 @@
 
 One page. One eagle. One date. Live at [www.emir.com.au](https://www.emir.com.au).
 
-A single-screen Next.js site with a traced gold eagle, an engraved quote,
+A single-screen Next.js site with a centered eagle signal, precise white type,
 a deliberately fixed date, no scrolling, and a password-protected private page.
 
 ## Commands
@@ -35,7 +35,7 @@ do not add clocks, midnight timers, or "current date" logic.**
 
 ## Structure
 
-- `app/page.jsx` — the eagle, quote, fixed date, and sign-in CTA
+- `app/page.jsx` — the eagle signal, statement, fixed date, and sign-in CTA
 - `app/signin/` — password sign-in (server action, HMAC session cookie)
 - `app/admin/` — protected read-only private page
 - `lib/session.js`, `lib/rate-limit.js`, `lib/date.js` — auth + date resolution

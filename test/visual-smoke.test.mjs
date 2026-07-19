@@ -137,7 +137,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginHref: login?.getAttribute("href"),
         loginText: login?.textContent?.trim(),
         loginVisible: inViewport(loginRect),
-        quoteTextNodes: document.querySelectorAll(".heroQuote text").length,
+        heroLabel: document.querySelector(".heroQuote")?.getAttribute("aria-label"),
+        signalRayCount: document.querySelectorAll(".signalRay").length,
         noHorizontalScroll:
           document.documentElement.scrollWidth <= window.innerWidth + 1 &&
           document.body.scrollWidth <= window.innerWidth + 1,
@@ -150,8 +151,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
     assert.deepEqual(
       state,
       {
-        dateTime: "2026-07-11",
-        dateText: "Saturday, July 11, 2026",
+        dateTime: "2026-07-20",
+        dateText: "Monday, July 20, 2026",
         dateFontSize: 11,
         dateVisible: true,
         eagleLabel: "Animate eagle",
@@ -160,7 +161,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         loginHref: "/signin",
         loginText: "Sign in",
         loginVisible: true,
-        quoteTextNodes: 6,
+        heroLabel: "Rise above the noise.",
+        signalRayCount: 96,
         noHorizontalScroll: true,
         noVerticalScroll: true,
       },

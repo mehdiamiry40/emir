@@ -1,13 +1,13 @@
 export const SITE_NAME = "EMIR";
 export const SITE_URL = "https://www.emir.com.au";
-export const DESCRIPTION = "EMIR — a personal homepage built around a gold eagle and a fixed date.";
+export const DESCRIPTION = "EMIR — a personal homepage built around an eagle signal and a fixed date.";
 export const SOCIAL_DESCRIPTION = "EMIR — Rise above the noise.";
 export const SIGNIN_PATH = "/signin";
 
-export const DATE_LABEL = "Saturday, July 11, 2026";
-export const DATE_ISO = "2026-07-11";
+export const DATE_LABEL = "Monday, July 20, 2026";
+export const DATE_ISO = "2026-07-20";
 
-export const THEME_COLOR = "#2c000f";
+export const THEME_COLOR = "#2f64c7";
 
 export const MANIFEST_ICONS = [
   {
