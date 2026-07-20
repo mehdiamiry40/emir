@@ -838,6 +838,34 @@ input {
     width: 32px;
     height: 32px;
   }
+
+  .signinPanel {
+    padding: 22px 26px;
+  }
+
+  .signinMark {
+    width: 150px;
+    height: 34px;
+    margin-bottom: 14px;
+  }
+
+  .signinTitle {
+    margin-bottom: 18px;
+    font-size: 32px;
+  }
+
+  .signinForm {
+    gap: 10px;
+  }
+
+  .signinField {
+    gap: 6px;
+  }
+
+  .signinField input,
+  .signinSubmit {
+    height: 44px;
+  }
 }
 
 @media (max-height: 680px) and (max-width: 620px) {
@@ -866,6 +894,38 @@ input {
 
   .bottomRow {
     bottom: 12px;
+  }
+
+  .signinPanel {
+    padding: 20px 22px;
+  }
+
+  .signinMark {
+    width: 132px;
+    height: 30px;
+    margin-bottom: 12px;
+  }
+
+  .signinEyebrow {
+    margin-bottom: 4px;
+  }
+
+  .signinTitle {
+    margin-bottom: 16px;
+    font-size: 30px;
+  }
+
+  .signinForm {
+    gap: 9px;
+  }
+
+  .signinField {
+    gap: 5px;
+  }
+
+  .signinField input,
+  .signinSubmit {
+    height: 42px;
   }
 }
 

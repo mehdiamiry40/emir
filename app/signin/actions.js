@@ -13,6 +13,7 @@ import {
   createSessionToken,
   isConfigured,
   verifyPassword,
+  verifyUsername,
 } from "../../lib/session";
 
 function clientKey(headerList) {
@@ -40,9 +41,11 @@ export async function signIn(prevState, formData) {
     };
   }
 
-  if (!verifyPassword(formData.get("password"))) {
+  const usernameIsValid = verifyUsername(formData.get("username"));
+  const passwordIsValid = verifyPassword(formData.get("password"));
+  if (!usernameIsValid || !passwordIsValid) {
     await new Promise((resolve) => setTimeout(resolve, 500));
-    return { error: "Wrong password." };
+    return { error: "Incorrect username or password." };
   }
 
   const jar = await cookies();

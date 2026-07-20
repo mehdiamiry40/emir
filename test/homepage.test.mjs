@@ -79,6 +79,8 @@ test("prerendered sign-in page exposes the expected form", () => {
   assert.match(prerenderedSignIn, /aria-label="Sign in"/);
   assert.match(prerenderedSignIn, /<h1 class="signinTitle" id="signin-title">Sign in<\/h1>/);
   assert.doesNotMatch(prerenderedSignIn, /name="email"/);
+  assert.match(prerenderedSignIn, /name="username"/);
+  assert.match(prerenderedSignIn, /autoComplete="username"/);
   assert.match(prerenderedSignIn, /name="password"/);
   assert.match(prerenderedSignIn, /name="robots" content="noindex, nofollow, nocache"/);
   assert.match(prerenderedSignIn, />Home</);

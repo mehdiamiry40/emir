@@ -191,6 +191,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
 
     const signInState = await page.evaluate(() => {
       const panel = document.querySelector(".signinPanel");
+      const username = document.querySelector('input[name="username"]');
       const password = document.querySelector('input[name="password"]');
       const submit = document.querySelector(".signinSubmit");
       const home = document.querySelector(".loginButton");
@@ -230,6 +231,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         submitText: submit?.textContent?.trim(),
         submitVisible: inViewport(rectFor(submit)),
         title: document.querySelector(".signinTitle")?.textContent?.trim(),
+        usernameAutocomplete: username?.getAttribute("autocomplete"),
+        usernameVisible: inViewport(rectFor(username)),
         noHorizontalScroll:
           document.documentElement.scrollWidth <= window.innerWidth + 1 &&
           document.body.scrollWidth <= window.innerWidth + 1,
@@ -252,6 +255,8 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         submitText: "Sign in",
         submitVisible: true,
         title: "Sign in",
+        usernameAutocomplete: "username",
+        usernameVisible: true,
       },
       `${viewport.label} sign-in layout should stay visible without scroll`,
     );
