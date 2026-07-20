@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 
 process.env.AUTH_RATE_LIMIT_TEST_MODE = "memory";
 const {
+  checkPasskeyRateLimit,
   checkSignInRateLimit,
+  getRateLimitIdentifier,
   isRateLimitConfigured,
 } = await import("../lib/rate-limit.js");
 const { resolveRedisConfig } = await import("../lib/redis.js");
@@ -38,4 +40,27 @@ test("development sign-in limiter blocks the sixth attempt", async () => {
   const blocked = await checkSignInRateLimit(identifier);
   assert.equal(blocked.allowed, false);
   assert.ok(blocked.retryAfterSeconds > 0);
+});
+
+test("passkey ceremony limiter uses a separate higher threshold", async () => {
+  const identifier = `passkey-${Date.now()}-${Math.random()}`;
+
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const result = await checkPasskeyRateLimit(identifier);
+    assert.equal(result.allowed, true);
+  }
+
+  const blocked = await checkPasskeyRateLimit(identifier);
+  assert.equal(blocked.allowed, false);
+  assert.ok(blocked.retryAfterSeconds > 0);
+});
+
+test("rate-limit identifiers do not retain the client IP", () => {
+  const headers = new Headers({ "x-forwarded-for": "203.0.113.42, 10.0.0.1" });
+  const first = getRateLimitIdentifier(headers);
+  const second = getRateLimitIdentifier(headers);
+
+  assert.equal(first, second);
+  assert.equal(first.length, 64);
+  assert.doesNotMatch(first, /203\.0\.113\.42/);
 });

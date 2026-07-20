@@ -1,31 +1,20 @@
 "use server";
 
-import { createHmac } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
   checkSignInRateLimit,
+  getRateLimitIdentifier,
   isRateLimitConfigured,
 } from "../../lib/rate-limit";
 import {
   SESSION_COOKIE,
-  SESSION_MAX_AGE,
   createSessionToken,
   isConfigured,
+  sessionCookieOptions,
   verifyPassword,
   verifyUsername,
 } from "../../lib/session";
-
-function clientKey(headerList) {
-  const address =
-    headerList.get("x-real-ip") ||
-    headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "unknown";
-  const secret = `emir-rate-limit:${
-    process.env.ADMIN_PASSWORD || "local-development"
-  }`;
-  return createHmac("sha256", secret).update(address).digest("hex");
-}
 
 export async function signIn(prevState, formData) {
   if (!isConfigured() || !isRateLimitConfigured()) {
@@ -33,7 +22,7 @@ export async function signIn(prevState, formData) {
   }
 
   const headerList = await headers();
-  const key = clientKey(headerList);
+  const key = getRateLimitIdentifier(headerList);
   const limit = await checkSignInRateLimit(key);
   if (!limit.allowed) {
     return {
@@ -51,13 +40,7 @@ export async function signIn(prevState, formData) {
   }
 
   const jar = await cookies();
-  jar.set(SESSION_COOKIE, createSessionToken(), {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: SESSION_MAX_AGE,
-  });
+  jar.set(SESSION_COOKIE, createSessionToken(), sessionCookieOptions());
   redirect("/admin");
 }
 

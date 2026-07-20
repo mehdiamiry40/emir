@@ -592,6 +592,55 @@ textarea {
   outline-offset: 3px;
 }
 
+.signinDivider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.signinDivider::before,
+.signinDivider::after {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.24);
+  content: "";
+}
+
+.signinPasskey {
+  width: 100%;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.signinPasskey:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.signinPasskey:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.signinPasskey:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
 .signinStatus {
   margin: 2px 0 0;
   color: var(--ink-muted);
@@ -656,6 +705,7 @@ textarea {
 }
 
 .notesHomeLink,
+.adminPasskeys,
 .adminSignout {
   height: 40px;
   display: inline-flex;
@@ -676,15 +726,219 @@ textarea {
 }
 
 .notesHomeLink:hover,
+.adminPasskeys:hover:not(:disabled),
 .adminSignout:hover {
   border-color: var(--ink);
   background: rgba(255, 255, 255, 0.1);
 }
 
 .notesHomeLink:focus-visible,
+.adminPasskeys:focus-visible,
 .adminSignout:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
+}
+
+.adminPasskeys:disabled {
+  opacity: 0.48;
+  cursor: default;
+}
+
+.passkeyDialog {
+  width: min(92vw, 560px);
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 4px;
+  outline: none;
+  background: var(--canvas-panel);
+  color: var(--ink);
+  box-shadow: 0 32px 100px rgba(4, 22, 65, 0.5);
+}
+
+.passkeyDialog::backdrop {
+  background: rgba(4, 20, 58, 0.62);
+  backdrop-filter: blur(5px);
+}
+
+.passkeyPanel {
+  max-height: calc(100dvh - 34px);
+  display: grid;
+  grid-template-rows: auto minmax(80px, 1fr) auto;
+  overflow: hidden;
+}
+
+.passkeyHeader {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.passkeyEyebrow {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink-muted);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.passkeyHeader h2 {
+  margin: 0;
+  font-size: 27px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.passkeyClose {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.passkeyClose:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.passkeyClose:disabled {
+  opacity: 0.48;
+}
+
+.passkeyClose:focus-visible,
+.passkeyRemove:focus-visible,
+.passkeyAdd:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.passkeyList {
+  min-height: 104px;
+  max-height: min(48dvh, 360px);
+  overflow-y: auto;
+  padding: 0 20px;
+}
+
+.passkeyItem {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+
+.passkeyDetails {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.passkeyDetails strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.passkeyDetails span {
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.passkeyRemove {
+  height: 36px;
+  flex: 0 0 auto;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.passkeyRemove:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.passkeyRemove:disabled {
+  opacity: 0.48;
+}
+
+.passkeyEmpty {
+  min-height: 104px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.passkeyFooter {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--hairline);
+}
+
+.passkeyStatus {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+
+.passkeyAdd {
+  min-width: 122px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--canvas-deep);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.passkeyAdd:hover:not(:disabled) {
+  box-shadow: 0 10px 24px rgba(4, 24, 71, 0.3);
+  transform: translateY(-1px);
+}
+
+.passkeyAdd:disabled {
+  opacity: 0.52;
+  cursor: default;
 }
 
 .notesWorkspace {
@@ -1001,10 +1255,30 @@ textarea {
   }
 
   .notesHomeLink,
+  .adminPasskeys,
   .adminSignout {
     height: 38px;
     padding: 0 11px;
     font-size: 12px;
+  }
+
+  .passkeyDialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+
+  .passkeyPanel {
+    max-height: calc(100dvh - 26px);
+  }
+
+  .passkeyHeader,
+  .passkeyFooter {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .passkeyList {
+    padding: 0 14px;
   }
 
   .notesWorkspace {
@@ -1082,7 +1356,8 @@ textarea {
   }
 
   .signinField input,
-  .signinSubmit {
+  .signinSubmit,
+  .signinPasskey {
     height: 44px;
   }
 
@@ -1170,7 +1445,8 @@ textarea {
   }
 
   .signinField input,
-  .signinSubmit {
+  .signinSubmit,
+  .signinPasskey {
     height: 42px;
   }
 

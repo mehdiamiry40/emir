@@ -7,9 +7,14 @@ import {
   isNotesConfigured,
   loadNote,
 } from "../../lib/notes";
+import {
+  isPasskeyConfigured,
+  listPasskeys,
+} from "../../lib/passkeys";
 import { SITE_NAME } from "../site";
 import { signOut } from "../signin/actions";
 import NotesEditor from "./notes-editor";
+import PasskeyManager from "./passkey-manager";
 
 export const metadata = {
   title: `${SITE_NAME} — Admin`,
@@ -39,6 +44,16 @@ export default async function AdminPage() {
     }
   }
 
+  let passkeyAvailable = isPasskeyConfigured();
+  let passkeys = [];
+  if (passkeyAvailable) {
+    try {
+      passkeys = await listPasskeys();
+    } catch {
+      passkeyAvailable = false;
+    }
+  }
+
   return (
     <main className="notesPage" aria-labelledby="notes-title">
       <header className="notesHeader">
@@ -49,6 +64,10 @@ export default async function AdminPage() {
           </h1>
         </div>
         <nav className="notesActions" aria-label="Notes navigation">
+          <PasskeyManager
+            initialPasskeys={passkeys}
+            available={passkeyAvailable}
+          />
           <Link className="notesHomeLink" href="/">
             Home
           </Link>

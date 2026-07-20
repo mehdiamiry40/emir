@@ -21,6 +21,8 @@ npm test        # build + smoke/visual/a11y tests (Playwright + axe)
 | `ADMIN_USERNAME` | no | Username for `/signin`; defaults to `emir`. |
 | `ADMIN_PASSWORD` | yes | Password for `/signin` → `/admin` and session signing; use a long, random value. |
 | `NOTES_ENCRYPTION_KEY` | yes | Base64-encoded 32-byte key used for AES-256-GCM note encryption. Generate once with `openssl rand -base64 32`. |
+| `PASSKEY_RP_ID` | production | WebAuthn relying-party domain, without a scheme or port; for this site use `emir.com.au`. |
+| `PASSKEY_ORIGINS` | production | Comma-separated HTTPS origins allowed to create and use passkeys. |
 | `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL` | production | Durable Redis endpoint used for private notes and sign-in rate limiting. |
 | `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | production | Token for the private notes and rate-limit database. |
 
@@ -32,6 +34,12 @@ Notes are encrypted before they are written to Redis. Existing plaintext notes
 are encrypted automatically the first time `/admin` loads after this variable is
 configured. Keep a secure backup of `NOTES_ENCRYPTION_KEY`: replacing or losing
 it makes existing notes unreadable. Never commit the real key to Git.
+
+Passkeys use WebAuthn discoverable credentials with device verification. Sign in
+with the password once to add a passkey from `/admin`; subsequent sign-ins can
+use the passkey without a username. The private key remains with the device or
+its passkey provider. Redis stores only the public credential, transport
+metadata, signature counter, and five-minute one-time challenges.
 
 The date comes from `app/site.js` (`DATE_LABEL` / `DATE_ISO`) and only changes
 via a commit. Runtime storage and environment variables must not override it.
