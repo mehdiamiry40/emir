@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createHash, createHmac } from "node:crypto";
 import { once } from "node:events";
 import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
@@ -9,14 +10,35 @@ import AxeBuilder from "@axe-core/playwright";
 import { chromium } from "playwright";
 import {
   DEFAULT_ADMIN_USERNAME,
+  SESSION_MAX_AGE,
   createSessionToken,
+  isConfigured,
+  revokeSessionToken,
   verifySessionToken,
   verifyUsername,
 } from "../lib/session.js";
+import { addPasskey, removePasskey } from "../lib/passkeys.js";
 
 const TEST_PASSWORD = "test-eagle-password";
 const TEST_USERNAME = "emir-admin";
 const TEST_NOTES_ENCRYPTION_KEY = Buffer.alloc(32, 11).toString("base64");
+const TEST_SESSION_SECRET = Buffer.alloc(32, 23).toString("base64");
+
+/** @param {() => Promise<void>} run */
+async function withSessionSecret(run) {
+  const originalSessionSecret = process.env.SESSION_SECRET;
+  const originalPassword = process.env.ADMIN_PASSWORD;
+  process.env.SESSION_SECRET = TEST_SESSION_SECRET;
+  process.env.ADMIN_PASSWORD = TEST_PASSWORD;
+  try {
+    await run();
+  } finally {
+    if (originalSessionSecret === undefined) delete process.env.SESSION_SECRET;
+    else process.env.SESSION_SECRET = originalSessionSecret;
+    if (originalPassword === undefined) delete process.env.ADMIN_PASSWORD;
+    else process.env.ADMIN_PASSWORD = originalPassword;
+  }
+}
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const nextBin = fileURLToPath(
@@ -40,20 +62,129 @@ test("username validation is configurable and case-insensitive", () => {
   }
 });
 
-test("session tokens are signed with the admin password", () => {
+test("session tokens do not disclose a password-verification oracle", async () => {
   const originalPassword = process.env.ADMIN_PASSWORD;
 
   try {
     process.env.ADMIN_PASSWORD = TEST_PASSWORD;
-    const token = createSessionToken();
-    assert.equal(verifySessionToken(token), true);
+    await withSessionSecret(async () => {
+      const token = await createSessionToken();
+      assert.equal(await verifySessionToken(token), true);
 
-    process.env.ADMIN_PASSWORD = "a-different-admin-password";
-    assert.equal(verifySessionToken(token), false);
+      const parts = token.split(".");
+      const body = parts.slice(0, -1).join(".");
+      const passwordDerivedKey = createHash("sha256")
+        .update(`emir-session:${TEST_PASSWORD}`)
+        .digest();
+      const passwordDerivedMac = createHmac("sha256", passwordDerivedKey)
+        .update(body)
+        .digest("base64url");
+      assert.notEqual(parts.at(-1), passwordDerivedMac);
+
+      process.env.ADMIN_PASSWORD = "a-different-admin-password";
+      assert.equal(await verifySessionToken(token), false);
+    });
   } finally {
     if (originalPassword === undefined) delete process.env.ADMIN_PASSWORD;
     else process.env.ADMIN_PASSWORD = originalPassword;
   }
+});
+
+test("session signing migrates safely from the notes key and fails closed on invalid override", async () => {
+  const originalPassword = process.env.ADMIN_PASSWORD;
+  const originalNotesKey = process.env.NOTES_ENCRYPTION_KEY;
+  const originalSessionSecret = process.env.SESSION_SECRET;
+
+  try {
+    process.env.ADMIN_PASSWORD = TEST_PASSWORD;
+    process.env.NOTES_ENCRYPTION_KEY = TEST_NOTES_ENCRYPTION_KEY;
+    delete process.env.SESSION_SECRET;
+    assert.equal(isConfigured(), true);
+
+    const token = await createSessionToken();
+    assert.equal(await verifySessionToken(token), true);
+
+    process.env.SESSION_SECRET = "not-a-valid-base64-key";
+    assert.equal(isConfigured(), false);
+    assert.equal(await verifySessionToken(token), false);
+    await assert.rejects(createSessionToken(), /signing key is not configured/);
+  } finally {
+    if (originalPassword === undefined) delete process.env.ADMIN_PASSWORD;
+    else process.env.ADMIN_PASSWORD = originalPassword;
+    if (originalNotesKey === undefined) delete process.env.NOTES_ENCRYPTION_KEY;
+    else process.env.NOTES_ENCRYPTION_KEY = originalNotesKey;
+    if (originalSessionSecret === undefined) delete process.env.SESSION_SECRET;
+    else process.env.SESSION_SECRET = originalSessionSecret;
+  }
+});
+
+test("session authentication method and expiry are integrity protected", async () => {
+  await withSessionSecret(async () => {
+    const token = await createSessionToken();
+    const parts = token.split(".");
+
+    const changedExpiry = [...parts];
+    changedExpiry[2] = String(Number(changedExpiry[2]) + 3600);
+    assert.equal(await verifySessionToken(changedExpiry.join(".")), false);
+
+    const changedMethod = [...parts];
+    changedMethod[3] = "passkey";
+    changedMethod.splice(4, 0, "Zm9yZ2VkLWNyZWRlbnRpYWw");
+    assert.equal(await verifySessionToken(changedMethod.join(".")), false);
+  });
+});
+
+test("sessions still expire after the configured one-week lifetime", async () => {
+  await withSessionSecret(async () => {
+    const expiredToken = await createSessionToken({
+      now: Date.now() - (SESSION_MAX_AGE + 1) * 1000,
+    });
+    assert.equal(await verifySessionToken(expiredToken), false);
+  });
+});
+
+test("revoking a session rejects a copied token", async () => {
+  await withSessionSecret(async () => {
+    const token = await createSessionToken();
+    assert.equal(await verifySessionToken(token), true);
+
+    assert.equal(await revokeSessionToken(token), true);
+    assert.equal(await verifySessionToken(token), false);
+  });
+});
+
+test("removing a passkey invalidates sessions created by it", async () => {
+  const credentialId = "c2Vzc2lvbi10ZXN0LWNyZWRlbnRpYWw";
+  const userId = "c2Vzc2lvbi10ZXN0LXVzZXI";
+  await addPasskey({
+    userId,
+    id: credentialId,
+    publicKey: new Uint8Array([1, 2, 3, 4]),
+    counter: 0,
+    transports: ["internal"],
+    deviceType: "singleDevice",
+    backedUp: false,
+  });
+
+  await withSessionSecret(async () => {
+    const token = await createSessionToken({ passkeyId: credentialId });
+    assert.equal(await verifySessionToken(token), true);
+
+    await removePasskey(credentialId);
+    assert.equal(await verifySessionToken(token), false);
+
+    await addPasskey({
+      userId,
+      id: credentialId,
+      publicKey: new Uint8Array([9, 8, 7, 6]),
+      counter: 0,
+      transports: ["internal"],
+      deviceType: "singleDevice",
+      backedUp: false,
+    });
+    assert.equal(await verifySessionToken(token), false);
+    await removePasskey(credentialId);
+  });
 });
 
 async function findOpenPort() {
@@ -92,6 +223,7 @@ async function startServer() {
         AUTH_RATE_LIMIT_TEST_MODE: "memory",
         NOTES_STORAGE_TEST_MODE: "memory",
         PASSKEY_STORAGE_TEST_MODE: "memory",
+        SESSION_STORAGE_TEST_MODE: "memory",
         PASSKEY_RP_ID: "localhost",
         PASSKEY_ORIGINS: url,
       },
@@ -295,15 +427,35 @@ test("sign-in flow protects the admin page", async (t) => {
     );
   }
 
+  const passwordSession = (await context.cookies()).find(
+    (cookie) => cookie.name === "emir_session",
+  );
+  assert.ok(passwordSession);
+
   // sign out, then sign back in without a username or password
   await page.click(".adminSignout");
   await page.waitForURL(new RegExp(`${url.replaceAll(".", "\\.")}/?$`), {
     timeout: 15000,
   });
+  const copiedPasswordSessionResponse = await fetch(`${url}/admin`, {
+    headers: {
+      Cookie: `${passwordSession.name}=${passwordSession.value}`,
+    },
+    redirect: "manual",
+  });
+  assert.equal(copiedPasswordSessionResponse.status, 307);
+  assert.match(
+    copiedPasswordSessionResponse.headers.get("location") ?? "",
+    /\/signin$/,
+  );
   await page.goto(`${url}/signin`, { waitUntil: "load" });
   await page.click(".signinPasskey");
   await page.waitForURL("**/admin", { timeout: 15000 });
   assert.equal(await page.inputValue(".notesEditor"), noteContent);
+  const passkeySession = (await context.cookies()).find(
+    (cookie) => cookie.name === "emir_session",
+  );
+  assert.ok(passkeySession);
 
   // removal immediately prevents another passkey sign-in
   await page.click(".adminPasskeys");
@@ -313,6 +465,17 @@ test("sign-in flow protects the admin page", async (t) => {
   page.once("dialog", (dialog) => dialog.accept());
   await page.click(".passkeyRemove");
   await page.waitForSelector(".passkeyEmpty");
+  const removedPasskeySessionResponse = await fetch(`${url}/admin`, {
+    headers: {
+      Cookie: `${passkeySession.name}=${passkeySession.value}`,
+    },
+    redirect: "manual",
+  });
+  assert.equal(removedPasskeySessionResponse.status, 307);
+  assert.match(
+    removedPasskeySessionResponse.headers.get("location") ?? "",
+    /\/signin$/,
+  );
   await page.click(".passkeyClose");
   await page.click(".adminSignout");
   await page.waitForURL(new RegExp(`${url.replaceAll(".", "\\.")}/?$`), {

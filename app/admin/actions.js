@@ -17,7 +17,7 @@ import {
  */
 export async function saveNoteAction(content) {
   const jar = await cookies();
-  if (!verifySessionToken(jar.get(SESSION_COOKIE)?.value)) {
+  if (!(await verifySessionToken(jar.get(SESSION_COOKIE)?.value))) {
     return { ok: false, error: "Your session expired. Sign in again." };
   }
   if (!isNotesConfigured()) {

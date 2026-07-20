@@ -24,7 +24,7 @@ const NO_STORE_HEADERS = { "Cache-Control": "no-store, max-age=0" };
 /** @param {Request} request */
 export async function POST(request) {
   const jar = await cookies();
-  if (!verifySessionToken(jar.get(SESSION_COOKIE)?.value)) {
+  if (!(await verifySessionToken(jar.get(SESSION_COOKIE)?.value))) {
     return NextResponse.json(
       { error: "Sign in before adding a passkey." },
       { status: 401, headers: NO_STORE_HEADERS },
