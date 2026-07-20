@@ -76,11 +76,11 @@ async function findOpenPort() {
 
 async function startServer() {
   const port = await findOpenPort();
-  const url = `http://127.0.0.1:${port}`;
+  const url = `http://localhost:${port}`;
   let output = "";
   const server = spawn(
     process.execPath,
-    [nextBin, "start", "-H", "127.0.0.1", "-p", String(port)],
+    [nextBin, "start", "-H", "localhost", "-p", String(port)],
     {
       cwd: projectRoot,
       stdio: ["ignore", "pipe", "pipe"],
@@ -91,6 +91,9 @@ async function startServer() {
         NOTES_ENCRYPTION_KEY: TEST_NOTES_ENCRYPTION_KEY,
         AUTH_RATE_LIMIT_TEST_MODE: "memory",
         NOTES_STORAGE_TEST_MODE: "memory",
+        PASSKEY_STORAGE_TEST_MODE: "memory",
+        PASSKEY_RP_ID: "localhost",
+        PASSKEY_ORIGINS: url,
       },
     },
   );
@@ -140,6 +143,12 @@ test("sign-in flow protects the admin page", async (t) => {
   assert.equal(adminResponse.status, 307);
   assert.match(adminResponse.headers.get("location") ?? "", /\/signin$/);
 
+  const registrationResponse = await fetch(
+    `${url}/api/passkeys/registration/options`,
+    { method: "POST" },
+  );
+  assert.equal(registrationResponse.status, 401);
+
   const browser = await chromium.launch({
     executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined,
   });
@@ -148,6 +157,27 @@ test("sign-in flow protects the admin page", async (t) => {
   const context = await browser.newContext({ reducedMotion: "reduce" });
   t.after(() => context.close());
   const page = await context.newPage();
+  const cdp = await context.newCDPSession(page);
+  await cdp.send("WebAuthn.enable");
+  const { authenticatorId } = await cdp.send(
+    "WebAuthn.addVirtualAuthenticator",
+    {
+      options: {
+        protocol: "ctap2",
+        transport: "internal",
+        hasResidentKey: true,
+        hasUserVerification: true,
+        isUserVerified: true,
+        automaticPresenceSimulation: true,
+      },
+    },
+  );
+  t.after(async () => {
+    await cdp
+      .send("WebAuthn.removeVirtualAuthenticator", { authenticatorId })
+      .catch(() => {});
+    await cdp.send("WebAuthn.disable").catch(() => {});
+  });
 
   // wrong password shows a generic error and stays on /signin
   await page.goto(`${url}/signin`, { waitUntil: "load" });
@@ -181,6 +211,32 @@ test("sign-in flow protects the admin page", async (t) => {
   await page.waitForURL("**/admin", { timeout: 15000 });
   await page.waitForSelector(".notesEditor");
   assert.equal((await page.textContent(".notesTitle"))?.trim(), "Notes");
+
+  // passkey registration is available only inside the authenticated page
+  await page.click(".adminPasskeys");
+  await page.waitForFunction(
+    () => document.querySelector(".passkeyDialog")?.open === true,
+  );
+  assert.equal((await page.textContent(".passkeyEmpty"))?.trim(), "No passkeys");
+  const passkeyDialogAccessibility = await new AxeBuilder({ page }).analyze();
+  assert.deepEqual(
+    passkeyDialogAccessibility.violations,
+    [],
+    "open passkey manager should have no accessibility violations",
+  );
+  await page.click(".passkeyAdd");
+  await page.waitForFunction(
+    () => {
+      const status = document.querySelector(".passkeyStatus")?.textContent?.trim();
+      return Boolean(status && status !== "Waiting for your device...");
+    },
+  );
+  assert.equal(
+    (await page.textContent(".passkeyStatus"))?.trim(),
+    "Passkey added.",
+  );
+  assert.equal(await page.locator(".passkeyItem").count(), 1);
+  await page.click(".passkeyClose");
 
   const noteContent = "A persisted private note.\nSecond line.";
   await page.fill(".notesEditor", noteContent);
@@ -239,11 +295,37 @@ test("sign-in flow protects the admin page", async (t) => {
     );
   }
 
-  // sign out returns home and /admin is locked again
+  // sign out, then sign back in without a username or password
   await page.click(".adminSignout");
   await page.waitForURL(new RegExp(`${url.replaceAll(".", "\\.")}/?$`), {
     timeout: 15000,
   });
+  await page.goto(`${url}/signin`, { waitUntil: "load" });
+  await page.click(".signinPasskey");
+  await page.waitForURL("**/admin", { timeout: 15000 });
+  assert.equal(await page.inputValue(".notesEditor"), noteContent);
+
+  // removal immediately prevents another passkey sign-in
+  await page.click(".adminPasskeys");
+  await page.waitForFunction(
+    () => document.querySelector(".passkeyDialog")?.open === true,
+  );
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.click(".passkeyRemove");
+  await page.waitForSelector(".passkeyEmpty");
+  await page.click(".passkeyClose");
+  await page.click(".adminSignout");
+  await page.waitForURL(new RegExp(`${url.replaceAll(".", "\\.")}/?$`), {
+    timeout: 15000,
+  });
+  await page.goto(`${url}/signin`, { waitUntil: "load" });
+  await page.click(".signinPasskey");
+  await page.waitForFunction(
+    () =>
+      document.querySelector(".signinStatus")?.textContent?.trim() ===
+      "No passkey is registered. Sign in with your password first.",
+  );
+
   await page.goto(`${url}/admin`, { waitUntil: "load" });
   assert.match(page.url(), /\/signin$/);
 });

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { isPasskeyConfigured } from "../../lib/passkeys";
 import SignalField from "../signal-field";
 import { SITE_NAME } from "../site";
 import SignInForm from "./signin-form";
@@ -11,6 +12,8 @@ export const metadata = {
     nocache: true,
   },
 };
+
+export const dynamic = "force-dynamic";
 
 export default function SignInPage() {
   return (
@@ -30,7 +33,7 @@ export default function SignInPage() {
           <h1 className="signinTitle" id="signin-title">
             Sign in
           </h1>
-          <SignInForm />
+          <SignInForm passkeyEnabled={isPasskeyConfigured()} />
         </section>
       </main>
     </>

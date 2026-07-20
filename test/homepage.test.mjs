@@ -9,16 +9,20 @@ const signalSource = await readFile(
   "utf8",
 );
 const dateLibSource = await readFile(new URL("../lib/date.js", import.meta.url), "utf8");
+const signInPageSource = await readFile(
+  new URL("../app/signin/page.jsx", import.meta.url),
+  "utf8",
+);
+const signInFormSource = await readFile(
+  new URL("../app/signin/signin-form.jsx", import.meta.url),
+  "utf8",
+);
 const prerenderedHome = await readFile(
   new URL("../.next/server/app/index.html", import.meta.url),
   "utf8",
 );
 const prerenderedNotFound = await readFile(
   new URL("../.next/server/app/_not-found.html", import.meta.url),
-  "utf8",
-);
-const prerenderedSignIn = await readFile(
-  new URL("../.next/server/app/signin.html", import.meta.url),
   "utf8",
 );
 const prerenderedManifest = JSON.parse(
@@ -74,16 +78,16 @@ test("prerendered 404 page exposes the not-found title and content", () => {
   assert.match(prerenderedNotFound, />This page has flown away\.</);
 });
 
-test("prerendered sign-in page exposes the expected form", () => {
-  assert.match(prerenderedSignIn, /<title>EMIR — Sign in<\/title>/);
-  assert.match(prerenderedSignIn, /aria-label="Sign in"/);
-  assert.match(prerenderedSignIn, /<h1 class="signinTitle" id="signin-title">Sign in<\/h1>/);
-  assert.doesNotMatch(prerenderedSignIn, /name="email"/);
-  assert.match(prerenderedSignIn, /name="username"/);
-  assert.match(prerenderedSignIn, /autoComplete="username"/);
-  assert.match(prerenderedSignIn, /name="password"/);
-  assert.match(prerenderedSignIn, /name="robots" content="noindex, nofollow, nocache"/);
-  assert.match(prerenderedSignIn, />Home</);
+test("sign-in page exposes password and passkey authentication", () => {
+  assert.match(signInPageSource, /title: `\$\{SITE_NAME\} — Sign in`/);
+  assert.match(signInPageSource, /aria-label="Sign in"/);
+  assert.match(signInPageSource, /className="signinTitle"/);
+  assert.doesNotMatch(signInFormSource, /name="email"/);
+  assert.match(signInFormSource, /name="username"/);
+  assert.match(signInFormSource, /autoComplete="username"/);
+  assert.match(signInFormSource, /name="password"/);
+  assert.match(signInFormSource, /Sign in with passkey/);
+  assert.match(signInPageSource, /\n\s+Home\n/);
 });
 
 test("manifest uses the current background color", () => {
