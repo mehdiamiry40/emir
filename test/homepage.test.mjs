@@ -28,9 +28,9 @@ const prerenderedManifest = JSON.parse(
   ),
 );
 
-test("homepage keeps the requested frozen July 20 date", () => {
-  assert.match(siteSource, /DATE_LABEL\s*=\s*"Monday, July 20, 2026"/);
-  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-20"/);
+test("homepage keeps the requested frozen July 21 date", () => {
+  assert.match(siteSource, /DATE_LABEL\s*=\s*"Tuesday, July 21, 2026"/);
+  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-21"/);
   // the page renders the fixed date resolved by lib/date.js
   assert.match(pageSource, /getDate\(\)/);
   assert.match(pageSource, /dateTime=\{date\.iso\}/);
@@ -48,10 +48,10 @@ test("date cannot be overridden by production runtime storage", () => {
   assert.doesNotMatch(dateLibSource, /EDGE_CONFIG|@vercel\/edge-config/);
 });
 
-test("prerendered homepage exposes the frozen July 20 date", () => {
-  assert.match(prerenderedHome, /<title>EMIR — Monday, July 20, 2026<\/title>/);
-  assert.match(prerenderedHome, /dateTime="2026-07-20">20\.07\.26<\/time>/);
-  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-20">Monday, July 20, 2026<\/time>/);
+test("prerendered homepage exposes the frozen July 21 date", () => {
+  assert.match(prerenderedHome, /<title>EMIR — Tuesday, July 21, 2026<\/title>/);
+  assert.match(prerenderedHome, /dateTime="2026-07-21">21\.07\.26<\/time>/);
+  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-21">Tuesday, July 21, 2026<\/time>/);
   assert.match(prerenderedHome, />EMIR</);
   assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
   assert.match(prerenderedHome, /aria-label="Rise above the noise\."/);
