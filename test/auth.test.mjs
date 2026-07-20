@@ -8,6 +8,8 @@ import assert from "node:assert/strict";
 import { chromium } from "playwright";
 import {
   DEFAULT_ADMIN_USERNAME,
+  createSessionToken,
+  verifySessionToken,
   verifyUsername,
 } from "../lib/session.js";
 
@@ -33,6 +35,22 @@ test("username validation is configurable and case-insensitive", () => {
   } finally {
     if (originalUsername === undefined) delete process.env.ADMIN_USERNAME;
     else process.env.ADMIN_USERNAME = originalUsername;
+  }
+});
+
+test("session tokens are signed with the admin password", () => {
+  const originalPassword = process.env.ADMIN_PASSWORD;
+
+  try {
+    process.env.ADMIN_PASSWORD = TEST_PASSWORD;
+    const token = createSessionToken();
+    assert.equal(verifySessionToken(token), true);
+
+    process.env.ADMIN_PASSWORD = "a-different-admin-password";
+    assert.equal(verifySessionToken(token), false);
+  } finally {
+    if (originalPassword === undefined) delete process.env.ADMIN_PASSWORD;
+    else process.env.ADMIN_PASSWORD = originalPassword;
   }
 });
 
@@ -68,7 +86,6 @@ async function startServer() {
         ...process.env,
         ADMIN_USERNAME: TEST_USERNAME,
         ADMIN_PASSWORD: TEST_PASSWORD,
-        SESSION_SECRET: "test-session-secret-with-at-least-32-bytes",
         AUTH_RATE_LIMIT_TEST_MODE: "memory",
       },
     },
