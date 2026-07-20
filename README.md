@@ -20,12 +20,12 @@ npm test        # build + smoke/visual/a11y tests (Playwright + axe)
 | --- | --- | --- |
 | `ADMIN_USERNAME` | no | Username for `/signin`; defaults to `emir`. |
 | `ADMIN_PASSWORD` | yes | Password for `/signin` → `/admin` and session signing; use a long, random value. |
-| `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL` | production | Durable Redis endpoint used for sign-in rate limiting. |
-| `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | production | Token for the rate-limit Redis database. |
+| `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL` | production | Durable Redis endpoint used for private notes and sign-in rate limiting. |
+| `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | production | Token for the private notes and rate-limit database. |
 
-Production sign-in fails closed when session or rate-limit configuration is
+Production sign-in and note storage fail closed when their configuration is
 missing. Copy `.env.example` to `.env.local` for local setup. Development uses
-an in-memory limiter when Upstash is not configured; production never does.
+in-memory fallbacks when Redis is not configured; production never does.
 
 The date comes from `app/site.js` (`DATE_LABEL` / `DATE_ISO`) and only changes
 via a commit. Runtime storage and environment variables must not override it.
@@ -38,8 +38,8 @@ do not add clocks, midnight timers, or "current date" logic.**
 - `app/page.jsx` — the eagle signal, statement, fixed date, and sign-in CTA
 - `app/signal-field.jsx` — responsive canvas signal with reduced-motion support
 - `app/signin/` — username/password sign-in (server action, HMAC session cookie)
-- `app/admin/` — protected read-only private page
-- `lib/session.js`, `lib/rate-limit.js`, `lib/date.js` — auth + date resolution
+- `app/admin/` — protected private notes editor
+- `lib/session.js`, `lib/rate-limit.js`, `lib/notes.js` — auth + persistence
 - `public/eagle-icon.svg` — the traced eagle used everywhere
 - `test/` — smoke, visual, and axe accessibility tests (run in CI)
 

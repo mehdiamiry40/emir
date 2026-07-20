@@ -2,9 +2,14 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SESSION_COOKIE, verifySessionToken } from "../../lib/session";
-import { getDate } from "../../lib/date";
+import {
+  MAX_NOTE_LENGTH,
+  isNotesConfigured,
+  loadNote,
+} from "../../lib/notes";
 import { SITE_NAME } from "../site";
 import { signOut } from "../signin/actions";
+import NotesEditor from "./notes-editor";
 
 export const metadata = {
   title: `${SITE_NAME} — Admin`,
@@ -23,32 +28,43 @@ export default async function AdminPage() {
     redirect("/signin");
   }
 
-  const date = await getDate();
+  /** @type {{ content: string, updatedAt: string | null }} */
+  let note = { content: "", updatedAt: null };
+  let storageAvailable = isNotesConfigured();
+  if (storageAvailable) {
+    try {
+      note = await loadNote();
+    } catch {
+      storageAvailable = false;
+    }
+  }
 
   return (
-    <>
-      <Link className="loginButton" href="/">
-        Home
-      </Link>
-      <main className="home signinHome" aria-label="Admin">
-        <section className="signinPanel" aria-labelledby="admin-title">
-          <p className="signinEyebrow">{SITE_NAME}</p>
-          <h1 className="signinTitle" id="admin-title">
-            Admin
+    <main className="notesPage" aria-labelledby="notes-title">
+      <header className="notesHeader">
+        <div className="notesIdentity">
+          <span className="notesEyebrow">{SITE_NAME}</span>
+          <h1 className="notesTitle" id="notes-title">
+            Notes
           </h1>
-          <div className="adminSummary">
-            <span className="signinField">Frozen date</span>
-            <time className="adminPreview" dateTime={date.iso}>
-              {date.label}
-            </time>
-          </div>
+        </div>
+        <nav className="notesActions" aria-label="Notes navigation">
+          <Link className="notesHomeLink" href="/">
+            Home
+          </Link>
           <form action={signOut}>
             <button className="adminSignout" type="submit">
               Sign out
             </button>
           </form>
-        </section>
-      </main>
-    </>
+        </nav>
+      </header>
+      <NotesEditor
+        initialContent={note.content}
+        initialUpdatedAt={note.updatedAt}
+        maxLength={MAX_NOTE_LENGTH}
+        storageAvailable={storageAvailable}
+      />
+    </main>
   );
 }

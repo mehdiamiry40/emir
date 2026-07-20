@@ -41,7 +41,8 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
@@ -599,40 +600,197 @@ input {
   line-height: 1.4;
 }
 
-.adminSummary {
+.notesPage {
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100svh;
   display: grid;
-  gap: 8px;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  padding: 20px 24px 24px;
+  background: var(--canvas);
 }
 
-.adminPreview {
+.notesHeader {
+  width: min(100%, 1180px);
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 auto;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.notesIdentity {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.notesEyebrow {
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.notesTitle {
   margin: 0;
   color: var(--ink);
-  font-size: 18px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
 }
 
+.notesActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notesActions form {
+  margin: 0;
+}
+
+.notesHomeLink,
 .adminSignout {
-  width: 100%;
-  height: 46px;
-  margin-top: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 2px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  border-radius: 3px;
   background: transparent;
   color: var(--ink);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
+  text-decoration: none;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
 }
 
+.notesHomeLink:hover,
 .adminSignout:hover {
   border-color: var(--ink);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 }
 
+.notesHomeLink:focus-visible,
 .adminSignout:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
+}
+
+.notesWorkspace {
+  width: min(100%, 1180px);
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 60px;
+  overflow: hidden;
+  margin: 18px auto 0;
+  border: 1px solid rgba(8, 38, 97, 0.34);
+  border-radius: 4px;
+  background: #f8fafc;
+  box-shadow: 0 24px 60px rgba(9, 39, 103, 0.24);
+}
+
+.notesWorkspace:focus-within {
+  border-color: rgba(255, 255, 255, 0.92);
+}
+
+.notesEditor {
+  width: 100%;
+  min-height: 0;
+  padding: 34px 38px;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: #f8fafc;
+  color: #112b5b;
+  caret-color: #123d8f;
+  font-size: 18px;
+  font-weight: 450;
+  line-height: 1.7;
+  letter-spacing: 0;
+  tab-size: 2;
+}
+
+.notesEditor::placeholder {
+  color: #7787a5;
+}
+
+.notesEditor:disabled {
+  color: #687894;
+  cursor: not-allowed;
+}
+
+.notesFooter {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 18px;
+  padding: 0 12px 0 20px;
+  border-top: 1px solid #d8e0ec;
+  background: #eef3f8;
+  color: #405476;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.notesStatus {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notesStatusError {
+  color: #a23333;
+}
+
+.notesCount {
+  color: #52637d;
+  white-space: nowrap;
+}
+
+.notesSave {
+  min-width: 96px;
+  height: 40px;
+  border: 1px solid var(--canvas-deep);
+  border-radius: 3px;
+  background: var(--canvas-deep);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 750;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease;
+}
+
+.notesSave:hover:not(:disabled) {
+  background: #0d347d;
+  transform: translateY(-1px);
+}
+
+.notesSave:disabled {
+  border-color: #aab7ca;
+  background: #aab7ca;
+  cursor: default;
+}
+
+.notesSave:focus-visible {
+  outline: 2px solid var(--canvas-deep);
+  outline-offset: 2px;
 }
 
 @media (prefers-contrast: more) {
@@ -647,7 +805,9 @@ input {
   .hero,
   .bottomRow,
   .signinPanel,
-  .loginButton {
+  .loginButton,
+  .notesHeader,
+  .notesWorkspace {
     animation: fadeUp 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
@@ -813,6 +973,65 @@ input {
   .notFoundCode {
     font-size: 112px;
   }
+
+  .notesPage {
+    padding: 12px;
+  }
+
+  .notesHeader {
+    min-height: 50px;
+    gap: 14px;
+    padding-bottom: 12px;
+  }
+
+  .notesIdentity {
+    gap: 8px;
+  }
+
+  .notesEyebrow {
+    font-size: 10px;
+  }
+
+  .notesTitle {
+    font-size: 25px;
+  }
+
+  .notesActions {
+    gap: 7px;
+  }
+
+  .notesHomeLink,
+  .adminSignout {
+    height: 38px;
+    padding: 0 11px;
+    font-size: 12px;
+  }
+
+  .notesWorkspace {
+    grid-template-rows: minmax(0, 1fr) 56px;
+    margin-top: 12px;
+  }
+
+  .notesEditor {
+    padding: 24px 18px;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .notesFooter {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 0 8px 0 14px;
+  }
+
+  .notesCount {
+    display: none;
+  }
+
+  .notesSave {
+    min-width: 88px;
+    height: 40px;
+  }
 }
 
 @media (max-height: 620px) and (min-width: 621px) {
@@ -865,6 +1084,33 @@ input {
   .signinField input,
   .signinSubmit {
     height: 44px;
+  }
+
+  .notesPage {
+    padding: 12px 20px 16px;
+  }
+
+  .notesHeader {
+    min-height: 46px;
+    padding-bottom: 10px;
+  }
+
+  .notesTitle {
+    font-size: 26px;
+  }
+
+  .notesWorkspace {
+    grid-template-rows: minmax(0, 1fr) 52px;
+    margin-top: 10px;
+  }
+
+  .notesEditor {
+    padding: 22px 28px;
+    font-size: 16px;
+  }
+
+  .notesFooter {
+    padding-left: 16px;
   }
 }
 
@@ -926,6 +1172,28 @@ input {
   .signinField input,
   .signinSubmit {
     height: 42px;
+  }
+
+  .notesPage {
+    padding: 10px 12px 12px;
+  }
+
+  .notesHeader {
+    min-height: 42px;
+    padding-bottom: 9px;
+  }
+
+  .notesWorkspace {
+    grid-template-rows: minmax(0, 1fr) 50px;
+    margin-top: 9px;
+  }
+
+  .notesEditor {
+    padding: 18px;
+  }
+
+  .notesSave {
+    height: 36px;
   }
 }
 

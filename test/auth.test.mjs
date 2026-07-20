@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
 import test from "node:test";
 import assert from "node:assert/strict";
+import AxeBuilder from "@axe-core/playwright";
 import { chromium } from "playwright";
 import {
   DEFAULT_ADMIN_USERNAME,
@@ -87,6 +88,7 @@ async function startServer() {
         ADMIN_USERNAME: TEST_USERNAME,
         ADMIN_PASSWORD: TEST_PASSWORD,
         AUTH_RATE_LIMIT_TEST_MODE: "memory",
+        NOTES_STORAGE_TEST_MODE: "memory",
       },
     },
   );
@@ -141,7 +143,7 @@ test("sign-in flow protects the admin page", async (t) => {
   });
   t.after(() => browser.close());
 
-  const context = await browser.newContext();
+  const context = await browser.newContext({ reducedMotion: "reduce" });
   t.after(() => context.close());
   const page = await context.newPage();
 
@@ -175,8 +177,65 @@ test("sign-in flow protects the admin page", async (t) => {
   await page.fill('input[name="password"]', TEST_PASSWORD);
   await page.click(".signinSubmit");
   await page.waitForURL("**/admin", { timeout: 15000 });
-  await page.waitForSelector(".adminPreview");
-  assert.ok((await page.textContent(".adminPreview"))?.includes("2026"));
+  await page.waitForSelector(".notesEditor");
+  assert.equal((await page.textContent(".notesTitle"))?.trim(), "Notes");
+
+  const noteContent = "A persisted private note.\nSecond line.";
+  await page.fill(".notesEditor", noteContent);
+  assert.equal((await page.textContent(".notesStatus"))?.trim(), "Unsaved");
+  await page.click(".notesSave");
+  await page.waitForFunction(
+    () => document.querySelector(".notesStatus")?.textContent?.trim() === "Saved",
+  );
+  await page.reload({ waitUntil: "load" });
+  assert.equal(await page.inputValue(".notesEditor"), noteContent);
+
+  const accessibility = await new AxeBuilder({ page }).analyze();
+  assert.deepEqual(
+    accessibility.violations,
+    [],
+    "authenticated notes editor should have no WCAG A/AA violations",
+  );
+
+  for (const viewport of [
+    { width: 1280, height: 720 },
+    { width: 390, height: 844 },
+    { width: 390, height: 667 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.reload({ waitUntil: "load" });
+    const layout = await page.evaluate(() => {
+      const editor = document.querySelector(".notesEditor")?.getBoundingClientRect();
+      const footer = document.querySelector(".notesFooter")?.getBoundingClientRect();
+      const signOut = document.querySelector(".adminSignout")?.getBoundingClientRect();
+      return {
+        editorVisible: Boolean(
+          editor && editor.top >= 0 && editor.bottom <= window.innerHeight,
+        ),
+        footerVisible: Boolean(
+          footer && footer.top >= 0 && footer.bottom <= window.innerHeight,
+        ),
+        signOutVisible: Boolean(
+          signOut && signOut.top >= 0 && signOut.bottom <= window.innerHeight,
+        ),
+        noHorizontalScroll:
+          document.documentElement.scrollWidth <= window.innerWidth + 1,
+        noVerticalScroll:
+          document.documentElement.scrollHeight <= window.innerHeight + 1,
+      };
+    });
+    assert.deepEqual(
+      layout,
+      {
+        editorVisible: true,
+        footerVisible: true,
+        signOutVisible: true,
+        noHorizontalScroll: true,
+        noVerticalScroll: true,
+      },
+      `${viewport.width}x${viewport.height} notes layout should remain visible without page scroll`,
+    );
+  }
 
   // sign out returns home and /admin is locked again
   await page.click(".adminSignout");

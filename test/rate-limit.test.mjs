@@ -5,8 +5,8 @@ process.env.AUTH_RATE_LIMIT_TEST_MODE = "memory";
 const {
   checkSignInRateLimit,
   isRateLimitConfigured,
-  resolveRedisConfig,
 } = await import("../lib/rate-limit.js");
+const { resolveRedisConfig } = await import("../lib/redis.js");
 
 test("Redis configuration supports direct Upstash and Vercel KV names", () => {
   assert.deepEqual(
