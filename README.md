@@ -20,12 +20,18 @@ npm test        # build + smoke/visual/a11y tests (Playwright + axe)
 | --- | --- | --- |
 | `ADMIN_USERNAME` | no | Username for `/signin`; defaults to `emir`. |
 | `ADMIN_PASSWORD` | yes | Password for `/signin` → `/admin` and session signing; use a long, random value. |
+| `NOTES_ENCRYPTION_KEY` | yes | Base64-encoded 32-byte key used for AES-256-GCM note encryption. Generate once with `openssl rand -base64 32`. |
 | `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL` | production | Durable Redis endpoint used for private notes and sign-in rate limiting. |
 | `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | production | Token for the private notes and rate-limit database. |
 
 Production sign-in and note storage fail closed when their configuration is
 missing. Copy `.env.example` to `.env.local` for local setup. Development uses
 in-memory fallbacks when Redis is not configured; production never does.
+
+Notes are encrypted before they are written to Redis. Existing plaintext notes
+are encrypted automatically the first time `/admin` loads after this variable is
+configured. Keep a secure backup of `NOTES_ENCRYPTION_KEY`: replacing or losing
+it makes existing notes unreadable. Never commit the real key to Git.
 
 The date comes from `app/site.js` (`DATE_LABEL` / `DATE_ISO`) and only changes
 via a commit. Runtime storage and environment variables must not override it.

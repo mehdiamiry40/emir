@@ -16,6 +16,7 @@ import {
 
 const TEST_PASSWORD = "test-eagle-password";
 const TEST_USERNAME = "emir-admin";
+const TEST_NOTES_ENCRYPTION_KEY = Buffer.alloc(32, 11).toString("base64");
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const nextBin = fileURLToPath(
@@ -87,6 +88,7 @@ async function startServer() {
         ...process.env,
         ADMIN_USERNAME: TEST_USERNAME,
         ADMIN_PASSWORD: TEST_PASSWORD,
+        NOTES_ENCRYPTION_KEY: TEST_NOTES_ENCRYPTION_KEY,
         AUTH_RATE_LIMIT_TEST_MODE: "memory",
         NOTES_STORAGE_TEST_MODE: "memory",
       },
