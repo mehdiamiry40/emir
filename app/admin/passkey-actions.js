@@ -13,7 +13,7 @@ import { SESSION_COOKIE, verifySessionToken } from "../../lib/session";
  */
 export async function removePasskeyAction(id) {
   const jar = await cookies();
-  if (!verifySessionToken(jar.get(SESSION_COOKIE)?.value)) {
+  if (!(await verifySessionToken(jar.get(SESSION_COOKIE)?.value))) {
     return { ok: false, error: "Your session expired. Sign in again." };
   }
   if (typeof id !== "string") {

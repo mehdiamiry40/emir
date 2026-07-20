@@ -11,6 +11,7 @@ import {
   SESSION_COOKIE,
   createSessionToken,
   isConfigured,
+  revokeSessionToken,
   sessionCookieOptions,
   verifyPassword,
   verifyUsername,
@@ -39,13 +40,21 @@ export async function signIn(prevState, formData) {
     return { error: "Incorrect username or password." };
   }
 
+  let token;
+  try {
+    token = await createSessionToken();
+  } catch {
+    return { error: "Sign-in is temporarily unavailable." };
+  }
+
   const jar = await cookies();
-  jar.set(SESSION_COOKIE, createSessionToken(), sessionCookieOptions());
+  jar.set(SESSION_COOKIE, token, sessionCookieOptions());
   redirect("/admin");
 }
 
 export async function signOut() {
   const jar = await cookies();
+  await revokeSessionToken(jar.get(SESSION_COOKIE)?.value);
   jar.delete(SESSION_COOKIE);
   redirect("/");
 }

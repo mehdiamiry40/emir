@@ -29,7 +29,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const jar = await cookies();
-  if (!verifySessionToken(jar.get(SESSION_COOKIE)?.value)) {
+  if (!(await verifySessionToken(jar.get(SESSION_COOKIE)?.value))) {
     redirect("/signin");
   }
 

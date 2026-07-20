@@ -108,7 +108,7 @@ export async function POST(request) {
     const response = responseAndClearChallenge({ verified: true }, 200);
     response.cookies.set(
       SESSION_COOKIE,
-      createSessionToken(),
+      await createSessionToken({ passkeyId: passkey.id }),
       sessionCookieOptions(),
     );
     return response;

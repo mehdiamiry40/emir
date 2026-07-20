@@ -34,7 +34,7 @@ function responseAndClearChallenge(body, status) {
 /** @param {Request} request */
 export async function POST(request) {
   const jar = await cookies();
-  if (!verifySessionToken(jar.get(SESSION_COOKIE)?.value)) {
+  if (!(await verifySessionToken(jar.get(SESSION_COOKIE)?.value))) {
     return responseAndClearChallenge(
       { error: "Sign in before adding a passkey." },
       401,
