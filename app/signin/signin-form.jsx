@@ -8,10 +8,26 @@ const initialState = { error: null };
 export default function SignInForm() {
   const [state, formAction, pending] = useActionState(signIn, initialState);
   const [showPassword, setShowPassword] = useState(false);
+  const usernameId = useId();
   const passwordId = useId();
 
   return (
     <form className="signinForm" action={formAction}>
+      <label className="signinField" htmlFor={usernameId}>
+        <span>Username</span>
+        <input
+          id={usernameId}
+          name="username"
+          type="text"
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck={false}
+          maxLength={64}
+          placeholder="Enter username"
+          required
+          autoFocus
+        />
+      </label>
       <label className="signinField" htmlFor={passwordId}>
         <span>Password</span>
         <span className="signinInputWrap">
@@ -22,7 +38,6 @@ export default function SignInForm() {
             autoComplete="current-password"
             placeholder="Enter password"
             required
-            autoFocus
           />
           <button
             type="button"

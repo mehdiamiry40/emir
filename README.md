@@ -18,6 +18,7 @@ npm test        # build + smoke/visual/a11y tests (Playwright + axe)
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
+| `ADMIN_USERNAME` | no | Username for `/signin`; defaults to `emir`. |
 | `ADMIN_PASSWORD` | yes | Password for `/signin` → `/admin`. |
 | `SESSION_SECRET` | yes | Independent HMAC key for session cookies; use at least 32 random bytes. |
 | `UPSTASH_REDIS_REST_URL` | production | Durable Redis endpoint used for sign-in rate limiting. |
