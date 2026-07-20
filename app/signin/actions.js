@@ -21,7 +21,9 @@ function clientKey(headerList) {
     headerList.get("x-real-ip") ||
     headerList.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
-  const secret = process.env.SESSION_SECRET || "local-development";
+  const secret = `emir-rate-limit:${
+    process.env.ADMIN_PASSWORD || "local-development"
+  }`;
   return createHmac("sha256", secret).update(address).digest("hex");
 }
 
