@@ -4,8 +4,8 @@ export const DESCRIPTION = "EMIR — a personal homepage built around an eagle s
 export const SOCIAL_DESCRIPTION = "EMIR — Rise above the noise.";
 export const SIGNIN_PATH = "/signin";
 
-export const DATE_LABEL = "Monday, July 27, 2026";
-export const DATE_ISO = "2026-07-27";
+export const DATE_LABEL = "Sunday, July 26, 2026";
+export const DATE_ISO = "2026-07-26";
 
 export const THEME_COLOR = "#2f64c7";
 
