@@ -63,7 +63,7 @@ export default async function Home() {
 
         <div className="siteStatus" aria-label="Page status">
           <span className="siteStatusActive">Home</span>
-          <time dateTime={date.iso}>27.07.26</time>
+          <time dateTime={date.iso}>26.07.26</time>
         </div>
 
         <Link className="signinCta topSignin" href={SIGNIN_PATH}>
