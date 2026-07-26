@@ -65,7 +65,7 @@ export default async function OpengraphImage() {
               fontSize: 17,
             }}
           >
-            21.07.26
+            27.07.26
           </div>
         </div>
 
