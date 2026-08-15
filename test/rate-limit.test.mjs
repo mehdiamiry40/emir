@@ -4,9 +4,10 @@ import assert from "node:assert/strict";
 process.env.AUTH_RATE_LIMIT_TEST_MODE = "memory";
 const {
   checkPasskeyRateLimit,
-  checkSignInRateLimit,
   getRateLimitIdentifier,
+  getSignInRateLimit,
   isRateLimitConfigured,
+  recordFailedSignIn,
 } = await import("../lib/rate-limit.js");
 const { resolveRedisConfig } = await import("../lib/redis.js");
 
@@ -28,18 +29,26 @@ test("Redis configuration supports direct Upstash and Vercel KV names", () => {
   assert.equal(resolveRedisConfig({ KV_REST_API_URL: "incomplete" }), null);
 });
 
-test("development sign-in limiter blocks the sixth attempt", async () => {
+test("development sign-in limiter counts failures only", async () => {
   assert.equal(isRateLimitConfigured(), true);
   const identifier = `test-${Date.now()}-${Math.random()}`;
 
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const peeked = await getSignInRateLimit(identifier);
+    assert.equal(peeked.allowed, true);
+  }
+
   for (let attempt = 0; attempt < 5; attempt += 1) {
-    const result = await checkSignInRateLimit(identifier);
+    const result = await recordFailedSignIn(identifier);
     assert.equal(result.allowed, true);
   }
 
-  const blocked = await checkSignInRateLimit(identifier);
+  const blocked = await getSignInRateLimit(identifier);
   assert.equal(blocked.allowed, false);
   assert.ok(blocked.retryAfterSeconds > 0);
+
+  const extraFailure = await recordFailedSignIn(identifier);
+  assert.equal(extraFailure.allowed, false);
 });
 
 test("passkey ceremony limiter uses a separate higher threshold", async () => {

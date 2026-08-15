@@ -5,6 +5,7 @@ import {
   startAuthentication,
 } from "@simplewebauthn/browser";
 import { useActionState, useEffect, useId, useState } from "react";
+import { MAX_PASSWORD_LENGTH } from "../../lib/auth-limits";
 import { signIn } from "./actions";
 
 const initialState = { error: null };
@@ -98,6 +99,7 @@ export default function SignInForm({ passkeyEnabled }) {
           placeholder="Enter username"
           required
           autoFocus
+          disabled={pending || passkeyPending}
         />
       </label>
       <label className="signinField" htmlFor={passwordId}>
@@ -110,6 +112,8 @@ export default function SignInForm({ passkeyEnabled }) {
             autoComplete="current-password"
             placeholder="Enter password"
             required
+            maxLength={MAX_PASSWORD_LENGTH}
+            disabled={pending || passkeyPending}
           />
           <button
             type="button"
@@ -117,12 +121,17 @@ export default function SignInForm({ passkeyEnabled }) {
             onClick={() => setShowPassword((v) => !v)}
             aria-pressed={showPassword}
             aria-label={showPassword ? "Hide password" : "Show password"}
+            disabled={pending || passkeyPending}
           >
             {showPassword ? "Hide" : "Show"}
           </button>
         </span>
       </label>
-      <button className="signinSubmit" type="submit" disabled={pending}>
+      <button
+        className="signinSubmit"
+        type="submit"
+        disabled={pending || passkeyPending}
+      >
         {pending ? "Signing in…" : "Sign in"}
       </button>
       {passkeyEnabled ? (

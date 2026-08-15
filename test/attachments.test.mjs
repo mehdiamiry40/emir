@@ -28,6 +28,10 @@ const configSource = await readFile(
   new URL("../next.config.mjs", import.meta.url),
   "utf8",
 );
+const traySource = await readFile(
+  new URL("../app/admin/note-attachments.jsx", import.meta.url),
+  "utf8",
+);
 
 const PNG = Buffer.concat([
   Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
@@ -82,6 +86,10 @@ test("files preview in place, and only pictures carry a thumbnail", () => {
   // global /(.*) header entry.
   assert.match(configSource, /source: "\/api\/notes\/attachments\/:id"/);
   assert.match(configSource, /default-src 'none'; sandbox/);
+});
+
+test("file paste does not steal text from the notes editor", () => {
+  assert.match(traySource, /closest\("textarea, input"\)/);
 });
 
 test("attachment names are sanitized and keep a matching extension", () => {

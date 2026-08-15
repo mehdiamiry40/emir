@@ -85,6 +85,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
   const viewports = [
     { label: "desktop", width: 1280, height: 720 },
     { label: "mobile", width: 390, height: 844 },
+    { label: "narrow", width: 320, height: 568 },
   ];
 
   for (const viewport of viewports) {

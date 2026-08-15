@@ -1,7 +1,8 @@
-import Link from "next/link";
+import { Analytics } from "@vercel/analytics/react";
 import Eagle from "./eagle";
+import HomeCta from "./home-cta";
 import SignalField from "./signal-field";
-import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
+import { SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
 
 const QUOTE_TEXT = "Rise above the noise.";
 const WORDMARK_PIXELS = [
@@ -25,6 +26,9 @@ const WORDMARK_PIXELS = [
 
 export const metadata = {
   title: SITE_NAME,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: SITE_NAME,
     description: SOCIAL_DESCRIPTION,
@@ -41,52 +45,51 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <main className="home signalHome" aria-label={`${SITE_NAME} homepage`}>
-      <header className="topRow">
-        <span className="wordmark" aria-label={SITE_NAME}>
-          <span className="wordmarkMark" aria-hidden="true">
-            {WORDMARK_PIXELS.map(([column, row], index) => (
-              <i
-                key={`${column}-${row}-${index}`}
-                style={{ gridColumn: column, gridRow: row }}
-              />
-            ))}
+    <>
+      <main className="home signalHome" aria-label={`${SITE_NAME} homepage`}>
+        <header className="topRow">
+          <span className="wordmark" aria-label={SITE_NAME}>
+            <span className="wordmarkMark" aria-hidden="true">
+              {WORDMARK_PIXELS.map(([column, row], index) => (
+                <i
+                  key={`${column}-${row}-${index}`}
+                  style={{ gridColumn: column, gridRow: row }}
+                />
+              ))}
+            </span>
+            <span>{SITE_NAME}</span>
           </span>
-          <span>{SITE_NAME}</span>
-        </span>
 
-        <div className="siteStatus" aria-label="Page status">
-          <span className="siteStatusActive">Home</span>
-        </div>
+          <div className="siteStatus" aria-label="Page status">
+            <span className="siteStatusActive">Home</span>
+          </div>
 
-        <Link className="signinCta topSignin" href={SIGNIN_PATH}>
-          Sign in
-        </Link>
-      </header>
+          <HomeCta className="signinCta topSignin" />
+        </header>
 
-      <section className="signalStage" aria-label="Eagle signal">
-        <SignalField />
-        <Eagle />
-      </section>
+        <section className="signalStage" aria-label="Eagle signal">
+          <SignalField />
+          <Eagle />
+        </section>
 
-      <section className="hero" aria-labelledby="hero-title">
-        <h1
-          className="heroQuote"
-          data-text={QUOTE_TEXT}
-          id="hero-title"
-          aria-label={QUOTE_TEXT}
-        >
-          <span>Rise above</span>
-          <span>the noise.</span>
-        </h1>
-        <Link className="signinCta heroSignin" href={SIGNIN_PATH}>
-          Sign in
-        </Link>
-      </section>
+        <section className="hero" aria-labelledby="hero-title">
+          <h1
+            className="heroQuote"
+            data-text={QUOTE_TEXT}
+            id="hero-title"
+            aria-label={QUOTE_TEXT}
+          >
+            <span>Rise above</span>
+            <span>the noise.</span>
+          </h1>
+          <HomeCta className="signinCta heroSignin" />
+        </section>
 
-      <footer className="bottomRow">
-        <span>emir.com.au</span>
-      </footer>
-    </main>
+        <footer className="bottomRow">
+          <span>emir.com.au</span>
+        </footer>
+      </main>
+      <Analytics />
+    </>
   );
 }

@@ -3,6 +3,7 @@ export const SITE_URL = "https://www.emir.com.au";
 export const DESCRIPTION = "EMIR — a personal homepage built around an eagle signal.";
 export const SOCIAL_DESCRIPTION = "EMIR — Rise above the noise.";
 export const SIGNIN_PATH = "/signin";
+export const ADMIN_PATH = "/admin";
 
 export const THEME_COLOR = "#2f64c7";
 

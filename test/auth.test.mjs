@@ -10,10 +10,12 @@ import AxeBuilder from "@axe-core/playwright";
 import { chromium } from "playwright";
 import {
   DEFAULT_ADMIN_USERNAME,
+  MAX_PASSWORD_LENGTH,
   SESSION_MAX_AGE,
   createSessionToken,
   isConfigured,
   revokeSessionToken,
+  verifyPassword,
   verifySessionToken,
   verifyUsername,
 } from "../lib/session.js";
@@ -67,6 +69,20 @@ test("username validation is configurable and case-insensitive", () => {
   } finally {
     if (originalUsername === undefined) delete process.env.ADMIN_USERNAME;
     else process.env.ADMIN_USERNAME = originalUsername;
+  }
+});
+
+test("password verification rejects empty and oversized secrets", () => {
+  const originalPassword = process.env.ADMIN_PASSWORD;
+
+  try {
+    process.env.ADMIN_PASSWORD = TEST_PASSWORD;
+    assert.equal(verifyPassword(TEST_PASSWORD), true);
+    assert.equal(verifyPassword(""), false);
+    assert.equal(verifyPassword("a".repeat(MAX_PASSWORD_LENGTH + 1)), false);
+  } finally {
+    if (originalPassword === undefined) delete process.env.ADMIN_PASSWORD;
+    else process.env.ADMIN_PASSWORD = originalPassword;
   }
 });
 
@@ -276,7 +292,18 @@ test("sign-in flow protects the admin page", async (t) => {
     publicResponse.headers.get("content-security-policy") ?? "",
     /default-src 'self'/,
   );
+  assert.match(
+    publicResponse.headers.get("permissions-policy") ?? "",
+    /publickey-credentials-get=\(self\)/,
+  );
+  assert.equal(
+    publicResponse.headers.get("access-control-allow-origin"),
+    "https://www.emir.com.au",
+  );
   assert.equal(publicResponse.headers.get("x-powered-by"), null);
+
+  const sessionResponse = await fetch(`${url}/api/session`);
+  assert.equal(sessionResponse.status, 401);
 
   // unauthenticated /admin redirects to /signin
   const adminResponse = await fetch(`${url}/admin`, { redirect: "manual" });
@@ -351,6 +378,29 @@ test("sign-in flow protects the admin page", async (t) => {
   await page.waitForURL("**/admin", { timeout: 15000 });
   await page.waitForSelector(".notesEditor");
   assert.equal((await page.textContent(".notesTitle"))?.trim(), "Notes");
+
+  await page.goto(`${url}/signin`, { waitUntil: "load" });
+  await page.waitForURL("**/admin", { timeout: 15000 });
+  await page.waitForSelector(".notesEditor");
+
+  await page.goto(url, { waitUntil: "load" });
+  await page.waitForFunction(
+    () => {
+      const links = [...document.querySelectorAll(".signinCta")];
+      return (
+        links.length === 2 &&
+        links.every(
+          (link) =>
+            link.textContent?.trim() === "Notes" &&
+            link.getAttribute("href") === "/admin",
+        )
+      );
+    },
+    null,
+    { timeout: 15000 },
+  );
+  await page.goto(`${url}/admin`, { waitUntil: "load" });
+  await page.waitForSelector(".notesEditor");
 
   // passkey registration is available only inside the authenticated page
   await page.click(".adminPasskeys");
