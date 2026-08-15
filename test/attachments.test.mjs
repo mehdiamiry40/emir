@@ -166,6 +166,30 @@ test("removing an attachment drops both its bytes and its index entry", async ()
   assert.equal(await removeAttachment("bad-id"), null);
 });
 
+test("concurrent writes to the index cannot lose an entry", async () => {
+  const before = await listAttachments();
+  const names = Array.from({ length: 6 }, (_, index) => `race-${index}.png`);
+
+  const added = await Promise.all(
+    names.map((name) => addAttachment({ name, bytes: PNG })),
+  );
+  const stored = await listAttachments();
+
+  assert.equal(stored.length, before.length + names.length);
+  for (const name of names) {
+    assert.ok(
+      stored.some((item) => item.name === name),
+      `${name} should have survived the concurrent writes`,
+    );
+  }
+  // Every caller sees a list, and the last one to land sees them all.
+  assert.equal(Math.max(...added.map((items) => items.length)), stored.length);
+
+  const raced = stored.filter((item) => names.includes(item.name));
+  await Promise.all(raced.map((item) => removeAttachment(item.id)));
+  assert.deepEqual(await listAttachments(), before);
+});
+
 test("the attachment count is capped", async () => {
   const before = await listAttachments();
   for (let index = before.length; index < MAX_ATTACHMENTS; index += 1) {
