@@ -8,7 +8,10 @@ const signalSource = await readFile(
   new URL("../app/signal-field.jsx", import.meta.url),
   "utf8",
 );
-const dateLibSource = await readFile(new URL("../lib/date.js", import.meta.url), "utf8");
+const opengraphSource = await readFile(
+  new URL("../app/opengraph-image.jsx", import.meta.url),
+  "utf8",
+);
 const signInPageSource = await readFile(
   new URL("../app/signin/page.jsx", import.meta.url),
   "utf8",
@@ -32,30 +35,22 @@ const prerenderedManifest = JSON.parse(
   ),
 );
 
-test("homepage keeps the requested frozen July 26 date", () => {
-  assert.match(siteSource, /DATE_LABEL\s*=\s*"Sunday, July 26, 2026"/);
-  assert.match(siteSource, /DATE_ISO\s*=\s*"2026-07-26"/);
-  // the page renders the fixed date resolved by lib/date.js
-  assert.match(pageSource, /getDate\(\)/);
-  assert.match(pageSource, /dateTime=\{date\.iso\}/);
-  assert.match(pageSource, /\{date\.label\}/);
-  // no clocks or live-date machinery: the date must never advance on its own
+test("the site carries no date source or date markup", () => {
+  assert.doesNotMatch(siteSource, /DATE_LABEL|DATE_ISO/);
+  // no date plumbing, clocks, or live-date machinery anywhere on the page
+  assert.doesNotMatch(pageSource, /getDate|lib\/date|<time|dateTime/);
   assert.doesNotMatch(
     pageSource,
     /new Date\(|formatToday|DateDisplay|force-dynamic|setInterval|setTimeout/,
   );
-  assert.doesNotMatch(dateLibSource, /new Date\(\)/);
+  assert.doesNotMatch(opengraphSource, /getDate|lib\/date|date\.label/);
 });
 
-test("date cannot be overridden by production runtime storage", () => {
-  assert.doesNotMatch(dateLibSource, /process\.env/);
-  assert.doesNotMatch(dateLibSource, /EDGE_CONFIG|@vercel\/edge-config/);
-});
-
-test("prerendered homepage exposes the frozen July 26 date", () => {
-  assert.match(prerenderedHome, /<title>EMIR — Sunday, July 26, 2026<\/title>/);
-  assert.match(prerenderedHome, /dateTime="2026-07-26">26\.07\.26<\/time>/);
-  assert.match(prerenderedHome, /class="date footerDate" dateTime="2026-07-26">Sunday, July 26, 2026<\/time>/);
+test("prerendered homepage renders no date", () => {
+  assert.match(prerenderedHome, /<title>EMIR<\/title>/);
+  assert.doesNotMatch(prerenderedHome, /<time/);
+  assert.doesNotMatch(prerenderedHome, /datetime=/i);
+  assert.doesNotMatch(prerenderedHome, /26\.07\.26|Sunday, July|July 26, 2026/);
   assert.match(prerenderedHome, />EMIR</);
   assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
   assert.match(prerenderedHome, /aria-label="Rise above the noise\."/);
@@ -66,10 +61,10 @@ test("prerendered homepage exposes the frozen July 26 date", () => {
   assert.match(prerenderedHome, />Sign in</);
   assert.doesNotMatch(prerenderedHome, /themeToggle/);
   assert.doesNotMatch(prerenderedHome, /MMXXVI/);
-  // social card is generated dynamically and uses the same frozen date source
+  // social card is generated dynamically and carries no date either
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/opengraph-image/);
   assert.match(prerenderedHome, /rel="canonical" href="https:\/\/www\.emir\.com\.au"/);
-  assert.doesNotMatch(prerenderedHome, /Today is|Tuesday, July 7, 2026/);
+  assert.doesNotMatch(prerenderedHome, /Today is/);
 });
 
 test("prerendered 404 page exposes the not-found title and content", () => {

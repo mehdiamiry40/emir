@@ -96,7 +96,6 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
 
     const state = await page.evaluate(() => {
       const eagle = document.querySelector(".eagleWrap");
-      const date = document.querySelector(".date");
       const login = document.querySelector(".signinCta");
       const signal = document.querySelector(".signalCanvas");
 
@@ -127,7 +126,6 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       }
 
       const eagleRect = rectFor(eagle);
-      const dateRect = rectFor(date);
       const loginRect = rectFor(login);
       const signalContext = signal?.getContext("2d", { willReadFrequently: true });
       const signalPixels = signalContext
@@ -139,13 +137,10 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
       }
 
       return {
-        dateTime: date?.getAttribute("datetime"),
-        dateText: date?.textContent?.trim(),
-        dateFontSize: Number.parseFloat(getComputedStyle(date).fontSize),
+        timeElements: document.querySelectorAll("time").length,
         eagleLabel: eagle?.getAttribute("aria-label"),
         eagleTag: eagle?.tagName,
         eagleVisible: inViewport(eagleRect),
-        dateVisible: inViewport(dateRect),
         loginHref: login?.getAttribute("href"),
         loginText: login?.textContent?.trim(),
         loginVisible: inViewport(loginRect),
@@ -167,10 +162,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
     assert.deepEqual(
       state,
       {
-        dateTime: "2026-07-26",
-        dateText: "Sunday, July 26, 2026",
-        dateFontSize: 11,
-        dateVisible: true,
+        timeElements: 0,
         eagleLabel: "Animate eagle",
         eagleTag: "BUTTON",
         eagleVisible: true,
@@ -184,7 +176,7 @@ test("homepage and sign-in page are visible and non-scrollable", async (t) => {
         noHorizontalScroll: true,
         noVerticalScroll: true,
       },
-      `${viewport.label} layout should keep the eagle/date visible without scroll`,
+      `${viewport.label} layout should keep the eagle visible without scroll`,
     );
 
     await page.goto(`${url}/signin`, { waitUntil: "load" });

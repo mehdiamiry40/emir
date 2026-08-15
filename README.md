@@ -1,9 +1,9 @@
 # EMIR
 
-One page. One eagle. One date. Live at [www.emir.com.au](https://www.emir.com.au).
+One page. One eagle. Live at [www.emir.com.au](https://www.emir.com.au).
 
 A single-screen Next.js site with a centered eagle signal, precise white type,
-a deliberately fixed date, no scrolling, and a password-protected private page.
+no scrolling, and a password-protected private page.
 
 ## Commands
 
@@ -66,15 +66,12 @@ use the passkey without a username. The private key remains with the device or
 its passkey provider. Redis stores only the public credential, transport
 metadata, signature counter, and five-minute one-time challenges.
 
-The date comes from `app/site.js` (`DATE_LABEL` / `DATE_ISO`) and only changes
-via a commit. Runtime storage and environment variables must not override it.
-
-**The date is intentionally fixed. It must never advance on its own —
-do not add clocks, midnight timers, or "current date" logic.**
+The public pages show no date. **Do not reintroduce one — no clocks, midnight
+timers, or "current date" logic on the homepage or the social card.**
 
 ## Structure
 
-- `app/page.jsx` — the eagle signal, statement, fixed date, and sign-in CTA
+- `app/page.jsx` — the eagle signal, statement, and sign-in CTA
 - `app/signal-field.jsx` — responsive canvas signal with reduced-motion support
 - `app/signin/` — username/password sign-in (server action, revocable session cookie)
 - `app/admin/` — protected private notes editor
