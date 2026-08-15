@@ -79,12 +79,28 @@ test("production passkey config accepts only configured RP origins", () => {
     resolvePasskeyRequestConfig(
       "https://www.emir.com.au/api/passkeys/authentication/options",
       env,
+      "https://www.emir.com.au",
     ),
     {
       rpID: "emir.com.au",
       rpName: "EMIR",
       origin: "https://www.emir.com.au",
     },
+  );
+  assert.equal(
+    resolvePasskeyRequestConfig(
+      "https://www.emir.com.au/api/passkeys/authentication/options",
+      env,
+    ),
+    null,
+  );
+  assert.equal(
+    resolvePasskeyRequestConfig(
+      "https://www.emir.com.au/api/passkeys/authentication/options",
+      env,
+      "https://emir.com.au",
+    ),
+    null,
   );
   assert.equal(
     resolvePasskeyRequestConfig("https://evil.example/api/passkeys", env),

@@ -127,8 +127,17 @@ export default function NoteAttachments({
     };
     /** @param {ClipboardEvent} event */
     const onPaste = (event) => {
-      const files = event.clipboardData?.files;
-      if (!files?.length) return;
+      const data = event.clipboardData;
+      const files = data?.files;
+      if (!data || !files?.length) return;
+      const text = data.getData("text/plain");
+      if (
+        text &&
+        event.target instanceof HTMLElement &&
+        event.target.closest("textarea, input")
+      ) {
+        return;
+      }
       event.preventDefault();
       uploadRef.current(files);
     };

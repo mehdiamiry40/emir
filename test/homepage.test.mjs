@@ -4,6 +4,10 @@ import assert from "node:assert/strict";
 
 const siteSource = await readFile(new URL("../app/site.js", import.meta.url), "utf8");
 const pageSource = await readFile(new URL("../app/page.jsx", import.meta.url), "utf8");
+const layoutSource = await readFile(
+  new URL("../app/layout.jsx", import.meta.url),
+  "utf8",
+);
 const signalSource = await readFile(
   new URL("../app/signal-field.jsx", import.meta.url),
   "utf8",
@@ -55,6 +59,7 @@ test("prerendered homepage renders no date", () => {
   assert.match(prerenderedHome, /class="heroQuote" data-text="Rise above the noise\."/);
   assert.match(prerenderedHome, /aria-label="Rise above the noise\."/);
   assert.match(signalSource, /RAY_COUNT\s*=\s*128/);
+  assert.match(signalSource, /visibilitychange/);
   assert.match(prerenderedHome, /data-ray-count="128"/);
   assert.match(prerenderedHome, /<canvas class="signalCanvas"><\/canvas>/);
   assert.match(prerenderedHome, /href="\/signin"/);
@@ -64,23 +69,36 @@ test("prerendered homepage renders no date", () => {
   // social card is generated dynamically and carries no date either
   assert.match(prerenderedHome, /https:\/\/www\.emir\.com\.au\/opengraph-image/);
   assert.match(prerenderedHome, /rel="canonical" href="https:\/\/www\.emir\.com\.au"/);
+  assert.match(prerenderedHome, /viewport-fit=cover/);
   assert.doesNotMatch(prerenderedHome, /Today is/);
+});
+
+test("canonical and analytics stay on the public homepage", () => {
+  assert.match(pageSource, /canonical: "\/"/);
+  assert.match(pageSource, /from "@vercel\/analytics\/react"/);
+  assert.match(layoutSource, /viewportFit: "cover"/);
+  assert.doesNotMatch(layoutSource, /canonical/);
+  assert.doesNotMatch(layoutSource, /Analytics/);
 });
 
 test("prerendered 404 page exposes the not-found title and content", () => {
   assert.match(prerenderedNotFound, /<title>EMIR — Not found<\/title>/);
   assert.match(prerenderedNotFound, /<h1 class="notFoundCode">404<\/h1>/);
   assert.match(prerenderedNotFound, />This page has flown away\.</);
+  assert.match(prerenderedNotFound, /noindex/);
 });
 
 test("sign-in page exposes password and passkey authentication", () => {
   assert.match(signInPageSource, /title: `\$\{SITE_NAME\} — Sign in`/);
   assert.match(signInPageSource, /aria-label="Sign in"/);
   assert.match(signInPageSource, /className="signinTitle"/);
+  assert.match(signInPageSource, /verifySessionToken/);
+  assert.match(signInPageSource, /redirect\("\/admin"\)/);
   assert.doesNotMatch(signInFormSource, /name="email"/);
   assert.match(signInFormSource, /name="username"/);
   assert.match(signInFormSource, /autoComplete="username"/);
   assert.match(signInFormSource, /name="password"/);
+  assert.match(signInFormSource, /maxLength=\{MAX_PASSWORD_LENGTH\}/);
   assert.match(signInFormSource, /Sign in with passkey/);
   assert.match(signInPageSource, /\n\s+Home\n/);
 });

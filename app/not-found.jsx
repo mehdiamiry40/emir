@@ -2,6 +2,10 @@ import Link from "next/link";
 
 export const metadata = {
   title: "EMIR — Not found",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function NotFound() {

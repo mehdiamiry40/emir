@@ -125,19 +125,25 @@ export default function SignalField({ className = "" }) {
 
     const restartAnimation = () => {
       window.cancelAnimationFrame(animationFrame);
-      if (motionQuery.matches) {
+      animationFrame = 0;
+      if (document.hidden || motionQuery.matches) {
         pointer.x = 0;
         pointer.y = 0;
-        draw(0);
-      } else {
-        animationFrame = window.requestAnimationFrame(animate);
+        draw(document.hidden ? 0 : performance.now());
+        return;
       }
+      animationFrame = window.requestAnimationFrame(animate);
+    };
+
+    const handleVisibility = () => {
+      restartAnimation();
     };
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("blur", resetPointer);
+    document.addEventListener("visibilitychange", handleVisibility);
     motionQuery.addEventListener("change", restartAnimation);
     resize();
     restartAnimation();
@@ -147,6 +153,7 @@ export default function SignalField({ className = "" }) {
       resizeObserver.disconnect();
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("blur", resetPointer);
+      document.removeEventListener("visibilitychange", handleVisibility);
       motionQuery.removeEventListener("change", restartAnimation);
     };
   }, []);

@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { isPasskeyConfigured } from "../../lib/passkeys";
+import { SESSION_COOKIE, verifySessionToken } from "../../lib/session";
 import SignalField from "../signal-field";
 import { SITE_NAME } from "../site";
 import SignInForm from "./signin-form";
@@ -15,7 +18,12 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default function SignInPage() {
+export default async function SignInPage() {
+  const jar = await cookies();
+  if (await verifySessionToken(jar.get(SESSION_COOKIE)?.value)) {
+    redirect("/admin");
+  }
+
   return (
     <>
       <Link className="loginButton" href="/">
