@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import {
-  ATTACHMENT_TYPES,
   isAttachmentStorageConfigured,
   loadAttachment,
   removeAttachment,
@@ -27,15 +26,16 @@ async function requireSession() {
 }
 
 /**
- * Names are already stripped of controls and separators; the ASCII fallback
- * keeps the header well-formed for clients that ignore the RFC 5987 form.
+ * Everything stored here is safe to render, and the response is sandboxed to
+ * an opaque origin, so files preview in place instead of downloading. Names
+ * are already stripped of controls and separators; the ASCII fallback keeps
+ * the header well-formed for clients that ignore the RFC 5987 form.
  *
  * @param {string} name
- * @param {boolean} inline
  */
-function contentDisposition(name, inline) {
+function contentDisposition(name) {
   const fallback = name.replace(/[^A-Za-z0-9._ -]/g, "_");
-  return `${inline ? "inline" : "attachment"}; filename="${fallback}"; filename*=UTF-8''${encodeURIComponent(name)}`;
+  return `inline; filename="${fallback}"; filename*=UTF-8''${encodeURIComponent(name)}`;
 }
 
 /**
@@ -59,13 +59,12 @@ export async function GET(request, context) {
     }
 
     const { metadata, bytes } = attachment;
-    const { inline } = ATTACHMENT_TYPES[metadata.type];
     return new NextResponse(new Uint8Array(bytes), {
       status: 200,
       headers: {
         "Content-Type": metadata.type,
         "Content-Length": String(bytes.length),
-        "Content-Disposition": contentDisposition(metadata.name, inline),
+        "Content-Disposition": contentDisposition(metadata.name),
         "X-Content-Type-Options": "nosniff",
         "Cache-Control": "private, no-store, max-age=0",
       },

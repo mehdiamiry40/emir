@@ -66,8 +66,11 @@ bytes, so the browser-supplied content type and file extension are never
 trusted; SVG is excluded because it is an active document. Each file is
 encrypted with the same AES-256-GCM envelope as the note and stored under its
 own Redis key, with the encrypted metadata index at `emir:notes:attachments`.
-`/api/notes/attachments/<id>` requires a valid session, serves pictures inline
-and PDFs as downloads, and is sandboxed by its own content-security policy.
+Attach a file with the button, by dropping it on the page, or by pasting it.
+`/api/notes/attachments/<id>` requires a valid session and serves every file
+inline, so pictures and PDFs both preview in place; the response is sandboxed
+to an opaque origin by its own content-security policy, so a stored file
+cannot run anything or reach the session.
 Attachments need Redis for the same reason notes do; without it they report as
 unavailable in production.
 

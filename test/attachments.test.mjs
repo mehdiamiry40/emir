@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import {
   ATTACHMENT_TYPES,
   AttachmentError,
@@ -18,6 +19,15 @@ import {
 import { encryptNoteRecord } from "../lib/note-crypto.js";
 
 process.env.NOTES_ENCRYPTION_KEY = Buffer.alloc(32, 7).toString("base64");
+
+const fileRouteSource = await readFile(
+  new URL("../app/api/notes/attachments/[id]/route.js", import.meta.url),
+  "utf8",
+);
+const configSource = await readFile(
+  new URL("../next.config.mjs", import.meta.url),
+  "utf8",
+);
 
 const PNG = Buffer.concat([
   Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
@@ -53,6 +63,25 @@ test("attachment types are resolved from the bytes, not the file name", () => {
   assert.equal(detectAttachmentType(Buffer.alloc(0)), null);
   // A truncated RIFF header must not pass as WEBP.
   assert.equal(detectAttachmentType(Buffer.from("RIFF")), null);
+});
+
+test("files preview in place, and only pictures carry a thumbnail", () => {
+  for (const [type, kind] of Object.entries(ATTACHMENT_TYPES)) {
+    assert.equal(
+      kind.thumbnail,
+      type.startsWith("image/"),
+      `${type} thumbnail flag should follow its media type`,
+    );
+  }
+
+  // Previewing is only safe because the response is inert and never sniffed.
+  assert.match(fileRouteSource, /inline; filename="/);
+  assert.doesNotMatch(fileRouteSource, /attachment; filename/);
+  assert.match(fileRouteSource, /"X-Content-Type-Options": "nosniff"/);
+  // The sandbox has to live in the config: a route-level CSP loses to the
+  // global /(.*) header entry.
+  assert.match(configSource, /source: "\/api\/notes\/attachments\/:id"/);
+  assert.match(configSource, /default-src 'none'; sandbox/);
 });
 
 test("attachment names are sanitized and keep a matching extension", () => {
