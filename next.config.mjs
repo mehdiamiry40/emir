@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { SITE_URL } from "./app/site.js";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -40,6 +41,14 @@ const nextConfig = {
             value:
               "camera=(), microphone=(), geolocation=(), publickey-credentials-get=(self), publickey-credentials-create=(self)",
           },
+          ...(isDevelopment
+            ? []
+            : [
+                {
+                  key: "Access-Control-Allow-Origin",
+                  value: new URL(SITE_URL).origin,
+                },
+              ]),
         ],
       },
       {

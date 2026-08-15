@@ -3,9 +3,10 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
-  checkSignInRateLimit,
   getRateLimitIdentifier,
+  getSignInRateLimit,
   isRateLimitConfigured,
+  recordFailedSignIn,
 } from "../../lib/rate-limit";
 import {
   SESSION_COOKIE,
@@ -24,7 +25,7 @@ export async function signIn(prevState, formData) {
 
   const headerList = await headers();
   const key = getRateLimitIdentifier(headerList);
-  const limit = await checkSignInRateLimit(key);
+  const limit = await getSignInRateLimit(key);
   if (!limit.allowed) {
     return {
       error: limit.unavailable
@@ -36,6 +37,7 @@ export async function signIn(prevState, formData) {
   const usernameIsValid = verifyUsername(formData.get("username"));
   const passwordIsValid = verifyPassword(formData.get("password"));
   if (!usernameIsValid || !passwordIsValid) {
+    await recordFailedSignIn(key);
     await new Promise((resolve) => setTimeout(resolve, 500));
     return { error: "Incorrect username or password." };
   }

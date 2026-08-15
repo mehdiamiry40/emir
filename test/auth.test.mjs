@@ -296,7 +296,14 @@ test("sign-in flow protects the admin page", async (t) => {
     publicResponse.headers.get("permissions-policy") ?? "",
     /publickey-credentials-get=\(self\)/,
   );
+  assert.equal(
+    publicResponse.headers.get("access-control-allow-origin"),
+    "https://www.emir.com.au",
+  );
   assert.equal(publicResponse.headers.get("x-powered-by"), null);
+
+  const sessionResponse = await fetch(`${url}/api/session`);
+  assert.equal(sessionResponse.status, 401);
 
   // unauthenticated /admin redirects to /signin
   const adminResponse = await fetch(`${url}/admin`, { redirect: "manual" });
@@ -374,6 +381,25 @@ test("sign-in flow protects the admin page", async (t) => {
 
   await page.goto(`${url}/signin`, { waitUntil: "load" });
   await page.waitForURL("**/admin", { timeout: 15000 });
+  await page.waitForSelector(".notesEditor");
+
+  await page.goto(url, { waitUntil: "load" });
+  await page.waitForFunction(
+    () => {
+      const links = [...document.querySelectorAll(".signinCta")];
+      return (
+        links.length === 2 &&
+        links.every(
+          (link) =>
+            link.textContent?.trim() === "Notes" &&
+            link.getAttribute("href") === "/admin",
+        )
+      );
+    },
+    null,
+    { timeout: 15000 },
+  );
+  await page.goto(`${url}/admin`, { waitUntil: "load" });
   await page.waitForSelector(".notesEditor");
 
   // passkey registration is available only inside the authenticated page

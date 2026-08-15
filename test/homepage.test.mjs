@@ -64,6 +64,7 @@ test("prerendered homepage renders no date", () => {
   assert.match(prerenderedHome, /<canvas class="signalCanvas"><\/canvas>/);
   assert.match(prerenderedHome, /href="\/signin"/);
   assert.match(prerenderedHome, />Sign in</);
+  assert.match(pageSource, /HomeCta/);
   assert.doesNotMatch(prerenderedHome, /themeToggle/);
   assert.doesNotMatch(prerenderedHome, /MMXXVI/);
   // social card is generated dynamically and carries no date either

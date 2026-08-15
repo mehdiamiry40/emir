@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
 import Eagle from "./eagle";
+import HomeCta from "./home-cta";
 import SignalField from "./signal-field";
-import { SIGNIN_PATH, SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
+import { SITE_NAME, SOCIAL_DESCRIPTION } from "./site";
 
 const QUOTE_TEXT = "Rise above the noise.";
 const WORDMARK_PIXELS = [
@@ -64,9 +64,7 @@ export default function Home() {
             <span className="siteStatusActive">Home</span>
           </div>
 
-          <Link className="signinCta topSignin" href={SIGNIN_PATH}>
-            Sign in
-          </Link>
+          <HomeCta className="signinCta topSignin" />
         </header>
 
         <section className="signalStage" aria-label="Eagle signal">
@@ -84,9 +82,7 @@ export default function Home() {
             <span>Rise above</span>
             <span>the noise.</span>
           </h1>
-          <Link className="signinCta heroSignin" href={SIGNIN_PATH}>
-            Sign in
-          </Link>
+          <HomeCta className="signinCta heroSignin" />
         </section>
 
         <footer className="bottomRow">
