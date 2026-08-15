@@ -9,7 +9,7 @@ export default function NotFound() {
     <>
       <main className="home" aria-label="Page not found">
         <h1 className="notFoundCode">404</h1>
-        <p className="date notFoundText">This page has flown away.</p>
+        <p className="notFoundText">This page has flown away.</p>
         <Link className="homeLink" href="/">
           Return to the eagle
         </Link>

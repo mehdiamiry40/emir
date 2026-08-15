@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { getDate } from "../lib/date";
 import { SITE_NAME } from "./site";
 
 export const alt = "White eagle signal and statement on a cobalt background";
@@ -19,8 +18,7 @@ const RAYS = Array.from({ length: 96 }, (_, index) => {
 const RAY_LINES = Array.from({ length: 48 }, (_, index) => index * 3.75);
 
 export default async function OpengraphImage() {
-  const [date, eagle, font] = await Promise.all([
-    getDate(),
+  const [eagle, font] = await Promise.all([
     readFile(join(process.cwd(), "public/eagle-icon.svg")),
     readFile(join(process.cwd(), "assets/inter-700.ttf")),
   ]);
@@ -55,18 +53,6 @@ export default async function OpengraphImage() {
           }}
         >
           <div style={{ display: "flex" }}>{SITE_NAME}</div>
-          <div
-            style={{
-              display: "flex",
-              padding: "12px 16px",
-              border: "1px solid rgba(255,255,255,0.32)",
-              borderRadius: 4,
-              background: "#123d8f",
-              fontSize: 17,
-            }}
-          >
-            26.07.26
-          </div>
         </div>
 
         <div
@@ -141,20 +127,6 @@ export default async function OpengraphImage() {
         >
           <div style={{ display: "flex" }}>Rise above</div>
           <div style={{ display: "flex" }}>the noise.</div>
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            right: 48,
-            bottom: 38,
-            display: "flex",
-            color: "#edf4ff",
-            fontSize: 16,
-            fontWeight: 700,
-          }}
-        >
-          {date.label}
         </div>
       </div>
     ),
