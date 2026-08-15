@@ -60,6 +60,17 @@ plaintext in logs or shell history. Keep a secure backup of
 `NOTES_ENCRYPTION_KEY`: replacing or losing it makes existing notes unreadable.
 Never commit the real key to Git.
 
+Notes can carry attachments: up to 10 files of 4 MB each, limited to PDF, PNG,
+JPG, WEBP, and GIF. The format is decided by sniffing the file's own magic
+bytes, so the browser-supplied content type and file extension are never
+trusted; SVG is excluded because it is an active document. Each file is
+encrypted with the same AES-256-GCM envelope as the note and stored under its
+own Redis key, with the encrypted metadata index at `emir:notes:attachments`.
+`/api/notes/attachments/<id>` requires a valid session, serves pictures inline
+and PDFs as downloads, and is sandboxed by its own content-security policy.
+Attachments need Redis for the same reason notes do; without it they report as
+unavailable in production.
+
 Passkeys use WebAuthn discoverable credentials with device verification. Sign in
 with the password once to add a passkey from `/admin`; subsequent sign-ins can
 use the passkey without a username. The private key remains with the device or
@@ -74,8 +85,10 @@ timers, or "current date" logic on the homepage or the social card.**
 - `app/page.jsx` — the eagle signal, statement, and sign-in CTA
 - `app/signal-field.jsx` — responsive canvas signal with reduced-motion support
 - `app/signin/` — username/password sign-in (server action, revocable session cookie)
-- `app/admin/` — protected private notes editor
+- `app/admin/` — protected private notes editor and attachment tray
+- `app/api/notes/attachments/` — session-gated upload, download, and removal
 - `lib/session.js`, `lib/rate-limit.js`, `lib/notes.js` — auth + persistence
+- `lib/attachments.js` — encrypted attachment storage and format sniffing
 - `scripts/migrate-legacy-note.mjs` — reviewed offline legacy-note conversion
 - `public/eagle-icon.svg` — the traced eagle used everywhere
 - `test/` — smoke, visual, and axe accessibility tests (run in CI)

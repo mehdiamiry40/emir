@@ -41,6 +41,16 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Stored files are inert: no scripts, no subresources, no navigation.
+        source: "/api/notes/attachments/:id",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'none'; sandbox",
+          },
+        ],
+      },
     ];
   },
 };
