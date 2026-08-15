@@ -21,6 +21,14 @@ import { addPasskey, removePasskey } from "../lib/passkeys.js";
 
 const TEST_PASSWORD = "test-eagle-password";
 const TEST_USERNAME = "emir-admin";
+// A real 64x64 PNG, so the tray renders a thumbnail instead of a broken image.
+const TEST_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAP0lEQVR42u3PQREAAAgDoC251a3gLzhQwM2qYwQCgUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoFAIBAI3g8WWAABtVXvBQAAAABJRU5ErkJggg==",
+  "base64",
+);
+const TEST_PDF = Buffer.from(
+  "%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n",
+);
 const TEST_NOTES_ENCRYPTION_KEY = Buffer.alloc(32, 11).toString("base64");
 const TEST_SESSION_SECRET = Buffer.alloc(32, 23).toString("base64");
 
@@ -368,6 +376,17 @@ test("sign-in flow protects the admin page", async (t) => {
     "Passkey added.",
   );
   assert.equal(await page.locator(".passkeyItem").count(), 1);
+  // the row says how the credential is stored, and prints no date
+  assert.match(
+    (await page.textContent(".passkeyDetails span"))?.trim() ?? "",
+    /^(Synced|Device)$/,
+  );
+  const listedPasskeyAccessibility = await new AxeBuilder({ page }).analyze();
+  assert.deepEqual(
+    listedPasskeyAccessibility.violations,
+    [],
+    "passkey manager listing a credential should have no accessibility violations",
+  );
   await page.click(".passkeyClose");
 
   const noteContent = "A persisted private note.\nSecond line.";
@@ -380,11 +399,29 @@ test("sign-in flow protects the admin page", async (t) => {
   await page.reload({ waitUntil: "load" });
   assert.equal(await page.inputValue(".notesEditor"), noteContent);
 
+  // attachments, so the axe run below covers a populated tray rather than an
+  // empty one: thumbnails, type badges, and the per-file remove buttons
+  await page.setInputFiles(".notesFilePicker", [
+    { name: "note photo.png", mimeType: "image/png", buffer: TEST_PNG },
+    { name: "note scan.pdf", mimeType: "application/pdf", buffer: TEST_PDF },
+  ]);
+  await page.waitForFunction(
+    () => document.querySelectorAll(".notesAttachment").length === 2,
+    null,
+    { timeout: 15000 },
+  );
+  assert.deepEqual(
+    await page.$$eval(".notesAttachmentName", (nodes) =>
+      nodes.map((node) => node.textContent),
+    ),
+    ["note photo.png", "note scan.pdf"],
+  );
+
   const accessibility = await new AxeBuilder({ page }).analyze();
   assert.deepEqual(
     accessibility.violations,
     [],
-    "authenticated notes editor should have no WCAG A/AA violations",
+    "authenticated notes editor and attachment tray should have no WCAG A/AA violations",
   );
 
   for (const viewport of [
@@ -394,6 +431,12 @@ test("sign-in flow protects the admin page", async (t) => {
   ]) {
     await page.setViewportSize(viewport);
     await page.reload({ waitUntil: "load" });
+    // measure with the tray populated: it is the tallest the page ever gets
+    await page.waitForFunction(
+      () => document.querySelectorAll(".notesAttachment").length === 2,
+      null,
+      { timeout: 15000 },
+    );
     const layout = await page.evaluate(() => {
       const editor = document.querySelector(".notesEditor")?.getBoundingClientRect();
       const footer = document.querySelector(".notesFooter")?.getBoundingClientRect();
