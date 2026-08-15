@@ -66,6 +66,13 @@ bytes, so the browser-supplied content type and file extension are never
 trusted; SVG is excluded because it is an active document. Each file is
 encrypted with the same AES-256-GCM envelope as the note and stored under its
 own Redis key, with the encrypted metadata index at `emir:notes:attachments`.
+The metadata index is read, modified, and written back, so every update takes
+a lock: an in-process queue serializes requests inside one server instance,
+and a Redis lock (`emir:notes:attachments:lock`, held only for the index
+write) serializes the instances against each other. Without it, two uploads
+landing together would each write their own view of the list and one would be
+lost.
+
 Attach a file with the button, by dropping it on the page, or by pasting it.
 `/api/notes/attachments/<id>` requires a valid session and serves every file
 inline, so pictures and PDFs both preview in place; the response is sandboxed

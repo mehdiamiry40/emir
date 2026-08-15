@@ -20,6 +20,7 @@ const ATTACHMENT_ERROR_STATUS = {
   too_large: 413,
   unsupported_type: 415,
   too_many: 409,
+  locked: 503,
   empty: 400,
 };
 
