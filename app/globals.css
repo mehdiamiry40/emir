@@ -930,7 +930,7 @@ textarea {
   width: min(100%, 1180px);
   min-height: 0;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) 60px;
+  grid-template-rows: minmax(0, 1fr) auto 60px;
   overflow: hidden;
   margin: 18px auto 0;
   border: 1px solid rgba(8, 38, 97, 0.34);
@@ -967,6 +967,179 @@ textarea {
 .notesEditor:disabled {
   color: #687894;
   cursor: not-allowed;
+}
+
+.notesAttachments {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 20px;
+  border-top: 1px solid #d8e0ec;
+  background: #f2f6fa;
+}
+
+.notesAttachmentList {
+  min-width: 0;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notesAttachment {
+  flex: 0 0 auto;
+  max-width: 260px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 6px 6px 8px;
+  border: 1px solid #d3dcea;
+  border-radius: 3px;
+  background: #ffffff;
+}
+
+.notesAttachmentOpen {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #16305f;
+  text-decoration: none;
+}
+
+.notesAttachmentOpen:hover .notesAttachmentName {
+  text-decoration: underline;
+}
+
+.notesAttachmentOpen:focus-visible {
+  outline: 2px solid var(--canvas-deep);
+  outline-offset: 2px;
+}
+
+.notesAttachmentThumb,
+.notesAttachmentKind {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 2px;
+}
+
+.notesAttachmentThumb {
+  background: #e6edf6;
+  object-fit: cover;
+}
+
+.notesAttachmentKind {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--canvas-deep);
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.notesAttachmentText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notesAttachmentName {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notesAttachmentSize {
+  color: #52637d;
+  font-size: 11px;
+}
+
+.notesAttachmentRemove {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: #52637d;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.notesAttachmentRemove:hover:not(:disabled) {
+  border-color: #d3dcea;
+  background: #eef3f8;
+  color: #a23333;
+}
+
+.notesAttachmentRemove:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.notesAttachmentRemove:focus-visible {
+  outline: 2px solid var(--canvas-deep);
+  outline-offset: 1px;
+}
+
+.notesAttachmentBar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.notesAttachButton {
+  height: 34px;
+  flex: none;
+  padding: 0 14px;
+  border: 1px solid #c3cfe0;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #16305f;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.notesAttachButton:hover:not(:disabled) {
+  border-color: var(--canvas-deep);
+}
+
+.notesAttachButton:disabled {
+  color: #8494ab;
+  cursor: default;
+}
+
+.notesAttachButton:focus-visible {
+  outline: 2px solid var(--canvas-deep);
+  outline-offset: 2px;
+}
+
+.notesFilePicker {
+  display: none;
+}
+
+.notesAttachmentStatus {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #52637d;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .notesFooter {
@@ -1262,7 +1435,7 @@ textarea {
   }
 
   .notesWorkspace {
-    grid-template-rows: minmax(0, 1fr) 56px;
+    grid-template-rows: minmax(0, 1fr) auto 56px;
     margin-top: 12px;
   }
 
@@ -1270,6 +1443,15 @@ textarea {
     padding: 24px 18px;
     font-size: 16px;
     line-height: 1.65;
+  }
+
+  .notesAttachments {
+    gap: 8px;
+    padding: 10px 14px;
+  }
+
+  .notesAttachment {
+    max-width: 210px;
   }
 
   .notesFooter {
@@ -1355,7 +1537,7 @@ textarea {
   }
 
   .notesWorkspace {
-    grid-template-rows: minmax(0, 1fr) 52px;
+    grid-template-rows: minmax(0, 1fr) auto 52px;
     margin-top: 10px;
   }
 
@@ -1440,7 +1622,7 @@ textarea {
   }
 
   .notesWorkspace {
-    grid-template-rows: minmax(0, 1fr) 50px;
+    grid-template-rows: minmax(0, 1fr) auto 50px;
     margin-top: 9px;
   }
 

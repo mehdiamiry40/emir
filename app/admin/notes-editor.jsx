@@ -9,6 +9,7 @@ import { saveNoteAction } from "./actions";
  *   initialUpdatedAt: string | null,
  *   maxLength: number,
  *   storageAvailable: boolean,
+ *   children?: import("react").ReactNode,
  * }} props
  */
 export default function NotesEditor({
@@ -16,6 +17,7 @@ export default function NotesEditor({
   initialUpdatedAt,
   maxLength,
   storageAvailable,
+  children,
 }) {
   const [content, setContent] = useState(initialContent);
   const [savedContent, setSavedContent] = useState(initialContent);
@@ -90,6 +92,7 @@ export default function NotesEditor({
         }}
         onKeyDown={handleKeyDown}
       />
+      {children}
       <footer className="notesFooter">
         <p
           className={`notesStatus${error ? " notesStatusError" : ""}`}

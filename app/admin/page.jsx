@@ -8,11 +8,20 @@ import {
   loadNote,
 } from "../../lib/notes";
 import {
+  ACCEPTED_ATTACHMENT_TYPES,
+  ATTACHMENT_TYPES,
+  MAX_ATTACHMENTS,
+  MAX_ATTACHMENT_BYTES,
+  isAttachmentStorageConfigured,
+  listAttachments,
+} from "../../lib/attachments";
+import {
   isPasskeyConfigured,
   listPasskeys,
 } from "../../lib/passkeys";
 import { SITE_NAME } from "../site";
 import { signOut } from "../signin/actions";
+import NoteAttachments from "./note-attachments";
 import NotesEditor from "./notes-editor";
 import PasskeyManager from "./passkey-manager";
 
@@ -41,6 +50,17 @@ export default async function AdminPage() {
       note = await loadNote();
     } catch {
       storageAvailable = false;
+    }
+  }
+
+  /** @type {import("../../lib/attachments").AttachmentMetadata[]} */
+  let attachments = [];
+  let attachmentsAvailable = storageAvailable && isAttachmentStorageConfigured();
+  if (attachmentsAvailable) {
+    try {
+      attachments = await listAttachments();
+    } catch {
+      attachmentsAvailable = false;
     }
   }
 
@@ -83,7 +103,16 @@ export default async function AdminPage() {
         initialUpdatedAt={note.updatedAt}
         maxLength={MAX_NOTE_LENGTH}
         storageAvailable={storageAvailable}
-      />
+      >
+        <NoteAttachments
+          initialAttachments={attachments}
+          accept={ACCEPTED_ATTACHMENT_TYPES}
+          types={ATTACHMENT_TYPES}
+          maxAttachments={MAX_ATTACHMENTS}
+          maxBytes={MAX_ATTACHMENT_BYTES}
+          storageAvailable={attachmentsAvailable}
+        />
+      </NotesEditor>
     </main>
   );
 }
