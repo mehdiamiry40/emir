@@ -15,7 +15,7 @@ function formatSize(bytes) {
  * @param {{
  *   initialAttachments: import("../../lib/attachments").AttachmentMetadata[],
  *   accept: string[],
- *   types: Record<string, { extension: string, label: string, inline: boolean }>,
+ *   types: Record<string, { extension: string, label: string, thumbnail: boolean }>,
  *   maxAttachments: number,
  *   maxBytes: number,
  *   storageAvailable: boolean,
@@ -32,7 +32,11 @@ export default function NoteAttachments({
   const [attachments, setAttachments] = useState(initialAttachments);
   const [error, setError] = useState(/** @type {string | null} */ (null));
   const [busy, setBusy] = useState(/** @type {string | null} */ (null));
+  const [dropping, setDropping] = useState(false);
   const inputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const uploadRef = useRef(/** @type {(files: FileList | null) => void} */ (
+    () => {}
+  ));
   const isFull = attachments.length >= maxAttachments;
 
   // Picks up files attached from another device, and keeps the tray correct
@@ -62,7 +66,7 @@ export default function NoteAttachments({
 
   /** @param {FileList | null} files */
   async function upload(files) {
-    if (!files?.length || !storageAvailable) return;
+    if (!files?.length || !storageAvailable || busy) return;
     setError(null);
 
     for (const file of Array.from(files)) {
@@ -91,6 +95,56 @@ export default function NoteAttachments({
     }
   }
 
+  uploadRef.current = upload;
+
+  // Dropping a file anywhere on the page, or pasting a screenshot, attaches
+  // it. Both are ignored while an upload is in flight so two writes to the
+  // attachment index cannot interleave.
+  useEffect(() => {
+    if (!storageAvailable) return undefined;
+
+    /** @param {DragEvent} event */
+    const carriesFiles = (event) =>
+      Array.from(event.dataTransfer?.types || []).includes("Files");
+
+    /** @param {DragEvent} event */
+    const onDragOver = (event) => {
+      if (!carriesFiles(event)) return;
+      event.preventDefault();
+      setDropping(true);
+    };
+    /** @param {DragEvent} event */
+    const onDragLeave = (event) => {
+      if (event.relatedTarget) return;
+      setDropping(false);
+    };
+    /** @param {DragEvent} event */
+    const onDrop = (event) => {
+      if (!carriesFiles(event)) return;
+      event.preventDefault();
+      setDropping(false);
+      uploadRef.current(event.dataTransfer?.files || null);
+    };
+    /** @param {ClipboardEvent} event */
+    const onPaste = (event) => {
+      const files = event.clipboardData?.files;
+      if (!files?.length) return;
+      event.preventDefault();
+      uploadRef.current(files);
+    };
+
+    window.addEventListener("dragover", onDragOver);
+    window.addEventListener("dragleave", onDragLeave);
+    window.addEventListener("drop", onDrop);
+    window.addEventListener("paste", onPaste);
+    return () => {
+      window.removeEventListener("dragover", onDragOver);
+      window.removeEventListener("dragleave", onDragLeave);
+      window.removeEventListener("drop", onDrop);
+      window.removeEventListener("paste", onPaste);
+    };
+  }, [storageAvailable]);
+
   /** @param {{ id: string, name: string }} attachment */
   async function remove(attachment) {
     if (!storageAvailable) return;
@@ -115,10 +169,16 @@ export default function NoteAttachments({
   }
 
   const status =
-    error || busy || `${attachments.length} of ${maxAttachments} attached`;
+    error ||
+    busy ||
+    (dropping && !isFull ? "Drop to attach" : null) ||
+    `${attachments.length} of ${maxAttachments} attached`;
 
   return (
-    <section className="notesAttachments" aria-label="Attachments">
+    <section
+      className={`notesAttachments${dropping && !isFull ? " notesAttachmentsDropping" : ""}`}
+      aria-label="Attachments"
+    >
       {attachments.length > 0 && (
         <ul className="notesAttachmentList">
           {attachments.map((attachment) => {
@@ -131,7 +191,7 @@ export default function NoteAttachments({
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {kind?.inline ? (
+                  {kind?.thumbnail ? (
                     <img
                       className="notesAttachmentThumb"
                       src={`${ENDPOINT}/${attachment.id}`}
@@ -176,6 +236,7 @@ export default function NoteAttachments({
         >
           Attach PDF or picture
         </button>
+        <span className="notesAttachmentHint">or drop a file, or paste one</span>
         <input
           className="notesFilePicker"
           ref={inputRef}

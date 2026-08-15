@@ -979,6 +979,11 @@ textarea {
   background: #f2f6fa;
 }
 
+.notesAttachmentsDropping {
+  background: #e4edfa;
+  box-shadow: inset 0 0 0 2px var(--canvas-deep);
+}
+
 .notesAttachmentList {
   min-width: 0;
   display: flex;
@@ -1132,12 +1137,20 @@ textarea {
   display: none;
 }
 
+.notesAttachmentHint {
+  flex: none;
+  color: #52637d;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 .notesAttachmentStatus {
   min-width: 0;
-  margin: 0;
+  margin: 0 0 0 auto;
   overflow: hidden;
   color: #52637d;
   font-size: 12px;
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1452,6 +1465,10 @@ textarea {
 
   .notesAttachment {
     max-width: 210px;
+  }
+
+  .notesAttachmentHint {
+    display: none;
   }
 
   .notesFooter {

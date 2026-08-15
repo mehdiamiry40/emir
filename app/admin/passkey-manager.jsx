@@ -159,14 +159,7 @@ export default function PasskeyManager({ initialPasskeys, available }) {
                 <div className="passkeyItem" key={passkey.id}>
                   <div className="passkeyDetails">
                     <strong>{passkey.label}</strong>
-                    <span>
-                      {passkey.backedUp ? "Synced" : "Device"} · Added{" "}
-                      {new Intl.DateTimeFormat("en-AU", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      }).format(new Date(passkey.createdAt))}
-                    </span>
+                    <span>{passkey.backedUp ? "Synced" : "Device"}</span>
                   </div>
                   <button
                     className="passkeyRemove"
