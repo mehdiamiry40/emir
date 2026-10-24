@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "EMIR_AUTH_SNAPSHOT_DIR=.next/auth-snapshots next dev",
+    "build": "next build && node scripts/csp-hashes.mjs",
+    "start": "EMIR_AUTH_SNAPSHOT_DIR=.next/auth-snapshots next start",
     "typecheck": "tsc --noEmit",
-    "test": "next build && npm run typecheck && node --test"
+    "test": "npm run build && npm run typecheck && node --test"
   },
   "dependencies": {
     "@simplewebauthn/browser": "^13.3.0",

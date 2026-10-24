@@ -24,6 +24,11 @@ const signInFormSource = await readFile(
   new URL("../app/signin/signin-form.jsx", import.meta.url),
   "utf8",
 );
+const sessionRedirectSource = await readFile(
+  new URL("../app/signin/session-redirect.jsx", import.meta.url),
+  "utf8",
+);
+const proxySource = await readFile(new URL("../proxy.js", import.meta.url), "utf8");
 const prerenderedHome = await readFile(
   new URL("../.next/server/app/index.html", import.meta.url),
   "utf8",
@@ -93,8 +98,13 @@ test("sign-in page exposes password and passkey authentication", () => {
   assert.match(signInPageSource, /title: `\$\{SITE_NAME\} — Sign in`/);
   assert.match(signInPageSource, /aria-label="Sign in"/);
   assert.match(signInPageSource, /className="signinTitle"/);
-  assert.match(signInPageSource, /verifySessionToken/);
-  assert.match(signInPageSource, /redirect\("\/admin"\)/);
+  assert.match(signInPageSource, /force-static/);
+  assert.doesNotMatch(signInPageSource, /cookies\(/);
+  assert.match(signInPageSource, /SessionRedirect/);
+  assert.match(sessionRedirectSource, /\/api\/session/);
+  assert.match(sessionRedirectSource, /ADMIN_PATH/);
+  assert.match(proxySource, /verifySessionToken/);
+  assert.match(proxySource, /pathname = "\/signin"/);
   assert.doesNotMatch(signInFormSource, /name="email"/);
   assert.match(signInFormSource, /name="username"/);
   assert.match(signInFormSource, /autoComplete="username"/);
