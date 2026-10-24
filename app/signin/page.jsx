@@ -1,10 +1,7 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { isPasskeyConfigured } from "../../lib/passkeys";
-import { SESSION_COOKIE, verifySessionToken } from "../../lib/session";
 import SignalField from "../signal-field";
 import { SITE_NAME } from "../site";
+import SessionRedirect from "./session-redirect";
 import SignInForm from "./signin-form";
 
 export const metadata = {
@@ -16,16 +13,12 @@ export const metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
-export default async function SignInPage() {
-  const jar = await cookies();
-  if (await verifySessionToken(jar.get(SESSION_COOKIE)?.value)) {
-    redirect("/admin");
-  }
-
+export default function SignInPage() {
   return (
     <>
+      <SessionRedirect />
       <Link className="loginButton" href="/">
         Home
       </Link>
@@ -41,7 +34,7 @@ export default async function SignInPage() {
           <h1 className="signinTitle" id="signin-title">
             Sign in
           </h1>
-          <SignInForm passkeyEnabled={isPasskeyConfigured()} />
+          <SignInForm passkeyEnabled />
         </section>
       </main>
     </>

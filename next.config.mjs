@@ -1,27 +1,27 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE_URL } from "./app/site.js";
+import { buildContentSecurityPolicy, buildDevContentSecurityPolicy } from "./lib/csp-policy.mjs";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const isDevelopment = process.env.NODE_ENV === "development";
-const contentSecurityPolicy = [
-  "default-src 'self'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-  "object-src 'none'",
-  "img-src 'self' data: blob:",
-  "font-src 'self' data:",
-  "style-src 'self' 'unsafe-inline'",
-  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
-  `connect-src 'self'${isDevelopment ? " ws: http: https:" : ""}`,
-  "manifest-src 'self'",
-  ...(isDevelopment ? [] : ["upgrade-insecure-requests"]),
-].join("; ");
+// Production script hashes are unknown until prerender finishes. The placeholder is
+// replaced in the build output by scripts/csp-hashes.mjs. On Vercel that is too late
+// for the header the CDN serves: the Next adapter copies it into `.next/output/config.json`
+// during onBuildComplete, while `next build` is still running. scripts/csp-adapter.mjs
+// wraps that adapter and writes the hashes first. Development cannot use those hashes.
+const contentSecurityPolicy = isDevelopment
+  ? buildDevContentSecurityPolicy()
+  : buildContentSecurityPolicy([]);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  // Vercel sets NEXT_ADAPTER_PATH to its own adapter. Wrap it so the routing
+  // object it serialises already contains the real script hashes.
+  ...(process.env.NEXT_ADAPTER_PATH
+    ? { adapterPath: path.join(projectRoot, "scripts/csp-adapter.mjs") }
+    : {}),
   turbopack: {
     root: projectRoot,
   },

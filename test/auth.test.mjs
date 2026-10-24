@@ -1,7 +1,10 @@
 import { spawn } from "node:child_process";
 import { createHash, createHmac } from "node:crypto";
 import { once } from "node:events";
+import { mkdtemp } from "node:fs/promises";
 import { createServer } from "node:net";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
 import test from "node:test";
@@ -232,6 +235,7 @@ async function findOpenPort() {
 async function startServer() {
   const port = await findOpenPort();
   const url = `http://localhost:${port}`;
+  const snapshotDir = await mkdtemp(path.join(tmpdir(), "emir-auth-"));
   let output = "";
   const server = spawn(
     process.execPath,
@@ -248,6 +252,7 @@ async function startServer() {
         NOTES_STORAGE_TEST_MODE: "memory",
         PASSKEY_STORAGE_TEST_MODE: "memory",
         SESSION_STORAGE_TEST_MODE: "memory",
+        EMIR_AUTH_SNAPSHOT_DIR: snapshotDir,
         PASSKEY_RP_ID: "localhost",
         PASSKEY_ORIGINS: url,
       },
@@ -288,10 +293,25 @@ test("sign-in flow protects the admin page", async (t) => {
   });
 
   const publicResponse = await fetch(url);
+  const contentSecurityPolicy = publicResponse.headers.get("content-security-policy") ?? "";
+  assert.match(contentSecurityPolicy, /default-src 'self'/);
+  assert.match(contentSecurityPolicy, /script-src 'self' 'sha256-/);
+  assert.doesNotMatch(contentSecurityPolicy, /__CSP_INLINE_HASHES__/);
+  assert.doesNotMatch(contentSecurityPolicy, /script-src[^;]*'unsafe-inline'/);
+  assert.doesNotMatch(contentSecurityPolicy, /script-src[^;]*'unsafe-eval'/);
+  assert.doesNotMatch(contentSecurityPolicy, /vercel\.live/);
   assert.match(
-    publicResponse.headers.get("content-security-policy") ?? "",
-    /default-src 'self'/,
+    publicResponse.headers.get("cache-control") ?? "",
+    /s-maxage=31536000|public, max-age=0, must-revalidate/,
   );
+  const signInResponse = await fetch(`${url}/signin`);
+  assert.equal(signInResponse.status, 200);
+  assert.match(
+    signInResponse.headers.get("cache-control") ?? "",
+    /s-maxage=31536000|public, max-age=0, must-revalidate/,
+  );
+  assert.match(signInResponse.headers.get("content-security-policy") ?? "", /'sha256-/);
+  assert.match(await signInResponse.text(), /name="password"/);
   assert.match(
     publicResponse.headers.get("permissions-policy") ?? "",
     /publickey-credentials-get=\(self\)/,
@@ -447,7 +467,11 @@ test("sign-in flow protects the admin page", async (t) => {
     () => document.querySelector(".notesStatus")?.textContent?.trim() === "Saved",
   );
   await page.reload({ waitUntil: "load" });
-  assert.equal(await page.inputValue(".notesEditor"), noteContent);
+  await page.waitForFunction(
+    (expected) => document.querySelector(".notesEditor")?.value === expected,
+    noteContent,
+    { timeout: 15000 },
+  );
 
   // attachments, so the axe run below covers a populated tray rather than an
   // empty one: thumbnails, type badges, and the per-file remove buttons
@@ -544,7 +568,11 @@ test("sign-in flow protects the admin page", async (t) => {
   await page.goto(`${url}/signin`, { waitUntil: "load" });
   await page.click(".signinPasskey");
   await page.waitForURL("**/admin", { timeout: 15000 });
-  assert.equal(await page.inputValue(".notesEditor"), noteContent);
+  await page.waitForFunction(
+    (expected) => document.querySelector(".notesEditor")?.value === expected,
+    noteContent,
+    { timeout: 15000 },
+  );
   const passkeySession = (await context.cookies()).find(
     (cookie) => cookie.name === "emir_session",
   );

@@ -1,29 +1,12 @@
-import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { SESSION_COOKIE, verifySessionToken } from "../../lib/session";
-import {
-  MAX_NOTE_LENGTH,
-  isNotesConfigured,
-  loadNote,
-} from "../../lib/notes";
 import {
   ACCEPTED_ATTACHMENT_TYPES,
   ATTACHMENT_TYPES,
-  MAX_ATTACHMENTS,
   MAX_ATTACHMENT_BYTES,
-  isAttachmentStorageConfigured,
-  listAttachments,
+  MAX_ATTACHMENTS,
 } from "../../lib/attachments";
-import {
-  isPasskeyConfigured,
-  listPasskeys,
-} from "../../lib/passkeys";
+import { MAX_NOTE_LENGTH } from "../../lib/notes";
 import { SITE_NAME } from "../site";
-import { signOut } from "../signin/actions";
-import NoteAttachments from "./note-attachments";
-import NotesEditor from "./notes-editor";
-import PasskeyManager from "./passkey-manager";
+import AdminDashboard from "./dashboard";
 
 export const metadata = {
   title: `${SITE_NAME} — Admin`,
@@ -34,85 +17,16 @@ export const metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
-export default async function AdminPage() {
-  const jar = await cookies();
-  if (!(await verifySessionToken(jar.get(SESSION_COOKIE)?.value))) {
-    redirect("/signin");
-  }
-
-  /** @type {{ content: string, updatedAt: string | null }} */
-  let note = { content: "", updatedAt: null };
-  let storageAvailable = isNotesConfigured();
-  if (storageAvailable) {
-    try {
-      note = await loadNote();
-    } catch {
-      storageAvailable = false;
-    }
-  }
-
-  /** @type {import("../../lib/attachments").AttachmentMetadata[]} */
-  let attachments = [];
-  let attachmentsAvailable = storageAvailable && isAttachmentStorageConfigured();
-  if (attachmentsAvailable) {
-    try {
-      attachments = await listAttachments();
-    } catch {
-      attachmentsAvailable = false;
-    }
-  }
-
-  let passkeyAvailable = isPasskeyConfigured();
-  let passkeys = [];
-  if (passkeyAvailable) {
-    try {
-      passkeys = await listPasskeys();
-    } catch {
-      passkeyAvailable = false;
-    }
-  }
-
+export default function AdminPage() {
   return (
-    <main className="notesPage" aria-labelledby="notes-title">
-      <header className="notesHeader">
-        <div className="notesIdentity">
-          <span className="notesEyebrow">{SITE_NAME}</span>
-          <h1 className="notesTitle" id="notes-title">
-            Notes
-          </h1>
-        </div>
-        <nav className="notesActions" aria-label="Notes navigation">
-          <PasskeyManager
-            initialPasskeys={passkeys}
-            available={passkeyAvailable}
-          />
-          <Link className="notesHomeLink" href="/">
-            Home
-          </Link>
-          <form action={signOut}>
-            <button className="adminSignout" type="submit">
-              Sign out
-            </button>
-          </form>
-        </nav>
-      </header>
-      <NotesEditor
-        initialContent={note.content}
-        initialUpdatedAt={note.updatedAt}
-        maxLength={MAX_NOTE_LENGTH}
-        storageAvailable={storageAvailable}
-      >
-        <NoteAttachments
-          initialAttachments={attachments}
-          accept={ACCEPTED_ATTACHMENT_TYPES}
-          types={ATTACHMENT_TYPES}
-          maxAttachments={MAX_ATTACHMENTS}
-          maxBytes={MAX_ATTACHMENT_BYTES}
-          storageAvailable={attachmentsAvailable}
-        />
-      </NotesEditor>
-    </main>
+    <AdminDashboard
+      maxLength={MAX_NOTE_LENGTH}
+      accept={ACCEPTED_ATTACHMENT_TYPES}
+      types={ATTACHMENT_TYPES}
+      maxAttachments={MAX_ATTACHMENTS}
+      maxBytes={MAX_ATTACHMENT_BYTES}
+    />
   );
 }
