@@ -8,7 +8,12 @@
  * file would block every inline script. It fails if that happens.
  */
 import path from "node:path";
-import { assertDeploymentOutput, publishInlineScriptHashes, stripPreviewToolbarFiles } from "../lib/csp-publish.mjs";
+import {
+  assertDeploymentOutput,
+  publishInlineScriptHashes,
+  stripPreviewToolbarFiles,
+  toolbarStripRoots,
+} from "../lib/csp-publish.mjs";
 
 const root = process.cwd();
 const nextDir = path.join(root, ".next");
@@ -34,7 +39,7 @@ async function main() {
         `CSP: checked hashed policy in ${checked.configs.map((file) => path.relative(root, file)).join(", ")}`,
       );
     }
-    const toolbarFiles = await stripPreviewToolbarFiles(nextDir);
+    const toolbarFiles = await stripPreviewToolbarFiles(toolbarStripRoots(root, nextDir));
     if (toolbarFiles.length) {
       console.log(
         `CSP: removed the unconditional preview toolbar injection from ${toolbarFiles.length} file(s)`,

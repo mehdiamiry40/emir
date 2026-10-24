@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -17,7 +17,12 @@ import {
   buildDevContentSecurityPolicy,
   directiveValue,
 } from "../lib/csp-policy.mjs";
-import { assertDeploymentOutput, publishInlineScriptHashes, rewriteSitePolicies } from "../lib/csp-publish.mjs";
+import {
+  assertDeploymentOutput,
+  publishInlineScriptHashes,
+  rewriteSitePolicies,
+  stripPreviewToolbarFiles,
+} from "../lib/csp-publish.mjs";
 
 const GTAG = "window.dataLayer = window.dataLayer || [];";
 
@@ -83,6 +88,26 @@ test("strips the unconditional preview toolbar and keeps the production cookie g
     () => stripPreviewToolbar('const src = "https://vercel.live/_next-live/feedback/feedback.js";'),
     /unrecognized/,
   );
+});
+
+test("strips a symlinked chunk in the deployment output", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "csp-toolbar-"));
+  const injected =
+    'before;var r=document.createElement("script");r.src="https://vercel.live/_next-live/feedback/feedback.js",r.setAttribute("data-deployment-id",globalThis.NEXT_DEPLOYMENT_ID),(document.head||document.documentElement).appendChild(r);after';
+  try {
+    const realDir = path.join(root, "real");
+    const linkDir = path.join(root, "output", "static");
+    await mkdir(realDir, { recursive: true });
+    await mkdir(path.dirname(linkDir), { recursive: true });
+    const realFile = path.join(realDir, "chunk.js");
+    await writeFile(realFile, injected);
+    await symlink(realDir, linkDir);
+    const stripped = await stripPreviewToolbarFiles(path.join(root, "output"));
+    assert.equal(stripped.length, 1);
+    assert.equal(await readFile(realFile, "utf8"), "before;void 0;after");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("rewrites a deployment config that the adapter wrote with the placeholder", async () => {

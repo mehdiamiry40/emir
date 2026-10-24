@@ -1,5 +1,10 @@
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { stripPreviewToolbarFiles, assertDeploymentOutput, publishInlineScriptHashes } from "../lib/csp-publish.mjs";
+import {
+  assertDeploymentOutput,
+  publishInlineScriptHashes,
+  stripPreviewToolbarFiles,
+  toolbarStripRoots,
+} from "../lib/csp-publish.mjs";
 
 const adapterFile = fileURLToPath(new URL("./csp-adapter.mjs", import.meta.url));
 
@@ -32,7 +37,8 @@ export async function modifyConfig(config, context) {
  * @param {{ distDir: string, routing: unknown, projectDir: string }} payload
  */
 export async function onBuildComplete(payload) {
-  const stripped = await stripPreviewToolbarFiles(payload.distDir);
+  const roots = toolbarStripRoots(payload.projectDir, payload.distDir);
+  const stripped = await stripPreviewToolbarFiles(roots);
   if (stripped.length) {
     console.log(`CSP: removed the unconditional preview toolbar injection from ${stripped.length} file(s)`);
   }
@@ -52,6 +58,15 @@ export async function onBuildComplete(payload) {
   } else if (process.env.NEXT_ADAPTER_PATH) {
     throw new Error(
       `CSP adapter could not call onBuildComplete on NEXT_ADAPTER_PATH (${process.env.NEXT_ADAPTER_PATH})`,
+    );
+  }
+
+  // The platform adapter can copy the original chunk bytes into its output
+  // while this hook is running. Strip that tree before the deploy reads it.
+  const restripped = await stripPreviewToolbarFiles(roots);
+  if (restripped.length) {
+    console.log(
+      `CSP: removed the unconditional preview toolbar injection from ${restripped.length} output file(s)`,
     );
   }
 
