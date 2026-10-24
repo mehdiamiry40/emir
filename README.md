@@ -26,6 +26,7 @@ npm test        # build + smoke/visual/a11y tests (Playwright + axe)
 | `PASSKEY_ORIGINS` | production | Comma-separated HTTPS origins allowed to create and use passkeys. |
 | `UPSTASH_REDIS_REST_URL` or `KV_REST_API_URL` | production | Durable Redis endpoint used for private notes, sessions, passkeys, and sign-in rate limiting. |
 | `UPSTASH_REDIS_REST_TOKEN` or `KV_REST_API_TOKEN` | production | Token for the private authentication and notes database. |
+| `CRON_SECRET` | production | Bearer secret for the daily Redis keepalive. Generate with `openssl rand -base64 32`. Vercel sends it as `Authorization` on the cron request. Until it is set, the cron is rejected and the database is not kept active. |
 
 Production sign-in, session validation, and note storage fail closed when their
 configuration is missing. Copy `.env.example` to `.env.local` for local setup.
@@ -107,3 +108,10 @@ timers, or "current date" logic on the homepage or the social card.**
 
 Vercel deploys `main` to [www.emir.com.au](https://www.emir.com.au). Protect
 `main` in GitHub and require the `test` check before merge.
+
+Upstash deletes a free database after 14 days without activity. `vercel.json`
+schedules `GET /api/cron/redis-keepalive` once a day at 04:00 UTC
+(`0 4 * * *`, the Hobby plan limit). On Hobby, Vercel may run that job any
+time during the 04:00 hour. The route writes and reads
+`emir:ops:redis-keepalive` only. Set `CRON_SECRET` in the Vercel project for
+Production before relying on it.
